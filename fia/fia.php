@@ -41,9 +41,50 @@ class fia {
 	}
 
 
+	// initialization method (to initialize application)
+	public static function init($data){
+		if(!empty($data) && is_array($data)){
+			#unset needless variables
+			if(isset($data['FileInit'])){unset($data['FileInit']);}
+			if(isset($data['FileConfig'])){unset($data['FileConfig']);}
+			if(isset($data['FileCore'])){unset($data['FileCore']);}
+
+			if(isset($data['isIn'])){self::$isIn = $data['isIn']; unset($data['isIn']);}
+			if(isset($data['isCond'])){self::$isCond = $data['isCond']; unset($data['isCond']);}
+
+			#impose SSL
+			if(array_key_exists('imposeSSL', $data)){
+				if($data['imposeSSL'] == 'oYeah'){
+					self::imposeSSL();
+					unset($data['imposeSSL']);
+				}
+			}
+
+			#set project information properties
+			$data = self::project($data);
+
+			#set timezone
+			if(array_key_exists('timezone', $data)){
+				self::timezone($data['timezone']);
+				if(!empty(self::$timezone)){unset($data['timezone']);}
+			}
+
+			#set database
+			if(array_key_exists('database', $data)){
+				self::database($data['database']);
+				unset($data['database']);
+			}
+
+			#set directory
+			$data = self::path($data, 'oSET');
+		}
+	}
+
+
 
 
 	/**==== UTILITY ====**/
+
 	// Dump data to screen for debugging
 	public static function dump($data, $o='oPRE'){
 		if($o == 'oDUMP'){return var_dump($data);}
@@ -52,6 +93,6 @@ class fia {
 		elseif($o == 'oCLASSVAR'){self::dump(get_class_vars($data), 'oPRE');}
 		elseif($o == 'oOBJVAR'){self::dump(get_object_vars($data), 'oPRE');}
 	}
-	/**==== ~UTILITY ====**/
+
 }
 ?>
