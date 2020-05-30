@@ -116,6 +116,7 @@ class fia {
 		}
 	}
 
+
 	// set project information as object properties
 	private static function project($o){
 		if(isset($o['project']) && !empty($o['project']) && is_array($o['project'])){
@@ -149,6 +150,46 @@ class fia {
 	}
 
 
+	private static function baseURL(){
+	}
+
+
+	private static function domain(){
+	}
+
+
+	// set (from config) & get default directory paths
+	private static function path($o='', $task='oGET'){
+		#set paths
+		if($task == 'oSET'){
+			if(array_key_exists('RD', $o) && !empty($o['RD'])){
+				self::$pathroot = $o['RD'].DS;
+				unset($o['RD']);
+			}
+			if(array_key_exists('FD', $o) && !empty($o['FD'])){
+				self::$pathlib = $o['FD'].DS;
+				unset($o['FD']);
+			}
+			if(array_key_exists('CD', $o) && !empty($o['CD'])){
+				self::$pathcontent = $o['CD'].DS;
+				unset($o['CD']);
+			}
+			if(array_key_exists('drive', $o) && !empty($o['drive'])){
+				self::$pathdrive = $o['drive'].DS;
+				unset($o['drive']);
+			}
+
+			return $o;
+		}
+
+		#get paths
+		if($task == 'oGET'){
+			if(isset(self::${$o})){return self::${$o};}
+		}
+	}
+
+
+
 
 
 	/**==== DATABASE ====**/
@@ -172,6 +213,7 @@ class fia {
 
 
 
+
 	/**==== UTILITY ====**/
 
 	// Dump data to screen for debugging
@@ -182,6 +224,5 @@ class fia {
 		elseif($o == 'oCLASSVAR'){self::dump(get_class_vars($data), 'oPRE');}
 		elseif($o == 'oOBJVAR'){self::dump(get_object_vars($data), 'oPRE');}
 	}
-
 }
 ?>
