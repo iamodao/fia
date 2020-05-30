@@ -116,6 +116,30 @@ class fia {
 		}
 	}
 
+	// set project information as object properties
+	private static function project($data){
+		if(isset($data['project']) && !empty($data['project']) && is_array($data['project'])){
+			$project = $data['project'];
+			foreach ($project as $key => $value){
+				if(property_exists(__CLASS__, $key) && !empty($value)){
+					self::${$key} = $value;
+					unset($project[$key]);
+				}
+				elseif($key == 'baseURL' && empty($value)){
+					self::baseURL();
+					unset($project['baseURL']);
+				}
+				elseif($key == 'domain' && empty($value)){
+					self::domain();
+					unset($project['domain']);
+				}
+			}
+			unset($data['project']);
+			if(!empty($project)){$data['project'] = $project;}
+		}
+		return $data;
+	}
+
 
 
 
