@@ -159,7 +159,7 @@ class fia {
 
 
 	// set (from config) & get default directory paths
-	private static function path($o='', $task='oGET'){
+	public static function path($o='', $task='oGET'){
 		#set paths
 		if($task == 'oSET'){
 			if(array_key_exists('RD', $o) && !empty($o['RD'])){
@@ -185,6 +185,11 @@ class fia {
 		#get paths
 		if($task == 'oGET'){
 			if(isset(self::${$o})){return self::${$o};}
+			else {
+				$path = PS;
+				if($o=='CSS' || $o=='JS' || $o=='IMG' || $o=='MEDIA'){$path .= 'asset'.PS;}
+				return $path;
+			}
 		}
 	}
 
@@ -217,7 +222,7 @@ class fia {
 	}
 
 	// execute SQL and return response (use only when no user input & no fetching required)
-	public static function exec($sql){
+	public static function dbo_exec($sql){
 		$dbo = self::dbo();
 		return $dbo->exec($sql);
 		# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
