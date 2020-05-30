@@ -216,6 +216,13 @@ class fia {
 		return false;
 	}
 
+	// execute SQL and return response (use only when no user input & no fetching required)
+	public static function exec($sql){
+		$dbo = self::dbo();
+		return $dbo->exec($sql);
+		# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
+	}
+
 
 
 
