@@ -81,6 +81,42 @@ class fia {
 	}
 
 
+	// check for secured URL and return boolean
+	public static function https(){
+		$o = false; $https = 'inactive'; $port = 'default';
+		if(!empty($_SERVER['HTTPS'])){$https = $_SERVER['HTTPS'];}
+		if($https !== 'inactive'){$https == 'active';}
+		if(!empty($_SERVER['SERVER_PORT'])){$port = $_SERVER['SERVER_PORT'];}
+		if($https == 'active' || $port == 443){$o = true;}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){$o = true;}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'){$o = true;}
+		return $o;
+	}
+
+
+	// impose SSL on URL (it also starts session)
+	public static function imposeSSL($link='', $permanent='oNope'){
+		if(!headers_sent() && empty($_SESSION)){session_start();}
+		if(empty($_SESSION['vImposeSSL']) || $_SESSION['vImposeSSL'] !== 'imposed'){
+			$protocol = self::https() ? 'https' : 'http';
+			if($protocol !== 'https'){
+				$o = 'https://';
+				if(!empty($link)){$o .= $link;}
+				else {
+					if(!empty($_SERVER['HTTP_HOST'])){$o .= $_SERVER['HTTP_HOST'];}
+					if(!empty($_SERVER['REQUEST_URI'])){$o .= $_SERVER['REQUEST_URI'];}
+				}
+				if(filter_var($o, FILTER_VALIDATE_URL) !== false){
+					$_SESSION['vImposeSSL'] = 'imposed';
+					if($permanent == 'iYeah'){header('HTTP/1.1 301 Moved Permanently');}
+					header('Location: ' . $o);
+					exit;
+				}
+			}
+		}
+	}
+
+
 
 
 	/**==== UTILITY ====**/
