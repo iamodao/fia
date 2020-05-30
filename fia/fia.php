@@ -39,5 +39,19 @@ class fia {
 		}
 		return self::$instance;
 	}
+
+
+
+
+	/**==== UTILITY ====**/
+	// Dump data to screen for debugging
+	public static function dump($data, $o='oPRE'){
+		if($o == 'oDUMP'){return var_dump($data);}
+		elseif($o == 'oPRINT'){return print_r($data);}
+		elseif($o == 'oPRE'){echo '<pre><tt>'.var_export($data, true).'</tt></pre>';}
+		elseif($o == 'oCLASSVAR'){self::dump(get_class_vars($data), 'oPRE');}
+		elseif($o == 'oOBJVAR'){self::dump(get_object_vars($data), 'oPRE');}
+	}
+	/**==== ~UTILITY ====**/
 }
 ?>
