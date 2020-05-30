@@ -216,7 +216,21 @@ class fia {
 
 	/**==== UTILITY ====**/
 
-	// Dump data to screen for debugging
+	// set language
+	public static function lang($lang=''){
+		if(!empty($lang)){$o = $lang;}
+		elseif(!empty($_GET['lang'])){$o = $_GET['lang'];}
+		elseif(!empty($_POST['oLang'])){$o = $_POST['oLang'];}
+		elseif(!empty($_SESSION['oLang'])){$o = $_SESSION['oLang'];}
+		else {$o = 'en';}
+
+		if(empty($_SESSION['oLang'])){$_SESSION['oLang'] = $o;}
+		elseif($_SESSION['oLang'] != $o){$_SESSION['oLang'] = $o;}
+		return strtolower($o);
+	}
+
+
+	// dump data to screen for debugging
 	public static function dump($data, $o='oPRE'){
 		if($o == 'oDUMP'){return var_dump($data);}
 		elseif($o == 'oPRINT'){return print_r($data);}
