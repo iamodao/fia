@@ -210,6 +210,12 @@ class fia {
 		}
 	}
 
+	// return database object
+	public static function dbo(){
+		if(!empty(self::$database)){return self::$database;}
+		return false;
+	}
+
 
 
 
