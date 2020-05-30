@@ -42,41 +42,41 @@ class fia {
 
 
 	// initialization method (to initialize application)
-	public static function init($data){
-		if(!empty($data) && is_array($data)){
+	public static function init($o){
+		if(!empty($o) && is_array($o)){
 			#unset needless variables
-			if(isset($data['FileInit'])){unset($data['FileInit']);}
-			if(isset($data['FileConfig'])){unset($data['FileConfig']);}
-			if(isset($data['FileCore'])){unset($data['FileCore']);}
+			if(isset($o['FileInit'])){unset($o['FileInit']);}
+			if(isset($o['FileConfig'])){unset($o['FileConfig']);}
+			if(isset($o['FileCore'])){unset($o['FileCore']);}
 
-			if(isset($data['isIn'])){self::$isIn = $data['isIn']; unset($data['isIn']);}
-			if(isset($data['isCond'])){self::$isCond = $data['isCond']; unset($data['isCond']);}
+			if(isset($o['isIn'])){self::$isIn = $o['isIn']; unset($o['isIn']);}
+			if(isset($o['isCond'])){self::$isCond = $o['isCond']; unset($o['isCond']);}
 
 			#impose SSL
-			if(array_key_exists('imposeSSL', $data)){
-				if($data['imposeSSL'] == 'oYeah'){
+			if(array_key_exists('imposeSSL', $o)){
+				if($o['imposeSSL'] == 'oYeah'){
 					self::imposeSSL();
-					unset($data['imposeSSL']);
+					unset($o['imposeSSL']);
 				}
 			}
 
 			#set project information properties
-			$data = self::project($data);
+			$o = self::project($o);
 
 			#set timezone
-			if(array_key_exists('timezone', $data)){
-				self::timezone($data['timezone']);
-				if(!empty(self::$timezone)){unset($data['timezone']);}
+			if(array_key_exists('timezone', $o)){
+				self::timezone($o['timezone']);
+				if(!empty(self::$timezone)){unset($o['timezone']);}
 			}
 
 			#set database
-			if(array_key_exists('database', $data)){
-				self::database($data['database']);
-				unset($data['database']);
+			if(array_key_exists('database', $o)){
+				self::database($o['database']);
+				unset($o['database']);
 			}
 
 			#set directory
-			$data = self::path($data, 'oSET');
+			$o = self::path($o, 'oSET');
 		}
 	}
 
@@ -117,9 +117,9 @@ class fia {
 	}
 
 	// set project information as object properties
-	private static function project($data){
-		if(isset($data['project']) && !empty($data['project']) && is_array($data['project'])){
-			$project = $data['project'];
+	private static function project($o){
+		if(isset($o['project']) && !empty($o['project']) && is_array($o['project'])){
+			$project = $o['project'];
 			foreach ($project as $key => $value){
 				if(property_exists(__CLASS__, $key) && !empty($value)){
 					self::${$key} = $value;
@@ -134,10 +134,18 @@ class fia {
 					unset($project['domain']);
 				}
 			}
-			unset($data['project']);
-			if(!empty($project)){$data['project'] = $project;}
+			unset($o['project']);
+			if(!empty($project)){$o['project'] = $project;}
 		}
-		return $data;
+		return $o;
+	}
+
+
+	// set timezone and assign value to class property
+	private static function timezone($o='oFIA'){
+		if($o == 'oFIA' || empty($o)){$o = 'Africa/Lagos';}
+		$timezone = date_default_timezone_set($o);
+		if($timezone !== false){self::$timezone = $o;}
 	}
 
 
