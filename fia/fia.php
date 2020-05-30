@@ -151,6 +151,27 @@ class fia {
 
 
 
+	/**==== DATABASE ====**/
+
+	// create database connection and set property to database object
+	private static function database($o, $extension='oPDO'){
+		if(!empty($o) && is_array($o)){
+
+			#using PDO connection
+			if($extension == 'oPDO'){
+				try {
+					$pdo = new PDO('mysql:dbname='.$o['name'].';host='.$o['host'], $o['user'], $o['password']);
+				} catch (PDOException $e) {
+					exit('Connection error: '.$e->getMessage());
+				}
+				self::$database = $pdo;
+			}
+		}
+	}
+
+
+
+
 	/**==== UTILITY ====**/
 
 	// Dump data to screen for debugging
