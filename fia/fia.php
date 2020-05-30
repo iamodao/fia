@@ -228,6 +228,22 @@ class fia {
 		# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
 	}
 
+	// run SQL query
+	public static function dbo_query($sql){
+		$dbo = self::dbo();
+		$o = $dbo->prepare($sql);
+		// $exec = $o->execute();
+		// if(!$exec){return false;}
+		// return $res->fetchAll(PDO::FETCH_ASSOC);
+		return $o;
+	}
+
+	public function dbo_failed($stm, $return=2){
+		/* TODO ~ clean up this error reporting */
+		$error = $stm->errorInfo();
+		return $error[$return];
+	}
+
 
 
 
