@@ -232,17 +232,30 @@ class fia {
 	public static function dbo_query($sql){
 		$dbo = self::dbo();
 		$o = $dbo->prepare($sql);
-		// $exec = $o->execute();
-		// if(!$exec){return false;}
-		// return $res->fetchAll(PDO::FETCH_ASSOC);
+		if($o !== false){
+			$exec = $o->execute();
+			if(!$exec){
+				$e['oMSG'] = $o->errorInfo()[2];
+				$e['oSQL'] = $sql;
+				$rez['oERROR'] = $e;
+				return $rez;
+			}
+			else {
+				$fetch = $o->fetchAll(PDO::FETCH_ASSOC);
+				if($fetch === false){
+					#failure occurred
+					$rez['oRESULT'] = 'FETCH_FAILED';
+				}
+				elseif(count($fetch) === 0){
+					$rez['oRESULT'] = 'NO_RECORD';
+				}
+				return $rez;
+			}
+		}
 		return $o;
 	}
 
-	public function dbo_failed($stm, $return=2){
-		/* TODO ~ clean up this error reporting */
-		$error = $stm->errorInfo();
-		return $error[$return];
-	}
+
 
 
 
