@@ -243,11 +243,19 @@ class fia {
 			else {
 				$fetch = $o->fetchAll(PDO::FETCH_ASSOC);
 				if($fetch === false){
-					#failure occurred
-					$rez['oRESULT'] = 'FETCH_FAILED';
+					$rez['oRESULT'] = 'FETCH_FAILED'; #failure occurred
 				}
-				elseif(count($fetch) === 0){
-					$rez['oRESULT'] = 'NO_RECORD';
+				else {
+					$rez['oCOUNT'] = count($fetch);
+					if($rez['oCOUNT'] === 0){
+						$rez['oRESULT'] = 'NO_RECORD';
+					}
+					// elseif($rez['oCOUNT'] === 1){
+					// 	$rez['oRESULT'] = $fetch[0];
+					// }
+					else {
+						$rez['oRESULT'] = $fetch;
+					}
 				}
 				return $rez;
 			}
