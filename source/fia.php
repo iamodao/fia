@@ -313,7 +313,7 @@ class fia {
 
 
 
-	// router - checks current uri & calls appropriate controller NOTE ~ use for app & api, not site
+	// router - checks current URI & calls appropriate controller NOTE ~ use for app & api, not site
 	public static function orouter($i='oAUTO'){
 		if(!empty($_GET['oredirect'])){
 			#TODO ~ clean up redirect value
@@ -435,10 +435,9 @@ class fia {
 
 
 		if(!headers_sent($filename, $linenum)){
-			if(!empty($delay) || $exit != 'oNope'){
-				header('Refresh:'.$delay.';url='.$url);
-			}
-			else {header('Location: '.$url); exit();}
+			if(!empty($delay)){header('Refresh:'.$delay.';url='.$url);}
+			else {header('Location: '.$url);}
+			if($exit != 'oNope'){exit();}
 		}
 		else {
 			#use meta redirect (Headers already sent in $filename on line $linenum)
