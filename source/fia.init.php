@@ -19,6 +19,10 @@ if(file_exists($oInit['FileConfig'])){
 $oInit['CD'] = dirname($oInit['FileConfig']);
 
 
+# Module Directory
+$moduleDir = $oInit['CD'].DS.'module';
+if(is_dir($moduleDir)){$oInit['moduleDir'] = $moduleDir;}
+
 # Upload Directory
 $uploadDrive = $oInit['CD'].DS.'drive';
 if(is_dir($uploadDrive)){$oInit['drive'] = $uploadDrive;}
