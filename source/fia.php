@@ -389,6 +389,13 @@ class fia {
 	}
 
 
+	public static function oload($i='oGET', $path='oVIEW'){
+		$o = self::oprepare($i, $path);
+		if(file_exists($o)){require $o; return;}
+		exit('PATH: Unavailable '.$path.' [<em>'.$o.'</em>]');
+	}
+
+
 
 
 
@@ -559,7 +566,7 @@ class fia {
 	/**==== INPUT ====**/
 
 	// [returns clean string/array
-	public static function cleanInput($input, $tags_allowed=''){
+	public static function cleanInput($input){
 		#strip out JS, HTML, CSS & multi-line comments
 		$search = array(
 			'@<script[^>]*?>.*?</script>@si',
