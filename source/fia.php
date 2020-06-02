@@ -277,6 +277,18 @@ class fia {
 
 
 
+	/**==== lOADER ====**/
+	public static function prep();
+
+
+
+
+
+
+
+
+
+
 	/**==== ROUTING ====**/
 
 	public static function oroute($type='oAPP', $i='oGET'){
