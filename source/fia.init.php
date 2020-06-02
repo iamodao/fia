@@ -1,12 +1,8 @@
 <?php
 # Start session
 if(!isset($_SESSION)){session_start();}
-
 $oInit['FD'] = __DIR__;
 
-# Define Separator
-defined('DS') ? null : define('DS', DIRECTORY_SEPARATOR);
-defined('PS') ? null : define('PS', '/');
 
 # Configuration ~ NOTE: application directory is set to config.php's directory. And when config is not set, root directory (RD) becomes config directory
 $oInit['FileConfig'] = $oInit['RD'].DS.'source'.DS.'config.php';
