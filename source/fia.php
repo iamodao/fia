@@ -529,7 +529,7 @@ class fia {
 
 	/**==== FORMAT ====**/
 
-	// return formated numbers
+	// return formatted numbers
 	public static function numberFormat($input, $digit=2){
 		if(is_numeric($input)){
 			$o = $input;
@@ -540,7 +540,7 @@ class fia {
 		return false;
 	}
 
-	// return formated size (computer-based mesaurement)
+	// return formatted size (computer-based measurement)
 	public static function sizeFormat($byte){
 		if(!empty($byte)){
 			if($byte>=1073741824){$o = number_format($byte / 1073741824 , 2) . 'GB';}
@@ -702,38 +702,6 @@ class fia {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**==== UTILITY ====**/
 
 	// set language
@@ -750,7 +718,7 @@ class fia {
 	}
 
 
-	// perform JSON opperations
+	// perform JSON operations
 	public static function json($input, $i='oENCODE'){
 		if(!empty($input)){
 			if($i == 'oENCODE'){return json_encode($input);}
