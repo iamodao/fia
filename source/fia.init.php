@@ -8,8 +8,8 @@ $oInit['FD'] = __DIR__;
 defined('DS') ? null : define('DS', DIRECTORY_SEPARATOR);
 defined('PS') ? null : define('PS', '/');
 
-# Configuration
-$oInit['FileConfig'] = $oInit['RD'].DS.'content'.DS.'config.php';
+# Configuration ~ NOTE: application directory is set to config.php's directory. And when config is not set, root directory (RD) becomes config directory
+$oInit['FileConfig'] = $oInit['RD'].DS.'source'.DS.'config.php';
 if(!file_exists($oInit['FileConfig'])){$oInit['FileConfig'] = $oInit['RD'].DS.'config.php';}
 if(file_exists($oInit['FileConfig'])){
 	require $oInit['FileConfig'];
