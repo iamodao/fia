@@ -433,7 +433,6 @@ class fia {
 			$url = self::$baseURL.DS.$url;
 		}
 
-
 		if(!headers_sent($filename, $linenum)){
 			if(!empty($delay)){header('Refresh:'.$delay.';url='.$url);}
 			else {header('Location: '.$url);}
