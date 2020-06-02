@@ -1,6 +1,5 @@
 <?php
-// api primary controller
+// app primary controller
 class oAPP {
-
 }
 ?>
