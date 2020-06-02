@@ -4,5 +4,3 @@ function oAPI($route='oGET'){
 
 }
 ?>
-
-API CONTROLLER

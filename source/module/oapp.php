@@ -4,4 +4,3 @@ function oAPP($route='oGET'){
 
 }
 ?>
-APP CONTROLLER
