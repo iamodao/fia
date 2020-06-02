@@ -621,8 +621,17 @@ class fia {
 					else {$o[$index] = '';}
 				}
 			}
+			else {
+				$o = $v;
+			}
 		}
-		if(!empty($o)){return $o;}
+
+		if(!empty($o)){
+			#remove main uri [oapi & olink] for array if it exists
+			if(isset($o['oapi'])){unset($o['oapi']);}
+			if(isset($o['olink'])){unset($o['olink']);}
+			return $o;
+		}
 		return false;
 	}
 
