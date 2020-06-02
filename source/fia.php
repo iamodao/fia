@@ -268,6 +268,271 @@ class fia {
 
 
 
+	/**==== URL ====**/
+
+	// return URL referer
+	public static function refURL(){
+		if(!empty($_SERVER['HTTP_REFERER'])){return $_SERVER['HTTP_REFERER'];}
+		return false;
+	}
+
+	// URL redirect meta
+	public static function redirectMetaURL($url, $delay=0, $exit='oNope'){
+		$o = '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
+		if($exit == 'oYeah'){exit($o);}
+		else {return $o;}
+	}
+
+	public static function redirectURL($url, $delay=0, $exit='oNope'){
+		if(!headers_sent($filename, $linenum)){
+			if(!empty($delay) || $exit != 'oNope'){
+				header('Refresh:'.$delay.';url='.$url);
+			}
+			else {header('Location: '.$url); exit();}
+		}
+		else {
+			#use meta redirect (Headers already sent in $filename on line $linenum)
+			return self::redirectMetaURL($url, $delay, $exit);
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+	/**==== DIRECTORY ====**/
+
+	// check if path is a directory & returns true or false
+	public static function isDir($path){
+		if(is_dir($path)){return true;}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+	/**==== FILE ====**/
+
+	// check if path is a file & returns true or false
+	public static function isFile($path){
+		if(self::isDir($path)){return false;}
+		elseif(is_file($path) === false){return false;}
+		return true;
+	}
+
+	// returns file information
+	public static function infoFile($i='oData', $file='oSelf'){
+		if($file == 'oSelf'){$file = $_SERVER['PHP_SELF'];}
+		$path = pathinfo($file);
+		if($i == 'oDir' && !empty($path['dirname'])){$o = $path['dirname'];}
+		elseif($i == 'oBase' && !empty($path['basename'])){$o = $path['basename'];}
+		elseif($i == 'oExt' && !empty($path['extension'])){$o = $path['extension'];}
+		elseif($i == 'oName' && !empty($path['filename'])){$o = $path['filename'];}
+		elseif($i == 'oData'){$o = $path;}
+		if(!empty($i)){return $o;}
+		return false;
+	}
+
+	// download file information
+	public static function downloadFile($file, $save=''){
+		if(self::isFile($file)){
+			$name = self::infoFile('oName', $file);
+			$ext = self::infoFile('oExt', $file);
+			#TODO ~ naming convention
+			if(empty($save)){$save = $name.'_'.mt_rand();}
+			$save = $save.'.'.$ext;
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename ="'.$save.'"');
+			readfile($file);
+			exit;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+	/**==== FORMAT ====**/
+
+	// return formated numbers
+	public static function numberFormat($input, $digit=2){
+		if(is_numeric($input)){
+			$o = $input;
+			if(!empty($digit) && is_numeric($digit)){$o = number_format($input, $digit);}
+			else {$o = number_format($input);}
+			return $o;
+		}
+		return false;
+	}
+
+	// return formated size (computer-based mesaurement)
+	public static function sizeFormat($byte){
+		if(!empty($byte)){
+			if($byte>=1073741824){$o = number_format($byte / 1073741824 , 2) . 'GB';}
+			elseif($byte>=1048576){$o = number_format($byte / 1048576 , 2) . 'MB';}
+			elseif($byte>=1024){$o = number_format($byte / 1024 , 2) . 'KB';}
+			elseif($byte>1){$o = $byte . ' bytes';}
+			elseif($byte==1){$o = $byte . ' byte';}
+			else {$o = '0';}
+			return $o;
+		}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+	/**==== INPUT ====**/
+
+	// [returns clean string/array
+	public static function cleanInput($input, $tags_allowed=''){
+		#strip out JS, HTML, CSS & multi-line comments
+		$search = array(
+			'@<script[^>]*?>.*?</script>@si',
+			'@<[\/\!]*?[^<>]*?>@si',
+			'@<style[^>]*?>.*?</style>@siU',
+			'@<![\s\S]*?--[ \t\n\r]*>@'
+		);
+		if(!is_array($input)){
+			$o = '';
+			$o = preg_replace($search, '', $input);
+			$o = strip_tags($o);
+		}
+		else {
+			$o = array();
+			foreach ($input as $key => $value){
+				$clean = preg_replace($search, '', $value);
+				$clean = strip_tags($clean);
+				$o[$key] = $clean;
+			}
+		}
+		return trim($o);
+	}
+
+	// remove or add slash to string/array
+	public static function slashInput($input, $task='oTrim'){
+		if($task == 'oTrim'){
+			if(!is_array($input)){
+				$o = '';
+				$o = stripslashes($input);
+			}
+			else {
+				$o = array();
+				foreach ($input as $key => $value){
+					$clean = stripslashes($value);
+					$o[$key] = $clean;
+				}
+			}
+		}
+		elseif($task == 'oAdd'){
+			if(!is_array($input)){
+				$o = '';
+				$o = addslashes($input);
+			}
+			else {
+				$o = array();
+				foreach ($input as $key => $value){
+					$clean = addslashes($value);
+					$o[$key] = $clean;
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/**==== DATA ====**/
+
+	// capture data from post/get/request, filter relevant info and return it
+	public static function captureData($i='oPost', $filter=''){
+		if(!empty($i)){
+			if($i == 'oRequest' && !empty($_REQUEST)){$v = $_REQUEST;}
+			elseif($i == 'oGet' && !empty($_GET)){$v = $_GET;}
+			elseif($i == 'oPost' && !empty($_POST)){$v = $_POST;}
+
+			if(!empty($filter) && is_array($filter) && is_array($o)){
+				$o = array();
+				foreach ($filter as $index){
+					if(isset($v[$index])){$o[$index] = $v[$index];}
+					else {$o[$index] = '';}
+				}
+			}
+		}
+		if(!empty($o)){return $o;}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/**==== UTILITY ====**/
 
@@ -282,6 +547,20 @@ class fia {
 		if(empty($_SESSION['oLang'])){$_SESSION['oLang'] = $o;}
 		elseif($_SESSION['oLang'] != $o){$_SESSION['oLang'] = $o;}
 		return strtolower($o);
+	}
+
+
+	// perform JSON opperations
+	public static function json($input, $i='oENCODE'){
+		if(!empty($input)){
+			if($i == 'oENCODE'){return json_encode($input);}
+			elseif($i == 'oPRINT'){
+				header('Content-Type: application/json');
+				echo json_encode($input, JSON_PRETTY_PRINT);
+				exit;
+			}
+		}
+		return;
 	}
 
 
