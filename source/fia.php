@@ -309,12 +309,14 @@ class fia {
 			$goto = $_GET['oredirect'];
 			self::exitTo($goto);
 		}
-		else {
-			$api = self::oroute('oAPI');
-			if(!$api){
+		elseif(!empty(self::$pathmodule)){
+			$isapi = self::oroute('oAPI');
+			if(!$isapi){
+				require self::$pathmodule.'oapp.php';
 				return oAPP(self::oroute('oAPP'));
 			}
 			else {
+				require self::$pathmodule.'oapi.php';
 				return oAPI(self::oroute('oAPI'));
 			}
 		}
