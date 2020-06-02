@@ -302,8 +302,8 @@ class fia {
 
 
 
-	// router - checks current uri & routes application
-	public static function orouter(){
+	// router - checks current uri & calls appropriate controller
+	public static function orouter($i='oAUTO'){
 		if(!empty($_GET['oredirect'])){
 			#TODO ~ clean up redirect value
 			$goto = $_GET['oredirect'];
@@ -312,12 +312,26 @@ class fia {
 		elseif(!empty(self::$pathmodule)){
 			$isapi = self::oroute('oAPI');
 			if(!$isapi){
-				require self::$pathmodule.'oapp.php';
-				return oAPP(self::oroute('oAPP'));
+				if($i == 'oAUTO'){
+					require self::$pathmodule.'oapp.php';
+					return oAPP(self::oroute('oAPP'));
+				}
+				elseif($i == 'oGET'){
+					$o['oRoute'] = self::oroute('oAPP');
+					$o['oRouter'] = 'oAPP';
+					return $o;
+				}
 			}
 			else {
-				require self::$pathmodule.'oapi.php';
-				return oAPI(self::oroute('oAPI'));
+				if($i == 'oAUTO'){
+					require self::$pathmodule.'oapi.php';
+					return oAPI(self::oroute('oAPI'));
+				}
+				elseif($i == 'oGET'){
+					$o['oRoute'] = self::oroute('oAPI');
+					$o['oRouter'] = 'oAPI';
+					return $o;
+				}
 			}
 		}
 	}
