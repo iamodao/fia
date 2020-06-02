@@ -21,6 +21,7 @@ class fia {
 	public static $pathroot;
 	public static $pathlib;
 	public static $pathdrive;
+	public static $pathmodule;
 	public static $pathcontent;
 
 	protected static $database;
@@ -174,6 +175,10 @@ class fia {
 				self::$pathcontent = $o['CD'].DS;
 				unset($o['CD']);
 			}
+			if(array_key_exists('moduleDir', $o) && !empty($o['moduleDir'])){
+				self::$pathmodule = $o['moduleDir'].DS;
+				unset($o['moduleDir']);
+			}
 			if(array_key_exists('drive', $o) && !empty($o['drive'])){
 				self::$pathdrive = $o['drive'].DS;
 				unset($o['drive']);
@@ -268,6 +273,62 @@ class fia {
 
 
 
+
+
+
+
+	/**==== ROUTING ====**/
+
+	public static function oroute($type='oAPP', $i='oGET'){
+		if($i == 'oGET'){
+			if($type == 'oAPI'){
+				if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
+				else {return false;}
+			}
+			elseif($type == 'oAPP'){
+				if(isset($_GET['olink'])){$v = $_GET['olink'];}
+				else {$v = 'index';}
+			}
+		}
+		elseif(!empty($i)){$v = $i;}
+
+		if(!empty($v)){
+			#TODO ~ clean route value
+			$v = strtolower($v);
+			return $v;
+		}
+		return false;
+	}
+
+
+
+	// router - checks current uri & routes application
+	public static function orouter(){
+		if(!empty($_GET['oredirect'])){
+			#TODO ~ clean up redirect value
+			$goto = $_GET['oredirect'];
+			self::exitTo($goto);
+		}
+		else {
+			$api = self::oroute('oAPI');
+			if(!$api){
+				return oAPP(self::oroute('oAPP'));
+			}
+			else {
+				return oAPI(self::oroute('oAPI'));
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
 	/**==== URL ====**/
 
 	// return URL referer
@@ -276,14 +337,35 @@ class fia {
 		return false;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+	/**==== REDIRECT ====**/
+
 	// URL redirect meta
-	public static function redirectMetaURL($url, $delay=0, $exit='oNope'){
+	public static function redirectMeta($url, $delay=0, $exit='oNope'){
 		$o = '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
 		if($exit == 'oYeah'){exit($o);}
 		else {return $o;}
 	}
 
-	public static function redirectURL($url, $delay=0, $exit='oNope'){
+
+	public static function redirect($url, $delay=0, $exit='oNope'){
+		if($url == 'index'){$url = self::$baseURL;}
+		#TODO ~ check if url has http so as not to include baseURL
+		else {
+			$url = self::$baseURL.DS.$url;
+		}
+
+
 		if(!headers_sent($filename, $linenum)){
 			if(!empty($delay) || $exit != 'oNope'){
 				header('Refresh:'.$delay.';url='.$url);
@@ -292,8 +374,12 @@ class fia {
 		}
 		else {
 			#use meta redirect (Headers already sent in $filename on line $linenum)
-			return self::redirectMetaURL($url, $delay, $exit);
+			return self::redirectMeta($url, $delay, $exit);
 		}
+	}
+
+	public static function exitTo($url){
+		return self::redirect($url, 0, 'oYeah');
 	}
 
 
