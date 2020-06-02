@@ -372,36 +372,22 @@ class fia {
 	/**==== lOADER ====**/
 
 	public static function oprepare($i='oGET', $path='oVIEW'){
-		if($i == 'oGET'){
-			$v = self::orouter('oGET');
-			if(isset($v['oRouter'])){
-				if($v['oRouter'] == 'oAPI'){
-					$v['oFile'] = self::$pathmodule.'api'.DS.$v['oRoute'].'.php';
-					if(!file_exists($v['oFile'])){$v['oFile'] = self::$pathmodule.'api'.DS.'index.php';}
-				}
-				if($v['oRouter'] == 'oAPP'){
-					$v['oFile'] = self::$pathmodule.'app'.DS.$v['oRoute'].'.php';
-					if(!file_exists($v['oFile'])){$v['oFile'] = self::$pathmodule.'app'.DS.'index.php';}
-				}
-				return $v;
-			}
+		$v = self::orouter('oGET');
+		if(isset($v['oRouter'])){
+			$router = $v['oRouter'];
+			if($i !== 'oGET'){$route = $i;} else {$route = $v['oRoute'];}
+
+			if($router == 'oAPI' || $path == 'oAPI'){$o = self::$pathmodule.'api'.DS.$route;}
+			elseif($path == 'oAPP'){$o = self::$pathmodule.'app'.DS.$route;}
+			elseif($path == 'oSITE'){$o = self::$pathmodule.'layout'.DS.'site'.DS.$route;}
+			elseif($path == 'oBIT'){$o = self::$pathcontent.'layout'.DS.'bit'.DS.$route;}
+			elseif($path == 'oTHEME'){$o = self::$pathcontent.'layout'.DS.'skin'.DS.$route;}
+			elseif($path == 'oVIEW'){$o = self::$pathcontent.'layout'.DS.'view'.DS.$route;}
+
+			if(!empty($o)){return $o.'.php';}
 		}
-		// if(!empty($i)){
-		// 	$res = self::$dirpath;
-		// 	#DIRECTORY_SEPARATOR;
-		// 	if($input == 'ci_view'){
-		// 		$res .= 'source/view/';
-		// 		$input = self::page();
-		// 	}
-		// 	else {
-		// 		if($path == 'bit'){$res .= 'source/bit/';}
-		// 		elseif($path == 'slice'){$res .= 'source/slice/';}
-		// 		elseif($path == 'view'){$res .= 'source/view/';}
-		// 	}
-		// 	$res .= $input.'.php';
-		// 	return $res;
-		// }
 	}
+
 
 
 
