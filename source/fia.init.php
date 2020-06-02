@@ -10,7 +10,13 @@ defined('PS') ? null : define('PS', '/');
 
 # Configuration ~ NOTE: application directory is set to config.php's directory. And when config is not set, root directory (RD) becomes config directory
 $oInit['FileConfig'] = $oInit['RD'].DS.'source'.DS.'config.php';
-if(!file_exists($oInit['FileConfig'])){$oInit['FileConfig'] = $oInit['RD'].DS.'config.php';}
+if(!file_exists($oInit['FileConfig'])){
+	$oInit['FileConfig'] = $oInit['FD'].DS.'config.php';
+	if(!file_exists($oInit['FileConfig'])){
+		$oInit['FileConfig'] = $oInit['RD'].DS.'config.php';
+	}
+}
+
 if(file_exists($oInit['FileConfig'])){
 	require $oInit['FileConfig'];
 	if(isset($oInitConfig) && is_array($oInitConfig) && isset($oInit) && is_array($oInit)){$oInit = array_merge($oInit, $oInitConfig);}
