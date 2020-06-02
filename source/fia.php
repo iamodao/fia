@@ -277,8 +277,7 @@ class fia {
 
 
 
-	/**==== lOADER ====**/
-	public static function prep();
+
 
 
 
@@ -314,7 +313,7 @@ class fia {
 
 
 
-	// router - checks current uri & calls appropriate controller
+	// router - checks current uri & calls appropriate controller NOTE ~ use for app & api, not site
 	public static function orouter($i='oAUTO'){
 		if(!empty($_GET['oredirect'])){
 			#TODO ~ clean up redirect value
@@ -322,32 +321,87 @@ class fia {
 			self::exitTo($goto);
 		}
 		elseif(!empty(self::$pathmodule)){
-			$isapi = self::oroute('oAPI');
-			if(!$isapi){
-				if($i == 'oAUTO'){
-					require self::$pathmodule.'oapp.php';
-					return oAPP(self::oroute('oAPP'));
-				}
-				elseif($i == 'oGET'){
-					$o['oRoute'] = self::oroute('oAPP');
-					$o['oRouter'] = 'oAPP';
-					return $o;
-				}
+			if($i == 'oSITE'){ #for SITE
+				$o['oFile'] = self::$pathmodule.'site'.DS.'index.php';
+				if(!file_exists($o['oFile'])){exit('SITE::Missing [Controller File Required]');}
+				require $o['oFile'];
 			}
-			else {
+			elseif(!self::oroute('oAPI')){ #for APP
+				$o['oRouter'] = 'oAPP';
+				$o['oRoute'] = self::oroute('oAPP');
+				$o['oFile'] = self::$pathmodule.'app'.DS.$o['oRoute'].'.php';
+				if(!file_exists($o['oFile'])){
+					$o['oFile'] = self::$pathmodule.'app'.DS.'index.php';
+					if(!file_exists($o['oFile'])){exit('APP::Missing [Controller File Required]');}
+				}
+
 				if($i == 'oAUTO'){
-					require self::$pathmodule.'oapi.php';
-					return oAPI(self::oroute('oAPI'));
+					require $o['oFile'];
+					if(!class_exists('oAPP') || !method_exists($o['oRoute'], 'oAPP')){exit('APP::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
 				}
-				elseif($i == 'oGET'){
-					$o['oRoute'] = self::oroute('oAPI');
-					$o['oRouter'] = 'oAPI';
-					return $o;
+				elseif($i == 'oGET'){return $o;}
+			}
+			else { #for API
+				$o['oRouter'] = 'oAPI';
+				$o['oRoute'] = self::oroute('oAPI');
+				$o['oFile'] = self::$pathmodule.'api'.DS.$o['oRoute'].'.php';
+				if(!file_exists($o['oFile'])){
+					$o['oFile'] = self::$pathmodule.'api'.DS.'index.php';
+					if(!file_exists($o['oFile'])){exit('API::Missing [Controller File Required]');}
 				}
+
+				if($i == 'oAUTO'){
+					require $o['oFile'];
+					if(!class_exists('oAPI') || !method_exists($o['oRoute'], 'oAPI')){exit('API::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
+				}
+				elseif($i == 'oGET'){return $o;}
 			}
 		}
 	}
 
+
+
+
+
+
+
+
+
+
+
+	/**==== lOADER ====**/
+
+	public static function oprepare($i='oGET', $path='oVIEW'){
+		if($i == 'oGET'){
+			$v = self::orouter('oGET');
+			if(isset($v['oRouter'])){
+				if($v['oRouter'] == 'oAPI'){
+					$v['oFile'] = self::$pathmodule.'api'.DS.$v['oRoute'].'.php';
+					if(!file_exists($v['oFile'])){$v['oFile'] = self::$pathmodule.'api'.DS.'index.php';}
+				}
+				if($v['oRouter'] == 'oAPP'){
+					$v['oFile'] = self::$pathmodule.'app'.DS.$v['oRoute'].'.php';
+					if(!file_exists($v['oFile'])){$v['oFile'] = self::$pathmodule.'app'.DS.'index.php';}
+				}
+				return $v;
+			}
+		}
+		// if(!empty($i)){
+		// 	$res = self::$dirpath;
+		// 	#DIRECTORY_SEPARATOR;
+		// 	if($input == 'ci_view'){
+		// 		$res .= 'source/view/';
+		// 		$input = self::page();
+		// 	}
+		// 	else {
+		// 		if($path == 'bit'){$res .= 'source/bit/';}
+		// 		elseif($path == 'slice'){$res .= 'source/slice/';}
+		// 		elseif($path == 'view'){$res .= 'source/view/';}
+		// 	}
+		// 	$res .= $input.'.php';
+		// 	return $res;
+		// }
+	}
 
 
 
