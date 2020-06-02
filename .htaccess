@@ -22,6 +22,9 @@ RewriteRule ^favicon\.ico$ source/asset/favicon.ico [NC,QSA,END]
 RewriteRule ^favicon\.png$ source/asset/favicon.png [NC,QSA,END]
 
 # Including your virtual directory structure
+RewriteRule ^api\/$ /index.php?oapi=index [NC,QSA,END]
+RewriteRule ^api\/(.*)$ /index.php?oapi=$1 [NC,QSA,END]
+
 RewriteRule ^asset\/$ source/asset/ [NC,QSA,END]
 RewriteRule ^asset\/(.*)$ source/asset/$1 [NC,QSA,END]
 
@@ -35,8 +38,7 @@ RewriteRule ^source$ source/ [NC,QSA,END]
 	RewriteRule ^source\/module$ source/module/ [NC,QSA,END]
 
 RewriteRule ^source\/$ index.php?oredirect=index [NC,QSA,END]
-#RewriteRule ^source\/(.*)$ index.php?oredirect=$1 [NC,QSA,END]
-RewriteRule ^source\/(.*)$ index.php?oredirect=index [NC,QSA,END]
+RewriteRule ^source\/(.*)$ index.php?oredirect=$1 [NC,QSA,END]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -44,6 +46,6 @@ RewriteCond %{REQUEST_FILENAME} !-f
 Options -Indexes
 
 #RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-RewriteRule ^((?!favicon.ico$)(?!favicon.png$)(?!asset\/.*$)(?!source\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
+RewriteRule ^((?!favicon.ico$)(?!favicon.png$)(?!api\/.*$)(?!asset\/.*$)(?!source\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
 ErrorDocument 403 /index.php?olink=E403
 ErrorDocument 404 /index.php?olink=E404
