@@ -431,9 +431,10 @@ class fia {
 		return trim($o);
 	}
 
+
 	// remove or add slash to string/array
-	public static function slashInput($input, $task='oTrim'){
-		if($task == 'oTrim'){
+	public static function slashInput($input, $task='oTRIM'){
+		if($task == 'oTRIM'){
 			if(!is_array($input)){
 				$o = '';
 				$o = stripslashes($input);
@@ -446,7 +447,7 @@ class fia {
 				}
 			}
 		}
-		elseif($task == 'oAdd'){
+		elseif($task == 'oADD'){
 			if(!is_array($input)){
 				$o = '';
 				$o = addslashes($input);
@@ -462,6 +463,37 @@ class fia {
 	}
 
 
+	// retain form input
+	public static function retainInput($i='', $method='oPOST'){
+		$o = '';
+		if(!empty($i)){
+			if($method == 'oGET'){if(isset($_GET[$i])){$o = $_GET[$i];}}
+			if($method == 'oPOST'){if(isset($_POST[$i])){$o = $_POST[$i];}}
+			if($method == 'oREQUEST'){if(isset($_REQUEST[$i])){$o = $_REQUEST[$i];}}
+		}
+		return $o;
+	}
+
+
+	// check if input's value is retained
+	public static function isRetainedInput($value='', $i='', $method='oPOST'){
+		$retained = self::retainInput($i, $method);
+		if($value == $retained){return true;}
+		return false;
+	}
+
+
+	// retain input's group (array) of values [check if value is in options] ~TODO | test this method
+	public static function retainGroupInput($output='oCHECK', $value='', $i='', $method='oPOST'){
+		$retained = self::retainInput($i, $method);
+		if(is_array($retained) && in_array($value, $retained)){
+			if($output == 'oCHECK'){return true;}
+			return $output;
+		}
+		return false;
+	}
+
+
 
 
 
@@ -474,16 +506,16 @@ class fia {
 	/**==== DATA ====**/
 
 	// capture data from post/get/request, filter relevant info and return it
-	public static function captureData($i='oPost', $filter=''){
+	public static function captureData($i='oPOST', $filter=''){
 		if(!empty($i)){
-			if($i == 'oRequest' && !empty($_REQUEST)){$v = $_REQUEST;}
-			elseif($i == 'oGet' && !empty($_GET)){$v = $_GET;}
-			elseif($i == 'oPost' && !empty($_POST)){$v = $_POST;}
+			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
+			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
+			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
 
 			if(!empty($filter) && is_array($filter) && is_array($o)){
 				$o = array();
 				foreach ($filter as $index){
-					if(isset($v[$index])){$o[$index] = $v[$index];}
+					if(isset($v[$index])){$o[$index] = self::cleanInput($v[$index]);}
 					else {$o[$index] = '';}
 				}
 			}
