@@ -17,7 +17,9 @@ DirectoryIndex index.php index.html index.htm
 </IfModule>
 RewriteBase /
 
+# Handling favicon rewrite
 RewriteRule ^favicon\.ico$ source/asset/favicon.ico [NC,QSA,END]
+RewriteRule ^favicon\.png$ source/asset/favicon.png [NC,QSA,END]
 
 # Including your virtual directory structure
 RewriteRule ^asset\/$ source/asset/ [NC,QSA,END]
@@ -44,6 +46,6 @@ RewriteCond %{REQUEST_FILENAME} !-f
 Options -Indexes
 
 #RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-RewriteRule ^((?!favicon.ico$)(?!asset\/.*$)(?!source\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
+RewriteRule ^((?!favicon.ico$)(?!favicon.png$)(?!asset\/.*$)(?!source\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
 ErrorDocument 403 /index.php?olink=E403
 ErrorDocument 404 /index.php?olink=E404
