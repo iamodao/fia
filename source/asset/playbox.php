@@ -20,4 +20,9 @@ $q = "SELECT * FROM `firmz` WHERE `id` > 31";
 $demo = $fia->runSQL($q);
 $fia->dump($demo);
 exit();
+
+
+// $demo = $fia->orouter('oGET');
+// $demo = array_merge($demo, $fia->captureData('oGET'));
+// $fia->dump($demo);
 ?>
