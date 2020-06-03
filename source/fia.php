@@ -299,55 +299,65 @@ class fia {
 		return self::SQL($dbo, $stmt, $sql);
 	}
 
+	// run SQL in prepared statement
+	public static function runSQL($sql, $i=''){
+		$dbo = self::$dbo;
+		$stmt = $dbo->prepare($sql);
+		if(empty(($i))){$exec = $stmt->execute();}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**==== ROUTING ====**/
-
-	public static function oroute($type='oAPP', $i='oGET'){
-		if($i == 'oGET'){
-			if($type == 'oAPI'){
-				if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
-				else {return false;}
-			}
-			elseif($type == 'oAPP'){
-				if(isset($_GET['olink'])){$v = $_GET['olink'];}
-				else {$v = 'index';}
-			}
-		}
-		elseif(!empty($i)){$v = $i;}
-
-		if(!empty($v)){
-			#TODO ~ clean route value
-			$v = strtolower($v);
-			return $v;
-		}
-		return false;
+		if($exec === false){}
+		// return self::SQL($dbo, $stmt, $sql);
 	}
 
 
 
-	// router - checks current URI & calls appropriate controller NOTE ~ use for app & api, not site
-	public static function orouter($i='oAUTO'){
-		if(!empty($_GET['oredirect'])){
-			#TODO ~ clean up redirect value
-			$goto = $_GET['oredirect'];
-			self::exitTo($goto);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**==== ROUTING ====**/
+
+public static function oroute($type='oAPP', $i='oGET'){
+	if($i == 'oGET'){
+		if($type == 'oAPI'){
+			if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
+			else {return false;}
 		}
-		elseif(!empty(self::$pathmodule)){
+		elseif($type == 'oAPP'){
+			if(isset($_GET['olink'])){$v = $_GET['olink'];}
+			else {$v = 'index';}
+		}
+	}
+	elseif(!empty($i)){$v = $i;}
+
+	if(!empty($v)){
+			#TODO ~ clean route value
+		$v = strtolower($v);
+		return $v;
+	}
+	return false;
+}
+
+
+
+	// router - checks current URI & calls appropriate controller NOTE ~ use for app & api, not site
+public static function orouter($i='oAUTO'){
+	if(!empty($_GET['oredirect'])){
+			#TODO ~ clean up redirect value
+		$goto = $_GET['oredirect'];
+		self::exitTo($goto);
+	}
+	elseif(!empty(self::$pathmodule)){
 			if($i == 'oSITE'){ #for SITE
 				$o['oFile'] = self::$pathmodule.'site'.DS.'index.php';
 				if(!file_exists($o['oFile'])){exit('SITE::Missing [Controller File Required]');}
