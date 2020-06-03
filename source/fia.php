@@ -256,17 +256,22 @@ class fia {
 		if($stmt === false){$o['oERROR'] = self::queryFailed($dbo);}
 		else {
 			$o['oSUCCESS'] = 'oYeah';
-			if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
-			else {
-
+			if(is_int($stmt)){
+				$o['oCOUNT'] = $stmt;
 			}
+			else {
+				$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if($fetch === false){$o['oRECORD'] = 'FETCH_FAILED';}
+				else {
+					$o['oCOUNT'] = count($fetch);
+					if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
+					elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
+				}
+			}
+			if(isset($o['oCOUNT']) && $o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
 		}
 		return $o;
 	}
-
-
-
-
 
 
 	// NOTE ~ don't use for SELECT statement, and don't use with user INPUT
@@ -275,6 +280,7 @@ class fia {
 		$stmt = $dbo->exec($sql);
 		return self::SQL($dbo, $stmt, $sql);
 	}
+
 
 	// reset primary key
 	public static function resetPKSQL($table, $column){
@@ -285,6 +291,13 @@ class fia {
 		return self::execSQL($sql);
 	}
 
+
+	// NOTE ~ don't use with user INPUT, best for single case use with result
+	public static function querySQL($sql){
+		$dbo = self::$dbo;
+		$stmt = $dbo->query($sql);
+		return self::SQL($dbo, $stmt, $sql);
+	}
 
 
 
