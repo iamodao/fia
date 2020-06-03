@@ -269,13 +269,21 @@ class fia {
 
 
 
-
+	// NOTE ~ don't use for SELECT statement, and don't use with user INPUT
 	public static function execSQL($sql){
 		$dbo = self::$dbo;
 		$stmt = $dbo->exec($sql);
 		return self::SQL($dbo, $stmt, $sql);
 	}
 
+	// reset primary key
+	public static function resetPKSQL($table, $column){
+		$sql = "SET @NewID = 0; ";
+		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
+		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
+		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
+		return self::execSQL($sql);
+	}
 
 
 
