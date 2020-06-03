@@ -290,7 +290,7 @@ class fia {
 
 
 	// reset primary key
-	public static function resetPKSQL($table, $column){
+	public static function resetSQL($table, $column){
 		$sql = "SET @NewID = 0; ";
 		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
 		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
@@ -305,6 +305,7 @@ class fia {
 		$stmt = $dbo->query($sql);
 		return self::SQL($stmt, $sql);
 	}
+
 
 	// run SQL in prepared statement
 	public static function runSQL($sql, $i=''){
