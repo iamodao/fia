@@ -242,8 +242,9 @@ class fia {
 	# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
 
 
-	public static  function queryFailed($dbo, $i=2){
+	public static  function queryFailed($i=2){
 		# TODO ~ clean up error reporting
+		$dbo = self::$dbo;
 		$o = $dbo->errorInfo();
 		if($i == 'oALL'){return $o;}
 		elseif(is_numeric($i) && $i <3){return $o[$i];}
@@ -251,24 +252,30 @@ class fia {
 
 
 	// resolve query and return response
-	public static function SQL($dbo, $stmt, $sql){
+	public static function SQL($stmt, $sql){
 		$o['oSQL'] = $sql;
-		if($stmt === false){$o['oERROR'] = self::queryFailed($dbo);}
+		if($stmt === false){$o['oERROR'] = self::queryFailed();}
 		else {
 			$o['oSUCCESS'] = 'oYeah';
 			if(is_int($stmt)){
 				$o['oCOUNT'] = $stmt;
 			}
 			else {
-				$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				if($fetch === false){$o['oRECORD'] = 'FETCH_FAILED';}
+				# TODO ~ a better check for query type
+				if(stripos($sql, 'select')){
+					$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					if($fetch === false){$o['oRECORD'] = 'FETCH_FAILED';}
+					else {
+						$o['oCOUNT'] = count($fetch);
+						if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
+						elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
+						elseif($o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
+					}
+				}
 				else {
-					$o['oCOUNT'] = count($fetch);
-					if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
-					elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
+					$o['oCOUNT'] = $stmt->rowCount();
 				}
 			}
-			if(isset($o['oCOUNT']) && $o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
 		}
 		return $o;
 	}
@@ -278,7 +285,7 @@ class fia {
 	public static function execSQL($sql){
 		$dbo = self::$dbo;
 		$stmt = $dbo->exec($sql);
-		return self::SQL($dbo, $stmt, $sql);
+		return self::SQL($stmt, $sql);
 	}
 
 
@@ -296,7 +303,7 @@ class fia {
 	public static function querySQL($sql){
 		$dbo = self::$dbo;
 		$stmt = $dbo->query($sql);
-		return self::SQL($dbo, $stmt, $sql);
+		return self::SQL($stmt, $sql);
 	}
 
 	// run SQL in prepared statement
@@ -305,8 +312,9 @@ class fia {
 		$stmt = $dbo->prepare($sql);
 		if(empty(($i))){$exec = $stmt->execute();}
 
-		if($exec === false){}
-		// return self::SQL($dbo, $stmt, $sql);
+		// if($exec === false){$o['oERROR'] = self::queryFailed($stmto);}
+		return self::SQL($dbo, $stmt, $sql);
+		// return $o;
 	}
 
 
@@ -325,39 +333,39 @@ class fia {
 
 
 
-/**==== ROUTING ====**/
+	/**==== ROUTING ====**/
 
-public static function oroute($type='oAPP', $i='oGET'){
-	if($i == 'oGET'){
-		if($type == 'oAPI'){
-			if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
-			else {return false;}
+	public static function oroute($type='oAPP', $i='oGET'){
+		if($i == 'oGET'){
+			if($type == 'oAPI'){
+				if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
+				else {return false;}
+			}
+			elseif($type == 'oAPP'){
+				if(isset($_GET['olink'])){$v = $_GET['olink'];}
+				else {$v = 'index';}
+			}
 		}
-		elseif($type == 'oAPP'){
-			if(isset($_GET['olink'])){$v = $_GET['olink'];}
-			else {$v = 'index';}
-		}
-	}
-	elseif(!empty($i)){$v = $i;}
+		elseif(!empty($i)){$v = $i;}
 
-	if(!empty($v)){
+		if(!empty($v)){
 			#TODO ~ clean route value
-		$v = strtolower($v);
-		return $v;
+			$v = strtolower($v);
+			return $v;
+		}
+		return false;
 	}
-	return false;
-}
 
 
 
 	// router - checks current URI & calls appropriate controller NOTE ~ use for app & api, not site
-public static function orouter($i='oAUTO'){
-	if(!empty($_GET['oredirect'])){
+	public static function orouter($i='oAUTO'){
+		if(!empty($_GET['oredirect'])){
 			#TODO ~ clean up redirect value
-		$goto = $_GET['oredirect'];
-		self::exitTo($goto);
-	}
-	elseif(!empty(self::$pathmodule)){
+			$goto = $_GET['oredirect'];
+			self::exitTo($goto);
+		}
+		elseif(!empty(self::$pathmodule)){
 			if($i == 'oSITE'){ #for SITE
 				$o['oFile'] = self::$pathmodule.'site'.DS.'index.php';
 				if(!file_exists($o['oFile'])){exit('SITE::Missing [Controller File Required]');}
