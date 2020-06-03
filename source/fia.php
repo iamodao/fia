@@ -262,9 +262,10 @@ class fia {
 			}
 			else {
 				# TODO ~ a better check for query type
-				if(stripos($sql, 'select')){
+				$is_select = stripos($sql, 'select');
+				if($is_select !== false){
 					$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					if($fetch === false){$o['oRECORD'] = 'FETCH_FAILED';}
+					if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
 					else {
 						$o['oCOUNT'] = count($fetch);
 						if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
@@ -299,7 +300,7 @@ class fia {
 	}
 
 
-	// NOTE ~ don't use with user INPUT, best for single case use with result
+	// NOTE ~ don't use with user INPUT, best for single case with result
 	public static function querySQL($sql){
 		$dbo = self::$dbo;
 		$stmt = $dbo->query($sql);
