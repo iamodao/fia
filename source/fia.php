@@ -24,7 +24,7 @@ class fia {
 	public static $pathmodule;
 	public static $pathcontent;
 
-	protected static $database;
+	protected static $dbo; #database object
 
 
 	private function __construct(){}
@@ -215,60 +215,66 @@ class fia {
 				} catch (PDOException $e) {
 					exit('Connection error: '.$e->getMessage());
 				}
-				self::$database = $pdo;
+				self::$dbo = $pdo;
 			}
 		}
 	}
 
+
 	// return database object
 	public static function dbo(){
-		if(!empty(self::$database)){return self::$database;}
+		if(!empty(self::$dbo)){return self::$dbo;}
 		return false;
 	}
 
+
+
+
+
+
+
+
+
+
+	/**==== SQL ====**/
+
 	// execute SQL and return response (use only when no user input & no fetching required)
-	public static function dbo_exec($sql){
-		$dbo = self::dbo();
-		return $dbo->exec($sql);
-		# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
+	# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
+
+
+	public static  function queryFailed($dbo, $i=2){
+		# TODO ~ clean up error reporting
+		$o = $dbo->errorInfo();
+		if($i == 'oALL'){return $o;}
+		elseif(is_numeric($i) && $i <3){return $o[$i];}
 	}
 
-	// run SQL query
-	public static function dbo_query($sql){
-		$dbo = self::dbo();
-		$o = $dbo->prepare($sql);
-		if($o !== false){
-			$exec = $o->execute();
-			if(!$exec){
-				$e['oMSG'] = $o->errorInfo()[2];
-				$e['oSQL'] = $sql;
-				$rez['oERROR'] = $e;
-				return $rez;
-			}
+
+	// resolve query and return response
+	public static function SQL($dbo, $stmt, $sql){
+		$o['oSQL'] = $sql;
+		if($stmt === false){$o['oERROR'] = self::queryFailed($dbo);}
+		else {
+			$o['oSUCCESS'] = 'oYeah';
+			if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
 			else {
-				$fetch = $o->fetchAll(PDO::FETCH_ASSOC);
-				if($fetch === false){
-					$rez['oRESULT'] = 'FETCH_FAILED'; #failure occurred
-				}
-				else {
-					$rez['oCOUNT'] = count($fetch);
-					if($rez['oCOUNT'] === 0){
-						$rez['oRESULT'] = 'NO_RECORD';
-					}
-					// elseif($rez['oCOUNT'] === 1){
-					// 	$rez['oRESULT'] = $fetch[0];
-					// }
-					else {
-						$rez['oRESULT'] = $fetch;
-					}
-				}
-				return $rez;
+
 			}
 		}
 		return $o;
 	}
 
 
+
+
+
+
+
+	public static function execSQL($sql){
+		$dbo = self::$dbo;
+		$stmt = $dbo->exec($sql);
+		return self::SQL($dbo, $stmt, $sql);
+	}
 
 
 
