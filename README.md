@@ -18,7 +18,7 @@ If configuration [config.php OR/AND $initConfig array] is not created, FIA frame
 The basic structure of the directory
 
 *	_ignore
-	dev5
+	*	dev5
 		code
 		docs
 	storage
