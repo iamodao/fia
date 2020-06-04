@@ -5,7 +5,9 @@
 [![Generic badge](https://img.shields.io/badge/Creator-OSAWERE™-green.svg)](https://www.osawere.com/)
 [![Generic badge](https://img.shields.io/badge/LinkedIn-@iamodao-blue.svg)](https://www.linkedin.com/in/iamodao/)
 
-**FIA™ Framework** is a micro framework for website, application and API development with PHP & MySQL built by [Anthony O. Osawere - @iamodao](https://www.twitter.com/iamodao). And in his own words:
+**FIA™ Framework** is a micro framework for website, application and API development with PHP & MySQL built to be flexible and evolving.
+
+In the words of the developer, [Anthony O. Osawere - @iamodao](https://www.twitter.com/iamodao)
 
 > your project, code your way!
 
