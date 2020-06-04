@@ -19,8 +19,9 @@ The basic structure of the directory
 
 *	_ignore
 	*	dev5
-		code
-		docs
+		*	code
+		*	docs
+		*	index.php `developer sandbox`
 	storage
 * fia
 * source
