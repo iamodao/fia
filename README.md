@@ -5,12 +5,15 @@
 [![Generic badge](https://img.shields.io/badge/Creator-OSAWERE™-green.svg)](https://www.osawere.com/)
 [![Generic badge](https://img.shields.io/badge/LinkedIn-@iamodao-blue.svg)](https://www.linkedin.com/in/iamodao/)
 
-**FIA™ Framework** is a micro framework for website, application and API development with PHP & MySQL built by [Anthony O. Osawere - @iamodao](https://www.twitter.com/iamodao)
+**FIA™ Framework** is a micro framework for website, application and API development with PHP & MySQL built by [Anthony O. Osawere - @iamodao](https://www.twitter.com/iamodao). And in his own words:
+
+> your project, code your way!
 
 
 #### NOTE:
 If configuration [config.php OR/AND $initConfig array] is not created, FIA framework will assume certain defaults
 
+---
 
 #### Example Code
 ```php
