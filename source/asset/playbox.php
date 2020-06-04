@@ -1,4 +1,9 @@
 <?php
+
+$demo = array('FirstName' => 'Anthony', 'LastName' => 'Osawere');
+fia::json($demo, 'oPRINT');
+
+
 echo '<b>QUERY DEBURGING'.'</b><br>';
 
 #$demo = $fia->resetSQL('firm', 'id');
