@@ -5,7 +5,7 @@ defined('PS') ? null : define('PS', '/');
 
 $oInit['RD'] = __DIR__;
 
-$oInit['FileInit'] = $oInit['RD'].DS.'source'.DS.'fia.init.php';
+$oInit['FileInit'] = $oInit['RD'].DS.'fia'.DS.'fia.init.php';
 if(!file_exists($oInit['FileInit'])){exit('PATH::Missing [Initializer Required]');}
 require $oInit['FileInit'];
 
