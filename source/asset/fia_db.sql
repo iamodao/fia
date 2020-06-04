@@ -1,12 +1,7 @@
-
-
-
--- Dumping database structure for fia_db
 DROP DATABASE IF EXISTS `fia_db`;
 CREATE DATABASE IF NOT EXISTS `fia_db` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `fia_db`;
 
--- Dumping structure for table fia_db.firm
 DROP TABLE IF EXISTS `firm`;
 CREATE TABLE IF NOT EXISTS `firm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -22,8 +17,6 @@ CREATE TABLE IF NOT EXISTS `firm` (
   UNIQUE KEY `buid` (`buid`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table fia_db.firm: 35 rows
-/*!40000 ALTER TABLE `firm` DISABLE KEYS */;
 REPLACE INTO `firm` (`id`, `buid`, `name`, `email`, `phone`, `address`, `addresso`, `webmail`, `timezone`) VALUES
 	(1, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
 	(2, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
@@ -58,5 +51,3 @@ REPLACE INTO `firm` (`id`, `buid`, `name`, `email`, `phone`, `address`, `address
 	(33, NULL, 'Jerry Giang', 'info@jerry.com', NULL, NULL, NULL, NULL, 'Europe/London'),
 	(31, NULL, 'Jerry Gyang', NULL, NULL, NULL, NULL, NULL, 'Europe/London'),
 	(32, NULL, 'Jerry Gyang', 'info@jerry.com', NULL, NULL, NULL, NULL, 'Europe/London');
-/*!40000 ALTER TABLE `firm` ENABLE KEYS */;
-
