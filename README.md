@@ -21,8 +21,8 @@ The basic structure of the directory
 	*	dev5
 		*	code
 		*	docs
-		*	index.php `developer sandbox`
-	storage
+		*	index.php `~developer sandbox~`
+	*	storage
 * fia
 * source
 	asset
