@@ -21,20 +21,20 @@ The basic structure of the directory
 	*	dev5
 		*	code
 		*	docs
-		*	index.php `~developer sandbox~`
+		*	index.php `[developer sandbox]`
 	*	storage
 * fia
 * source
-	asset
-	drive
-	layout
-		bit
-		skin
-		view
-	module
-		api
-		app
-		site
-	config.php
+	*	asset
+	*	drive
+	*	layout
+		*	bit
+		*	skin
+		*	view
+	*	module
+		*	api
+		*	app
+		*	site
+	*	config.php
 * .htaccess
 * index.php
