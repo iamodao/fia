@@ -9,6 +9,7 @@
 
 > Your project, your goals. Code your way! - _[@iamodao](https://www.twitter.com/iamodao)_
 
+---
 
 #### NOTE:
 If configuration [config.php OR/AND $initConfig array] is not created, FIA framework will assume certain defaults
