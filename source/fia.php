@@ -262,7 +262,7 @@ class fia {
 			}
 			else {
 				# TODO ~ a better check for query type
-				$is_select = stripos($sql, 'select');
+				$is_select = stripos($o['oSQL'], 'select');
 				if($is_select !== false){
 					$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
@@ -313,10 +313,9 @@ class fia {
 		$dbo = self::$dbo;
 		$stmt = $dbo->prepare($sql);
 		if(empty(($i))){$exec = $stmt->execute();}
+		else {$exec = $stmt->execute($i);}
 
-		// if($exec === false){$o['oERROR'] = self::queryFailed($stmto);}
-		return self::SQL($dbo, $stmt, $sql);
-		// return $o;
+		#return self::SQL($stmt, $sql);
 	}
 
 
