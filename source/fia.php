@@ -242,24 +242,34 @@ class fia {
 	# NOTE: returns FALSE on failure, and ZERO(0) on success when no rows affected or the NUMBER of rows affected
 
 
-	public static  function queryFailed($i=2){
+	// return error response from [query statement or last database operation]
+	public static function stmtF9($sql, $obj='', $i=2){
+		$o['oSQL'] = $sql;
 		# TODO ~ clean up error reporting
-		$dbo = self::$dbo;
-		$o = $dbo->errorInfo();
-		if($i == 'oALL'){return $o;}
-		elseif(is_numeric($i) && $i <3){return $o[$i];}
+
+		#NOTE ~ we use DBO by default for object (thus returning error from last database operation)
+		if(empty($obj) || $obj === false){$obj = self::$dbo;}
+		$e = $obj->errorInfo();
+		if(!empty($e)){
+			if($i == 'oALL'){$o['oERROR'] = $e;}
+			elseif(is_numeric($i) && $i <3){$o['oERROR'] = $e[$i];}
+		}
+
+		if(empty($o['oERROR'])){$o['oERROR']= 'UNKNOWN';}
+		return $o;
 	}
 
 
-	// resolve query and return response
-	public static function SQL($stmt, $sql){
-		$o['oSQL'] = $sql;
-		if($stmt === false){$o['oERROR'] = self::queryFailed();}
+
+	// resolve query statement and return response
+	public static function stmt($sql, $stmt){
+		if($stmt === false){
+			return self::stmtF9($sql, $stmt);
+		}
 		else {
+			$o['oSQL'] = $sql;
 			$o['oSUCCESS'] = 'oYeah';
-			if(is_int($stmt)){
-				$o['oCOUNT'] = $stmt;
-			}
+			if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
 			else {
 				# TODO ~ a better check for query type
 				$is_select = stripos($o['oSQL'], 'select');
@@ -284,9 +294,13 @@ class fia {
 
 	// NOTE ~ don't use for SELECT statement, and don't use with user INPUT
 	public static function execSQL($sql){
+		$selectInSQL = stripos($sql, 'select');
+		if($selectInSQL !== false){
+			exit('ERROR::Unacceptable <em>(Don\'t call <strong>execSQL()</strong> on SELECT statement</em>)');
+		}
 		$dbo = self::$dbo;
 		$stmt = $dbo->exec($sql);
-		return self::SQL($stmt, $sql);
+		return self::stmt($sql, $stmt);
 	}
 
 
@@ -304,7 +318,7 @@ class fia {
 	public static function querySQL($sql){
 		$dbo = self::$dbo;
 		$stmt = $dbo->query($sql);
-		return self::SQL($stmt, $sql);
+		return self::stmt($sql, $stmt);
 	}
 
 
@@ -312,10 +326,11 @@ class fia {
 	public static function runSQL($sql, $i=''){
 		$dbo = self::$dbo;
 		$stmt = $dbo->prepare($sql);
-		if(empty(($i))){$exec = $stmt->execute();}
-		else {$exec = $stmt->execute($i);}
-
-		#return self::SQL($stmt, $sql);
+		if(empty(($i))){$exec = $stmt->execute();} else {$exec = $stmt->execute($i);}
+		if($exec === false){
+			return self::stmtF9($sql, $stmt);	#return error as PDO [$dbo->errorInfo()]
+		}
+		return self::stmt($sql, $stmt);
 	}
 
 
