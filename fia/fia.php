@@ -351,6 +351,12 @@ class fia {
 
 	/**==== ROUTING ====**/
 
+	public static function cleanRoute($i){
+		$o = strtolower($i);
+		$o = self::cleanInput($o);
+		return trim($o);
+	}
+
 	public static function oroute($type='oAPP', $i='oGET'){
 		if($i == 'oGET'){
 			if($type == 'oAPI'){
@@ -365,9 +371,7 @@ class fia {
 		elseif(!empty($i)){$v = $i;}
 
 		if(!empty($v)){
-			#TODO ~ clean route value
-			$v = strtolower($v);
-			return $v;
+			return self::cleanRoute($v);
 		}
 		return false;
 	}
@@ -377,8 +381,7 @@ class fia {
 	// router - checks current URI & calls appropriate controller NOTE ~ use for app & api, not site
 	public static function orouter($i='oAUTO'){
 		if(!empty($_GET['oredirect'])){
-			#TODO ~ clean up redirect value
-			$goto = $_GET['oredirect'];
+			$goto = self::cleanRoute($_GET['oredirect']);
 			self::exitTo($goto);
 		}
 		elseif(!empty(self::$pathmodule)){
@@ -467,7 +470,7 @@ class fia {
 
 	/**==== URL ====**/
 
-	// return URL referer
+	// return URL referrer
 	public static function refURL(){
 		if(!empty($_SERVER['HTTP_REFERER'])){return $_SERVER['HTTP_REFERER'];}
 		return false;
