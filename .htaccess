@@ -29,6 +29,10 @@ RewriteRule ^asset\/$ source/asset/ [NC,QSA,END]
 RewriteRule ^asset\/(.*)$ source/asset/$1 [NC,QSA,END]
 
 # Including your physical directory structure
+RewriteRule ^fia$ fia/ [NC,QSA,END]
+RewriteRule ^fia\/$ index.php?oredirect=index [NC,QSA,END]
+RewriteRule ^fia\/(.*)$ index.php?oredirect=$1 [NC,QSA,END]
+
 RewriteRule ^source$ source/ [NC,QSA,END]
 	RewriteRule ^source\/asset$ source/asset/ [NC,QSA,END]
 	RewriteRule ^source\/layout$ source/layout/ [NC,QSA,END]
@@ -39,6 +43,7 @@ RewriteRule ^source$ source/ [NC,QSA,END]
 
 RewriteRule ^source\/$ index.php?oredirect=index [NC,QSA,END]
 RewriteRule ^source\/(.*)$ index.php?oredirect=$1 [NC,QSA,END]
+
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
