@@ -383,7 +383,7 @@ class fia {
 		}
 		elseif(!empty(self::$pathmodule)){
 			if($i == 'oSITE'){ #for SITE
-				$o['oFile'] = self::$pathmodule.'site'.DS.'index.php';
+				$o['oFile'] = self::$pathmodule.'site.php';
 				if(!file_exists($o['oFile'])){exit('SITE::Missing [Controller File Required]');}
 				require $o['oFile'];
 			}
@@ -392,7 +392,7 @@ class fia {
 				$o['oRoute'] = self::oroute('oAPP');
 				$o['oFile'] = self::$pathmodule.'app'.DS.$o['oRoute'].'.php';
 				if(!file_exists($o['oFile'])){
-					$o['oFile'] = self::$pathmodule.'app'.DS.'index.php';
+					$o['oFile'] = self::$pathmodule.'app.php';
 					if(!file_exists($o['oFile'])){exit('APP::Missing [Controller File Required]');}
 				}
 
@@ -407,7 +407,7 @@ class fia {
 				$o['oRoute'] = self::oroute('oAPI');
 				$o['oFile'] = self::$pathmodule.'api'.DS.$o['oRoute'].'.php';
 				if(!file_exists($o['oFile'])){
-					$o['oFile'] = self::$pathmodule.'api'.DS.'index.php';
+					$o['oFile'] = self::$pathmodule.'api.php';
 					if(!file_exists($o['oFile'])){exit('API::Missing [Controller File Required]');}
 				}
 
