@@ -44,7 +44,6 @@ RewriteRule ^source$ source/ [NC,QSA,END]
 RewriteRule ^source\/$ index.php?oredirect=index [NC,QSA,END]
 RewriteRule ^source\/(.*)$ index.php?oredirect=$1 [NC,QSA,END]
 
-
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
