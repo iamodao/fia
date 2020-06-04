@@ -97,7 +97,7 @@ class fia {
 
 	// impose SSL on URL (it also starts session)
 	public static function imposeSSL($link='', $permanent='oNope'){
-		if(!headers_sent() && empty($_SESSION)){session_start();}
+		if(headers_sent() === false && !isset($_SESSION)){session_start();}
 		if(empty($_SESSION['vImposeSSL']) || $_SESSION['vImposeSSL'] !== 'imposed'){
 			$protocol = self::https() ? 'https' : 'http';
 			if($protocol !== 'https'){
