@@ -9,13 +9,21 @@
 
 
 #### NOTE:
-
 If configuration [config.php OR/AND $initConfig array] is not created, FIA framework will assume certain defaults
+
+
+#### Example Code
+```php
+	<?php
+		$demo = 'DEV5 SandBox';
+		$fia->dump($demo);
+	?>
+```
 
 
 
 ### DIRECTORY STRUCTURE
-The basic structure of the directory
+_The basic directory structure of the framework_
 
 *	_ignore
 	*	dev5
