@@ -1,5 +1,6 @@
 # Ignore Directory
 _ignore/storage/
+_ignore/dev5/www/
 
 # Ignore File
 sandbox.php
