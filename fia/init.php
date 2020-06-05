@@ -1,41 +1,57 @@
 <?php
-# Start session
+#START SESSION
 if(!isset($_SESSION)){session_start();}
-$oInit['FD'] = __DIR__;
 
 
-# Configuration ~ NOTE: application directory is set to config.php's directory. And when config is not set, root directory (RD) becomes config directory
-$oInit['FileConfig'] = $oInit['RD'].DS.'source'.DS.'config.php';
-if(!file_exists($oInit['FileConfig'])){
-	$oInit['FileConfig'] = $oInit['FD'].DS.'config.php';
-	if(!file_exists($oInit['FileConfig'])){
-		$oInit['FileConfig'] = $oInit['RD'].DS.'config.php';
+#CONFIGURATION FILE
+$config_file_name = 'config.php';
+$config_file = $o_init['DIR_SOURCE'].DS.$config_file_name;
+if(!file_exists($config_file)){
+	$config_file = $o_init['DIR_FIA'].DS.$config_file_name;
+	if(!file_exists($config_file)){
+		$config_file = $o_init['DIR_ROOT'].DS.$config_file_name;
 	}
 }
 
-if(file_exists($oInit['FileConfig'])){
-	require $oInit['FileConfig'];
-	if(isset($oInitConfig) && is_array($oInitConfig) && isset($oInit) && is_array($oInit)){$oInit = array_merge($oInit, $oInitConfig);}
+if(file_exists($config_file)){
+	require $config_file;
+	if(isset($o_config) && is_array($o_config) && isset($o_init) && is_array($o_init)){
+		$o_init = array_merge($o_init, $o_config);
+	}
+}
+else {
+	oExit('config', 'missing file', $config_file);
 }
 
-$oInit['CD'] = dirname($oInit['FileConfig']);
+
+#MODULE DIRECTORY
+$module_path = $o_init['DIR_SOURCE'].DS.'module';
+if(is_dir($module_path)){$o_init['path']['module'] = $module_path;}
+else {oExit('module', 'no directory', $module_path.DS);}
 
 
-# Module Directory
-$moduleDir = $oInit['CD'].DS.'module';
-if(is_dir($moduleDir)){$oInit['moduleDir'] = $moduleDir;}
-
-# Upload Directory
-$uploadDrive = $oInit['CD'].DS.'drive';
-if(is_dir($uploadDrive)){$oInit['drive'] = $uploadDrive;}
+#LAYOUT DIRECTORY
+$layout_path = $o_init['DIR_SOURCE'].DS.'layout';
+if(is_dir($layout_path)){$o_init['path']['layout'] = $layout_path;}
+else {oExit('layout', 'no directory', $layout_path.DS);}
 
 
-# Include FIA & Initialize
-$oInit['FileCore'] = $oInit['FD'].DS.'fia.php';
-if(file_exists($oInit['FileCore'])){
-	require $oInit['FileCore'];
-	if(!class_exists('fia') || !method_exists('fia', 'init')){exit('CORE::Unavailable [Initialization Failed]');}
-	$fia = fia::instantiate($oInit);
-	unset($oInit);
+#UPLOAD DIRECTORY
+$drive_path = $o_init['DIR_SOURCE'].DS.'drive';
+if(is_dir($drive_path)){$o_init['path']['drive'] = $drive_path;}
+
+
+#FIA CORE, INSTANTIATION & INITIALIZATION
+$core_file = $o_init['DIR_FIA'].DS.'fia.php';
+if(file_exists($core_file)){
+	require $core_file;
+	if(!class_exists('fia') || !method_exists('fia', 'init')){
+		oExit('core', 'unavailable', 'Initialization Failed');
+	}
+	$fia = fia::instantiate($o_init);
+	// unset($oInit);
+}
+else {
+	oExit('core', 'missing file', $core_file);
 }
 ?>
