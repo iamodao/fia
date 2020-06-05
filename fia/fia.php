@@ -401,7 +401,7 @@ class fia {
 
 				if($i == 'oAUTO'){
 					require $o['oFile'];
-					if(!class_exists('oAPP') || !method_exists($o['oRoute'], 'oAPP')){exit('APP::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
+					if(!class_exists('oAPP') || !method_exists('oAPP', $o['oRoute'])){exit('APP::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
 				}
 				elseif($i == 'oGET'){return $o;}
 			}
@@ -416,7 +416,7 @@ class fia {
 
 				if($i == 'oAUTO'){
 					require $o['oFile'];
-					if(!class_exists('oAPI') || !method_exists($o['oRoute'], 'oAPI')){exit('API::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
+					if(!class_exists('oAPI') || !method_exists('oAPI', $o['oRoute'])){exit('API::<strong><em>'.$o['oRoute'].'</em></strong> [Controller Required]');}
 				}
 				elseif($i == 'oGET'){return $o;}
 			}
