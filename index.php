@@ -1,20 +1,52 @@
 <?php
-# Define Separator
+/**
+ * FIA™ framework ~ a micro framework for website, application and API development with PHP & MySQL; © 2020 VERI8™, Inc.
+ * =====================================================================================================================
+ **/
+
+#DEFINE SEPARATOR
 defined('DS') ? null : define('DS', DIRECTORY_SEPARATOR);
 defined('PS') ? null : define('PS', '/');
 
-$oInit['RD'] = __DIR__;
 
-$oInit['FileInit'] = $oInit['RD'].DS.'fia'.DS.'init.php';
-if(!file_exists($oInit['FileInit'])){exit('PATH::Missing [Initializer Required]');}
-require $oInit['FileInit'];
+#SET DIRECTORY
+$o_init['DIR_ROOT'] = __DIR__;
+$o_init['DIR_FIA'] = $o_init['DIR_ROOT'].DS.'fia';
+$o_init['DIR_SOURCE'] = $o_init['DIR_ROOT'].DS.'source';
 
-# Include sandbox for development, demo & testing
-if(file_exists('_ignore/dev5/index.php')){require '_ignore/dev5/index.php';}
 
-	# NOTE ~ when for website [oSITE], for app & api - using auto controllers (oAUTO), or set manually (oGET)
+#EXIT & ERROR REPORTER
+function oExit($obj, $msg, $extra=''){
+	$o = strtoupper($obj).'::';
+	if(!empty($msg)){$o .=' <strong>'.ucwords($msg).'</strong>';}
+	if(!empty($extra)){$o .= ' (<small><em>'.$extra.'</em></small>)';}
+	exit($o);
+}
+
+
+#PRINT REPORT
+function oDUMP($input, $act='oPRINT'){
+	if(!empty($input)){
+		$o = '<pre><tt>'.var_export($input, true).'</tt></pre>';
+		if($act == 'oPRINT'){echo $o; return;}
+		return $o;
+	}
+}
+
+
+#INITIALATION FILE
+$init_file = $o_init['DIR_FIA'].DS.'init.php';
+if(!file_exists($init_file)){oExit('init', 'missing file', $init_file);}
+require $init_file;
+
+
+#SANDBOX FILE - for development, demo & testing
+$sandbox_file = '_ignore/dev5/index.php';
+if(file_exists($sandbox_file)){require $sandbox_file;}
+
+
+#ROUTER CALL
 if(isset($fia) && class_exists('fia') && method_exists('fia', 'orouter')){
-	$projectAs = 'oAUTO';
-	$fia->orouter($projectAs);
+	$fia->orouter('oDEFAULT');
 }
 ?>
