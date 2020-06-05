@@ -3,5 +3,4 @@ _ignore/storage/
 _ignore/dev5/www/
 
 # Ignore File
-sandbox.php
-demo.php
+_ignore/dev5/index.php
