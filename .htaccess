@@ -50,6 +50,6 @@ RewriteCond %{REQUEST_FILENAME} !-f
 Options -Indexes
 
 #RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-RewriteRule ^((?!favicon.ico$)(?!favicon.png$)(?!api\/.*$)(?!asset\/.*$)(?!source\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
+RewriteRule ^((?!favicon.ico$)(?!favicon.png$)(?!api\/.*$)(?!asset\/.*$)(?!source\/.*$)(?!_ignore\/.*$).*)$ /index.php?olink=$1 [NC,QSA,END]
 ErrorDocument 403 /index.php?olink=E403
 ErrorDocument 404 /index.php?olink=E404
