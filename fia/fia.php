@@ -460,6 +460,33 @@ class fia {
 	}
 
 
+	public static function oview($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oVIEW');}
+		else {
+			return self::oprepare($i, 'oVIEW');
+		}
+	}
+
+
+	public static function otheme($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oTHEME');}
+		else {
+			return self::oprepare($i, 'oTHEME');
+		}
+	}
+
+
+	public static function obit($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oBIT');}
+		else {
+			return self::oprepare($i, 'oBIT');
+		}
+	}
+
+
+
+
+
 
 
 
