@@ -45,11 +45,12 @@ if(is_dir($drive_path)){$o_init['path']['drive'] = $drive_path;}
 $core_file = $o_init['DIR_FIA'].DS.'fia.php';
 if(file_exists($core_file)){
 	require $core_file;
-	if(!class_exists('fia') || !method_exists('fia', 'init')){
+	if(!class_exists('fia') || !method_exists('fia', 'initialize')  || !method_exists('fia', 'instantiate')){
 		oExit('core', 'unavailable', 'Initialization Failed');
 	}
+
 	$fia = fia::instantiate($o_init);
-	// unset($oInit);
+	unset($o_init);
 }
 else {
 	oExit('core', 'missing file', $core_file);
