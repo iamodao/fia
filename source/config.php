@@ -1,8 +1,8 @@
 <?php
 #GENERAL CONFIGURATION
 $o_config = array(
-	'machine' => 'oDev',
-	'status' => 'oLive',
+	'machine' => 'oDEV',
+	'status' => 'oLIVE',
 	'https' => 'impose',
 	'timezone' => 'Europe/London',
 );
