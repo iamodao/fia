@@ -230,22 +230,26 @@ class fia {
 
 
 
-	/**==== DATABASE UTILITY ====**/
+	/**=====::DATABASE UTILITY::=====**/
 
 	#CREATE DATABASE CONNECTION AND SET DATABASE OBJECT PROPERTY
-	protected static function database($o, $extension='oPDO'){
+	protected static function database($o, $driver='oPDO'){
 		if(!empty($o) && is_array($o)){
 
-			#using PDO connection
-			if($extension == 'oPDO'){
-				try {
-					$pdo = new PDO('mysql:dbname='.$o['name'].';host='.$o['host'], $o['user'], $o['password']);
-				} catch (PDOException $e){
-					oExit('DB', 'connection error', $e->getMessage());
-				}
+			#Using PDO driver
+			if($driver == 'oPDO'){
+				try {$pdo = new PDO('mysql:dbname='.$o['name'].';host='.$o['host'], $o['user'], $o['password']);}
+				catch (PDOException $e){oExit('database', 'connection error', $e->getMessage());}
 				self::$dbo = $pdo;
 			}
 		}
+	}
+
+
+	#RETURN DATABASE OBJECT
+	public static function dbo(){
+		if(!empty(self::$dbo)){return self::$dbo;}
+		return false;
 	}
 
 
@@ -257,7 +261,114 @@ class fia {
 
 
 
-	/**==== REDIRECT UTILITY ====**/
+
+	/**=====::SQL UTILITY::=====**/
+
+	#RETURN ERROR RESPONSE FROM [QUERY STATEMENT OR LAST DATABASE OPERATION]
+	public static function stmtF9($sql, $obj='', $i=2){
+		$o['oSQL'] = $sql;
+		#TODO ~ clean up error reporting
+
+		#NOTE ~ we use DBO by default for object (thus returning error from last database operation)
+		if(empty($obj) || $obj === false){$obj = self::$dbo;}
+		$e = $obj->errorInfo();
+		if(!empty($e)){
+			if($i == 'oALL'){$o['oERROR'] = $e;}
+			elseif(is_numeric($i) && $i <3){$o['oERROR'] = $e[$i];}
+		}
+
+		if(empty($o['oERROR'])){$o['oERROR']= 'UNKNOWN';}
+		return $o;
+	}
+
+
+	#RESOLVE QUERY STATEMENT AND RETURN RESPONSE
+	public static function stmt($sql, $stmt){
+		if($stmt === false){
+			return self::stmtF9($sql, $stmt);
+		}
+		else {
+			$o['oSQL'] = $sql;
+			$o['oSUCCESS'] = 'oYEAH';
+			if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
+			else {
+				#TODO ~ a better check for query type
+				$is_select = stripos($o['oSQL'], 'select');
+				if($is_select !== false){
+					$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
+					else {
+						$o['oCOUNT'] = count($fetch);
+						if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
+						elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
+						elseif($o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
+					}
+				}
+				else {
+					$o['oCOUNT'] = $stmt->rowCount();
+				}
+			}
+		}
+		return $o;
+	}
+
+
+	#EXECUTES SQL QUERY & RETURNS RESPONSE
+	public static function execSQL($sql){
+		$selectInSQL = stripos($sql, 'select');
+		if($selectInSQL !== false){
+			exit('ERROR::Unacceptable <em>(Don\'t call <strong>execSQL()</strong> on SELECT statement</em>)');
+		}
+		$dbo = self::$dbo;
+		$stmt = $dbo->exec($sql);
+		return self::stmt($sql, $stmt);
+	}
+	/**NOTE:
+	 * Don't run SELECT statements on exec
+	 * Don't pass user's input directly via SQL into exec
+	 * It returns FALSE on failure, and ZERO(0) on success (when no rows affected), or the NUMBER of rows affected
+	*/
+
+
+	#RESET PRIMARY KEY
+	public static function resetSQL($table, $column){
+		$sql = "SET @NewID = 0; ";
+		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
+		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
+		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
+		return self::execSQL($sql);
+	}
+
+
+	#RUN SQL QUERY - NOTE ~ don't use with user INPUT, best for single case with result
+	public static function querySQL($sql){
+		$dbo = self::$dbo;
+		$stmt = $dbo->query($sql);
+		return self::stmt($sql, $stmt);
+	}
+
+
+	#RUN SQL USING PREPARED STATEMENT
+	public static function runSQL($sql, $i=''){
+		$dbo = self::$dbo;
+		$stmt = $dbo->prepare($sql);
+		if(empty(($i))){$exec = $stmt->execute();} elseif(is_array($i)){$exec = $stmt->execute($i);}
+		if($exec === false){
+			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
+		}
+		return self::stmt($sql, $stmt);
+	}
+
+
+
+
+
+
+
+
+
+
+	/**=====::REDIRECT UTILITY::=====**/
 
 	#URL REDIRECT ~ using meta
 	public static function redirectMeta($url, $delay=0, $exit='oNOPE'){
@@ -267,6 +378,7 @@ class fia {
 	}
 
 
+	#URL REDIRECT
 	public static function redirect($url, $delay=0, $exit='oNOPE'){
 		if($url == 'index'){$url = self::$url;}
 		#TODO ~ check if url has http so as not to include base URL
@@ -280,11 +392,12 @@ class fia {
 			if($exit != 'oNOPE'){exit();}
 		}
 		else {
-			#use meta redirect (Headers already sent in $filename on line $linenum)
+			#Use meta redirect (Headers already sent in $filename on line $linenum)
 			return self::redirectMeta($url, $delay, $exit);
 		}
 	}
 
+	#REDIRECT & EXIT
 	public static function exitTo($url){
 		return self::redirect($url, 0, 'oYEAH');
 	}
@@ -382,12 +495,14 @@ class fia {
 				else {$i = 'oAUTO';}
 			}
 
+
 			#SITE
 			if($i == 'oSITE'){
 				$o['oFile'] = self::$path['module'].'site.php';
 				if(!file_exists($o['oFile'])){oExit('site','missing controller file',$o['oFile']);}
 				require $o['oFile'];
 			}
+
 
 			#APP ~ when api call on URI doesn't exists
 			elseif(!self::oroute('oAPI')){
@@ -430,17 +545,425 @@ class fia {
 		}
 		else {oExit('FIA', 'path undefined', 'module path not set as property of fia class');}
 	}
-/**
- * NOTE:
- * Redirect takes precedence over everything else
- * Site takes precedence next, when set
- * App takes precedence next, if API call not found in URI (/api/*)
- * Api is next, if API call is found
- *
- * API or APP class & route method will be called automatically only when $i (project routing) is set to oAUTO and the default controller is used
- */
+	/**NOTE:
+	 * REDIRECT takes precedence over everything else
+	 * SITE takes precedence next, when set
+	 * APP takes precedence next, if API call not found in URI (/api/*)
+	 * API is next, if API call is found
+	 * API or APP class & route method will be called automatically only when $i (project routing) is set to oAUTO and the default controller is used
+	*/
 
 
+
+
+
+
+
+
+
+
+	/**==== lOADER UTILITY ====**/
+
+	#PREPARE ~ get and return a file based on path (use view as default path)
+	public static function oprepare($i='oGET', $path='oVIEW'){
+		$v = self::orouter('oGET');
+		if(isset($v['oRouter'])){
+			$router = $v['oRouter'];
+			if($i !== 'oGET'){$route = $i;} else {$route = $v['oRoute'];}
+
+			if($router == 'oAPI' || $path == 'oAPI'){$o = self::$path['module'].'api'.DS.$route;}
+			elseif($path == 'oAPP'){$o = self::$path['module'].'app'.DS.$route;}
+			elseif($path == 'oBIT'){$o = self::$path['layout'].'bit'.DS.$route;}
+			elseif($path == 'oTHEME'){$o = self::$path['layout'].'skin'.DS.$route;}
+			elseif($path == 'oVIEW'){$o = self::$path['layout'].'view'.DS.$route;}
+
+			if(!empty($o)){return $o.'.php';}
+		}
+	}
+
+
+	#LOAD ~ load a file | use view path by default
+	public static function oload($i='oGET', $path='oVIEW'){
+		$o = self::oprepare($i, $path);
+		if(file_exists($o)){require $o; return;}
+		oExit('path', $path.' unavailable', $o);
+	}
+
+
+	#VIEW ~ return or load
+	public static function oview($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oVIEW');}
+		else {return self::oprepare($i, 'oVIEW');}
+	}
+
+
+	#THEME ~ return or load
+	public static function otheme($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oTHEME');}
+		else {return self::oprepare($i, 'oTHEME');}
+	}
+
+
+	#BIT ~ return or load
+	public static function obit($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::oload($i, 'oBIT');}
+		else {return self::oprepare($i, 'oBIT');}
+	}
+
+
+
+	#SUBSTITUTE SPACE WITH CHARACTER|STRING AND VICE-VERSA
+	public static function spaceTo($string, $value, $inv='oNOPE'){
+		if($inv == 'oYEAH'){return str_replace($value, ' ', $string);}
+		return preg_replace('/\s+/', $value, $string);
+	}
+
+
+	#RETURNS BOOLEAN ~ check for needle in string
+	public static function stringIn($string, $needle){
+		if(strpos($string, $needle) !== false){return true;}
+		return false;
+	}
+
+	//-------------- Substitute a character|string in a string and vice-versa ---------------
+	public static function stringSwap($string, $search, $substitute , $occurence='oALL'){
+		#check if $search is found and return result, else return full string
+		$found = self::stringIn($string, $search);
+		if(!$found){return $string;}
+		else {
+			if($occurence == 'oALL'){return str_replace($search, $substitute, $string);}
+			else {
+				if($occurence == 'oFIRST'){$pos = strpos($string, $search);}
+				if($occurence == 'oLAST'){$pos = strrpos($string, $search);}
+
+				if($pos !== false){
+					return substr_replace($string, $substitute, $pos, strlen($search));
+				}
+				else {return $string;}
+			}
+		}
+	}
+
+	//-------------- Return false OR value before first occurrence character|string if found ---------------
+	public static function stringBefore($string, $search, $strip='oYEAH'){
+		$pos = strpos($string, $search);
+		if($pos && $pos != 0){$result = substr($string, 0, $pos);}
+		if($strip != 'oYEAH'){$result = $result.$search;}
+		if(isset($result)){return $result;}
+		return false;
+	}
+
+
+	//-------------- Return false OR value after first character|string if found ---------------
+	public static function stringAfter($string, $search, $strip='oYEAH'){
+		$found = strstr($string, $search);
+		if($found){
+			$result = $found;
+			if($strip == 'oYEAH'){
+				$result = self::stringSwap($result, $search, '', 'oFIRST');
+			}
+		}
+		if(!empty($result)){return $result;}
+		return false;
+	}
+
+	public static function stringTo($o, $to){
+		#Returns domain from URL
+		if($to == 'oDOMAIN'){
+			$o = self::stringSwap($o, 'https://', '', 'oFIRST');
+			$o = self::stringSwap($o, 'http://', '', 'oFIRST');
+
+			#Remove sub-directory if found
+			if(self::stringIn($o, '/')){
+				$o = self::stringBefore($o, '/', 'oYEAH');
+			}
+
+			#Remove [known] sub-domain  TODO  ~ use library
+			$subs = array('www','en', 'ng');
+			$o_stripped = '';
+			foreach ($subs as $sub){
+				if(self::stringIn($o, $sub)){
+					$o = self::stringSwap($o, 'www.', '', 'oFIRST');
+				}
+			}
+
+			return $o;
+		}
+	}
+
+	#RETURN SERVER-BASE INFORMATION (for example server URL)
+	public static function base($i='oDOMAIN'){
+		if($i == 'oDIR'){$o = $_SERVER['DOCUMENT_ROOT'];}
+		if($i == 'oHOST'){$o = $_SERVER['HTTP_HOST'];}
+		if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
+		if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
+		if(!empty($o)){return strtolower($o);}
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/**==== URL UTILITY ====**/
+
+	#RETURN URL REFERRER ~ if available
+	public static function refURL(){
+		if(!empty($_SERVER['HTTP_REFERER'])){return $_SERVER['HTTP_REFERER'];}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/**==== DIRECTORY ====**/
+
+	// check if path is a directory & returns true or false
+	public static function isDir($path){
+		if(is_dir($path)){return true;}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+	/**==== FILE ====**/
+
+	// check if path is a file & returns true or false
+	public static function isFile($path){
+		if(self::isDir($path)){return false;}
+		elseif(is_file($path) === false){return false;}
+		return true;
+	}
+
+	// returns file information
+	public static function infoFile($i='oData', $file='oSelf'){
+		if($file == 'oSelf'){$file = $_SERVER['PHP_SELF'];}
+		$path = pathinfo($file);
+		if($i == 'oDir' && !empty($path['dirname'])){$o = $path['dirname'];}
+		elseif($i == 'oBase' && !empty($path['basename'])){$o = $path['basename'];}
+		elseif($i == 'oExt' && !empty($path['extension'])){$o = $path['extension'];}
+		elseif($i == 'oName' && !empty($path['filename'])){$o = $path['filename'];}
+		elseif($i == 'oData'){$o = $path;}
+		if(!empty($i)){return $o;}
+		return false;
+	}
+
+	// download file information
+	public static function downloadFile($file, $save=''){
+		if(self::isFile($file)){
+			$name = self::infoFile('oName', $file);
+			$ext = self::infoFile('oExt', $file);
+			#TODO ~ naming convention
+			if(empty($save)){$save = $name.'_'.mt_rand();}
+			$save = $save.'.'.$ext;
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename ="'.$save.'"');
+			readfile($file);
+			exit;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+	/**==== FORMAT ====**/
+
+	// return formatted numbers
+	public static function numberFormat($input, $digit=2){
+		if(is_numeric($input)){
+			$o = $input;
+			if(!empty($digit) && is_numeric($digit)){$o = number_format($input, $digit);}
+			else {$o = number_format($input);}
+			return $o;
+		}
+		return false;
+	}
+
+	// return formatted size (computer-based measurement)
+	public static function sizeFormat($byte){
+		if(!empty($byte)){
+			if($byte>=1073741824){$o = number_format($byte / 1073741824 , 2) . 'GB';}
+			elseif($byte>=1048576){$o = number_format($byte / 1048576 , 2) . 'MB';}
+			elseif($byte>=1024){$o = number_format($byte / 1024 , 2) . 'KB';}
+			elseif($byte>1){$o = $byte . ' bytes';}
+			elseif($byte==1){$o = $byte . ' byte';}
+			else {$o = '0';}
+			return $o;
+		}
+		return false;
+	}
+
+
+
+	/**==== INPUT ====**/
+
+
+
+
+	// remove or add slash to string/array
+	public static function slashInput($input, $task='oTRIM'){
+		if($task == 'oTRIM'){
+			if(!is_array($input)){
+				$o = '';
+				$o = stripslashes($input);
+			}
+			else {
+				$o = array();
+				foreach ($input as $key => $value){
+					$clean = stripslashes($value);
+					$o[$key] = $clean;
+				}
+			}
+		}
+		elseif($task == 'oADD'){
+			if(!is_array($input)){
+				$o = '';
+				$o = addslashes($input);
+			}
+			else {
+				$o = array();
+				foreach ($input as $key => $value){
+					$clean = addslashes($value);
+					$o[$key] = $clean;
+				}
+			}
+		}
+	}
+
+
+	// retain form input
+	public static function retainInput($i='', $method='oPOST'){
+		$o = '';
+		if(!empty($i)){
+			if($method == 'oGET'){if(isset($_GET[$i])){$o = $_GET[$i];}}
+			if($method == 'oPOST'){if(isset($_POST[$i])){$o = $_POST[$i];}}
+			if($method == 'oREQUEST'){if(isset($_REQUEST[$i])){$o = $_REQUEST[$i];}}
+		}
+		return $o;
+	}
+
+
+	// check if input's value is retained
+	public static function isRetainedInput($value='', $i='', $method='oPOST'){
+		$retained = self::retainInput($i, $method);
+		if($value == $retained){return true;}
+		return false;
+	}
+
+
+	// retain input's group (array) of values [check if value is in options] ~TODO | test this method
+	public static function retainGroupInput($output='oCHECK', $value='', $i='', $method='oPOST'){
+		$retained = self::retainInput($i, $method);
+		if(is_array($retained) && in_array($value, $retained)){
+			if($output == 'oCHECK'){return true;}
+			return $output;
+		}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/**==== DATA ====**/
+
+	// capture data from post/get/request, filter relevant info and return it
+	public static function captureData($i='oPOST', $filter=''){
+		if(!empty($i)){
+			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
+			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
+			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
+
+			if(!empty($filter) && is_array($filter) && is_array($o)){
+				$o = array();
+				foreach ($filter as $index){
+					if(isset($v[$index])){$o[$index] = self::cleanInput($v[$index]);}
+					else {$o[$index] = '';}
+				}
+			}
+			else {
+				$o = $v;
+			}
+		}
+
+		if(!empty($o)){
+			#remove main uri [oapi & olink] for array if it exists
+			if(isset($o['oapi'])){unset($o['oapi']);}
+			if(isset($o['olink'])){unset($o['olink']);}
+			return $o;
+		}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/**==== OTHER UTILITY ====**/
+
+	// set language
+	public static function lang($lang=''){
+		if(!empty($lang)){$o = $lang;}
+		elseif(!empty($_GET['lang'])){$o = $_GET['lang'];}
+		elseif(!empty($_POST['oLang'])){$o = $_POST['oLang'];}
+		elseif(!empty($_SESSION['oLang'])){$o = $_SESSION['oLang'];}
+		else {$o = 'en';}
+
+		if(empty($_SESSION['oLang'])){$_SESSION['oLang'] = $o;}
+		elseif($_SESSION['oLang'] != $o){$_SESSION['oLang'] = $o;}
+		return strtolower($o);
+	}
+
+
+	// perform JSON operations
+	public static function json($input, $i='oENCODE'){
+		if(!empty($input)){
+			if($i == 'oENCODE'){return json_encode($input);}
+			elseif($i == 'oPRINT'){
+				header('Content-Type: application/json');
+				echo json_encode($input, JSON_PRETTY_PRINT);
+				exit;
+			}
+		}
+		return;
+	}
 
 }
 ?>
