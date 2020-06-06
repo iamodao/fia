@@ -257,7 +257,189 @@ class fia {
 
 
 
+	/**==== REDIRECT UTILITY ====**/
+
+	#URL REDIRECT ~ using meta
+	public static function redirectMeta($url, $delay=0, $exit='oNOPE'){
+		$o = '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
+		if($exit == 'oYEAH'){exit($o);}
+		else {return $o;}
+	}
+
+
+	public static function redirect($url, $delay=0, $exit='oNOPE'){
+		if($url == 'index'){$url = self::$url;}
+		#TODO ~ check if url has http so as not to include base URL
+		else {
+			$url = self::$url.DS.$url;
+		}
+
+		if(!headers_sent($filename, $linenum)){
+			if(!empty($delay)){header('Refresh:'.$delay.';url='.$url);}
+			else {header('Location: '.$url);}
+			if($exit != 'oNOPE'){exit();}
+		}
+		else {
+			#use meta redirect (Headers already sent in $filename on line $linenum)
+			return self::redirectMeta($url, $delay, $exit);
+		}
+	}
+
+	public static function exitTo($url){
+		return self::redirect($url, 0, 'oYEAH');
+	}
+
+
+
+
+
+
+
+
+
+
+	/**==== INPUT UTILITY ====**/
+
+	#CLEAN INPUT ~ returns clean string/array
+	public static function cleanInput($input){
+		#strip out JS, HTML, CSS & multi-line comments
+		$search = array(
+			'@<script[^>]*?>.*?</script>@si',
+			'@<[\/\!]*?[^<>]*?>@si',
+			'@<style[^>]*?>.*?</style>@siU',
+			'@<![\s\S]*?--[ \t\n\r]*>@'
+		);
+		if(!is_array($input)){
+			$o = '';
+			$o = preg_replace($search, '', $input);
+			$o = strip_tags($o);
+		}
+		else {
+			$o = array();
+			foreach ($input as $key => $value){
+				$clean = preg_replace($search, '', $value);
+				$clean = strip_tags($clean);
+				$o[$key] = $clean;
+			}
+		}
+		return trim($o);
+	}
+
+
+
+
+
+
+
+
+
 	/**==== ROUTING UTILITY ====**/
+
+	#CLEAN ROUTE VALUE
+	public static function cleanRoute($i){
+		$o = strtolower($i);
+		$o = self::cleanInput($o);
+		return trim($o);
+	}
+
+
+	#GET & PREPARE ROUTE ~ from URI or input
+	public static function oroute($type='oAPP', $i='oGET'){
+		if($i == 'oGET'){
+			if($type == 'oAPI'){
+				if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
+				else {return false;}
+			}
+			elseif($type == 'oAPP'){
+				if(isset($_GET['olink'])){$v = $_GET['olink'];}
+				else {$v = 'index';}
+			}
+		}
+		elseif(!empty($i)){$v = $i;}
+
+		if(!empty($v)){
+			return self::cleanRoute($v);
+		}
+		return false;
+	}
+
+
+	#ROUTER ~ handles primary controller
+	public static function orouter($i='oAUTO'){
+
+		#If redirect is detected from URI
+		if(!empty($_GET['oredirect'])){
+			$goto = self::cleanRoute($_GET['oredirect']);
+			self::exitTo($goto);
+		}
+
+		#To be certain module directory is set
+		elseif(!empty(self::$path['module'])){
+
+			#Prepare value for $i when it is set to default or empty
+			if($i == 'oDEFAULT' || empty($i)){
+				if(!empty(self::$routing)){$i = self::$routing;}
+				else {$i = 'oAUTO';}
+			}
+
+			#SITE
+			if($i == 'oSITE'){
+				$o['oFile'] = self::$path['module'].'site.php';
+				if(!file_exists($o['oFile'])){oExit('site','missing controller file',$o['oFile']);}
+				require $o['oFile'];
+			}
+
+			#APP ~ when api call on URI doesn't exists
+			elseif(!self::oroute('oAPI')){
+				$o['oRouter'] = 'oAPP';
+				$o['oRoute'] = self::oroute('oAPP');
+				$o['oFile'] = self::$path['module'].'app'.DS.$o['oRoute'].'.php';
+				if(!file_exists($o['oFile'])){
+					$o['oFile'] = self::$path['module'].'app.php';
+					if(!file_exists($o['oFile'])){oExit('app','missing controller file', $o['oFile']);}
+					#For when $i is set to auto & app.php is used as default app controller file
+					elseif($i == 'oAUTO'){
+						require $o['oFile'];
+						if(!class_exists('oAPP') || !method_exists('oAPP', $o['oRoute'])){oExit('app', '['.$o['oRoute'].'] controller required', $o['oFile']);}
+					}
+				}
+
+				#For when $i is set to get ~ returns $i value;
+				if($i == 'oGET' && !empty($o)){return $o;}
+			}
+
+
+			#API ~ when api call exists on URI
+			else {
+				$o['oRouter'] = 'oAPI';
+				$o['oRoute'] = self::oroute('oAPI');
+				$o['oFile'] = self::$path['module'].'api'.DS.$o['oRoute'].'.php';
+				if(!file_exists($o['oFile'])){
+					$o['oFile'] = self::$path['module'].'api.php';
+					if(!file_exists($o['oFile'])){oExit('api','missing controller file', $o['oFile']);}
+					#For when $i is set to auto & api.php is used as default api controller file
+					elseif($i == 'oAUTO'){
+						require $o['oFile'];
+						if(!class_exists('oAPI') || !method_exists('oAPI', $o['oRoute'])){oExit('api', '['.$o['oRoute'].'] controller required', $o['oFile']);}
+					}
+				}
+
+				#For when $i is set to get ~ returns $i value;
+				if($i == 'oGET' && !empty($o)){return $o;}
+			}
+		}
+		else {oExit('FIA', 'path undefined', 'module path not set as property of fia class');}
+	}
+/**
+ * NOTE:
+ * Redirect takes precedence over everything else
+ * Site takes precedence next, when set
+ * App takes precedence next, if API call not found in URI (/api/*)
+ * Api is next, if API call is found
+ *
+ * API or APP class & route method will be called automatically only when $i (project routing) is set to oAUTO and the default controller is used
+ */
+
 
 
 }
