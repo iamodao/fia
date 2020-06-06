@@ -25,7 +25,7 @@ function oExit($obj, $msg, $extra=''){
 
 
 #PRINT REPORT
-function oDUMP($input, $i='oPRE', $v='oECHO'){
+function oDUMP($input, $i='oNEAT', $v='oECHO'){
 	if(!empty($input)){
 		if($i == 'oPRE'){$o = '<pre><tt>'.var_export($input, true).'</tt></pre>';}
 		elseif($i == 'oDUMP'){return var_dump($o);}
