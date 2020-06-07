@@ -4,10 +4,9 @@ $o_config = array(
 	'machine' => 'oDEV',
 	'status' => 'oLIVE',
 	'timezone' => 'Europe/London',
-	'session' => 'oFIA',
 	'https' => 'impose',
+	'session' => 'oSESSID',
 );
-//NOTE: enabling session or https will trigger start_session (such will prevent the ability to have multiple unique sessions within the app)
 
 
 #PROJECT INFORMATION
@@ -31,5 +30,7 @@ $o_config['oDATABASE'] = array(
 	'user' => 'fia',
 	'password' => 'FIA'
 );
-//NOTE: $o_config['oDATABASE'] triggers DB connection by default
+/**
+ * NOTE: $o_config['oDATABASE'] triggers DB connection by default
+ **/
 ?>
