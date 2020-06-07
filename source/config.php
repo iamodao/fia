@@ -3,10 +3,11 @@
 $o_config = array(
 	'machine' => 'oDEV',
 	'status' => 'oLIVE',
-	'https' => 'impose',
 	'timezone' => 'Europe/London',
-	// 'session' => 'PHPFIA',
+	'session' => 'oFIA',
+	'https' => 'impose',
 );
+//NOTE: enabling session or https will trigger start_session (such will prevent the ability to have multiple unique sessions within the app)
 
 
 #PROJECT INFORMATION
