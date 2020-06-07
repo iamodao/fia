@@ -5,6 +5,7 @@ $o_config = array(
 	'status' => 'oLIVE',
 	'https' => 'impose',
 	'timezone' => 'Europe/London',
+	// 'session' => 'PHPFIA',
 );
 
 
