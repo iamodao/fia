@@ -446,6 +446,28 @@ class fia {
 
 
 
+
+	/**=====::FORM UTILITY::=====**/
+
+	#REMOVE BUTTONS FROM FORM DATA (submit, update, delete, save)
+	public static function removeBTN($o){
+		$btns = array('submit', 'update', 'delete', 'save');
+		foreach ($btns as $btn){
+		#Unset button from data (example submitBTN)
+			if(isset($o[$btn.'BTN'])){
+				unset($o[$btn.'BTN']);
+			}
+		}
+		return $o;
+	}
+
+
+
+
+
+
+
+
 	/**==== ROUTING UTILITY ====**/
 
 	#CLEAN ROUTE VALUE
@@ -952,10 +974,25 @@ class fia {
 	}
 
 
-	// perform JSON operations
+	/**=====::JSON UTILITY::=====**/
+
+	#JSON ERROR INTERPRETER
+	public static function jsonError($e, $i=''){
+		$o['JSON_INPUT'] = $i; $o['JSON_ERROR'] = $e;
+		if($e == 4){$o['JSON_ERROR_MSG'] = 'Syntax error';}
+		elseif($e == 5){$o['JSON_ERROR_MSG'] = 'Malformed UTF-8 characters, possibly incorrectly encoded';}
+		if(!empty($o)){return $o;}
+	}
+
+
+	#PERFORM JSON OPERATIONS (encode, decode & print)
 	public static function json($input, $i='oENCODE'){
 		if(!empty($input)){
-			if($i == 'oENCODE'){return json_encode($input);}
+			if($i == 'oENCODE'){$o = json_encode($input);}
+			elseif($i == 'oDECODE'){$o = json_decode($input);}
+			$e = json_last_error();
+			if(!empty($e)){return self::jsonError($e, $input);}
+			elseif($i == 'oENCODE' || $i == 'oDECODE'){return $o;}
 			elseif($i == 'oPRINT'){
 				header('Content-Type: application/json');
 				echo json_encode($input, JSON_PRETTY_PRINT);
@@ -964,6 +1001,16 @@ class fia {
 		}
 		return;
 	}
+
+
+
+
+
+
+
+
+
+
 
 }
 ?>
