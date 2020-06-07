@@ -58,7 +58,7 @@ class fia {
 
 	#IMPOSE SSL on URL ~  also starts session
 	public static function imposeSSL($url='', $move='oNOPE'){
-		if(headers_sent() === false && !isset($_SESSION)){session_start();}
+		self::sessionStart();
 		if(empty($_SESSION['oSSL']) || $_SESSION['oSSL'] !== 'imposed'){
 			$protocol = self::https() ? 'https' : 'http';
 			if($protocol !== 'https'){
@@ -176,6 +176,14 @@ class fia {
 	#INITIALIZATION ~ to initialize application
 	public static function initialize($o){
 		if(!empty($o) && is_array($o)){
+
+			#Session
+			if(!empty($o['session'])){
+				self::sessionName($o['session']);
+				unset($o['session']);
+			}
+			self::sessionStart();
+
 
 			#Enforce https
 			if(array_key_exists('https', $o) && $o['https'] == 'impose'){
@@ -920,12 +928,13 @@ class fia {
 
 	/**=====::DATA UTILITY::=====**/
 
-	#CAPTURE DATA (POST/GET/REQUEST/any), FILTER RELEVANT INFO AND RETURN CLEANED
+	#CAPTURE DATA (POST/GET/REQUEST/SESSION/any), FILTER RELEVANT INFO AND RETURN CLEANED
 	public static function dataCapture($i='oPOST', $filter=''){
 		if(!empty($i)){
 			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
 			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
 			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
+			elseif($i == 'oSESSION' && !empty($_SESSION)){$v = $_SESSION;}
 			else {$v = $i;}
 
 			if(!empty($filter) && is_array($filter) && is_array($v)){
@@ -958,6 +967,162 @@ class fia {
 
 
 
+	//=====::BEGIN SESSION UTILITY::=====//
+
+
+	#RETURN SESSION VALUE - $_SESSION['value']
+	public static function session($i='', $v='', $id=''){
+		if(!empty($id)){self::sessionStart($id);}
+		if(!empty($i)){
+			if(!empty($v)){$_SESSION[$i] = $v;}
+			elseif(isset($_SESSION[$i])){
+				return $_SESSION[$i];
+			}
+		}
+	}
+
+
+
+	#CLOSE SESSION WRITE
+	public static function sessionClose(){
+		return session_write_close();
+	}
+
+
+
+	#SET/GET SESSION ID
+	public static function sessionID($id=''){
+		if(empty($id)){session_id();}
+		elseif($id == 'oGET'){return session_id();}
+		else {
+			self::sessionClose();
+			session_id($id);
+		}
+	}
+
+
+
+	#SET/GET SESSION NAME
+	public static function sessionName($name=''){
+		if(empty($name)){session_id();}
+		elseif($name == 'oGET'){return session_name();}
+		else {session_name($name);}
+	}
+
+
+
+	#START SESSION
+	public static function sessionStart($id=''){
+		if(empty($id) || $id == 'oGET'){
+			if(headers_sent() === false && !isset($_SESSION)){
+				return session_start();
+			}
+		}
+		else {
+			self::sessionID($id);
+			return session_start();
+		}
+	}
+
+
+
+	#ROLLBACK SESSION - (rollback to last active session information)
+	public static function sessionReset(){
+		if(!isset($_SESSION)){
+			return session_reset();
+		}
+	}
+
+
+
+	#ABORT SESSION - (maintain session yet discard session changes on current page)
+	public static function sessionAbort(){
+		if(!empty($_SESSION)){
+			return session_abort();
+		}
+	}
+
+
+
+	#DELETE SESSION - (unset session or a session's variable)
+	public static function sessionUnset($var=''){
+		if(!empty($_SESSION)){
+			if(isset($_SESSION[$var])){
+				unset($_SESSION[$var]);
+				return true;
+			}
+			else {
+				return session_unset();
+			}
+		}
+		return false;
+	}
+
+
+
+	#DESTROY SESSION - (destroys all data witihin current session)
+	public static function sessionDestroy(){
+		if(isset($_SESSION['session_status'])){
+			unset($_SESSION['session_status']);
+		}
+		return session_destroy();
+	}
+
+
+
+	#TERMINATE SESSION
+	public static function sessionTerminate(){
+		if(!empty($_SESSION)){
+			$_SESSION = array();
+			if(ini_get("session.use_cookies")){
+				$params = session_get_cookie_params();
+				setcookie(
+					session_id(),
+					'',
+					time() - 42000,
+					$params["path"],
+					$params["domain"],
+					$params["secure"],
+					$params["httponly"]
+				);
+			}
+			session_unset();
+			session_destroy();
+		}
+	}
+
+
+
+	#STOP A PARTCTULAR SESSION
+	public static function sessionStop($id='oGET'){
+		if($id == 'oGET'){$id = self::sessionID('oGET');}
+		self::sessionStart($id);
+		session_destroy();
+	}
+
+
+
+	#TERMINATE & START FRESH SESSION
+	public static function sessionFresh($i=''){
+		if(empty($i) && !empty(self::$session)){$i = self::$session;}
+		if(!empty($i)){
+			self::sessionStop($i);
+			self::sessionStart($i);
+		}
+		else {
+			self::sessionStart();
+			self::sessionTerminate();
+			self::sessionStart();
+		}
+		return $i;
+	}
+
+
+
+
+
+
+
 	/**=====::LANGUAGE UTILITY::=====**/
 
 	#GET & SET LANGUAGE
@@ -968,7 +1133,10 @@ class fia {
 		elseif(!empty($_SESSION['oLANG'])){$o = $_SESSION['oLANG'];}
 		else {$o = 'en';}
 
-		if(empty($_SESSION['oLANG'])){$_SESSION['oLANG'] = $o;}
+		if(empty($_SESSION['oLANG'])){
+			self::sessionStart();
+			$_SESSION['oLANG'] = $o;
+		}
 		elseif($_SESSION['oLANG'] != $o){$_SESSION['oLANG'] = $o;}
 		return strtolower($o);
 	}
