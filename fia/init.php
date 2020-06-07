@@ -1,8 +1,4 @@
 <?php
-#START SESSION
-if(!isset($_SESSION)){session_start();}
-
-
 #CONFIGURATION FILE
 $config_file_name = 'config.php';
 $config_file = $o_init['DIR_SOURCE'].DS.$config_file_name;
