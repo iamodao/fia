@@ -918,36 +918,36 @@ class fia {
 
 
 
-	/**==== DATA ====**/
+	/**=====::DATA UTILITY::=====**/
 
-	// capture data from post/get/request, filter relevant info and return it
-	public static function captureData($i='oPOST', $filter=''){
+	#CAPTURE DATA (POST/GET/REQUEST/any), FILTER RELEVANT INFO AND RETURN CLEANED
+	public static function dataCapture($i='oPOST', $filter=''){
 		if(!empty($i)){
 			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
 			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
 			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
+			else {$v = $i;}
 
-			if(!empty($filter) && is_array($filter) && is_array($o)){
+			if(!empty($filter) && is_array($filter) && is_array($v)){
 				$o = array();
 				foreach ($filter as $index){
-					if(isset($v[$index])){$o[$index] = self::cleanInput($v[$index]);}
-					else {$o[$index] = '';}
+					if(!empty($v[$index])){$o[$index] = self::cleanInput($v[$index]);}
+					elseif(isset($v[$index])){$o[$index] = '';}
 				}
 			}
 			else {
-				$o = $v;
+				$o = cleanInput($v);
 			}
 		}
 
 		if(!empty($o)){
-			#remove main uri [oapi & olink] for array if it exists
+			#Remove main uri [oapi & olink] for array if it exists
 			if(isset($o['oapi'])){unset($o['oapi']);}
 			if(isset($o['olink'])){unset($o['olink']);}
 			return $o;
 		}
 		return false;
 	}
-
 
 
 
@@ -984,6 +984,7 @@ class fia {
 
 	/**=====::JSON UTILITY::=====**/
 
+
 	#JSON ERROR INTERPRETER
 	public static function jsonError($e, $i=''){
 		$o['JSON_INPUT'] = $i; $o['JSON_ERROR'] = $e;
@@ -991,6 +992,7 @@ class fia {
 		elseif($e == 5){$o['JSON_ERROR_MSG'] = 'Malformed UTF-8 characters, possibly incorrectly encoded';}
 		if(!empty($o)){return $o;}
 	}
+
 
 
 	#PERFORM JSON OPERATIONS (encode, decode & print)
