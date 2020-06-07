@@ -958,20 +958,28 @@ class fia {
 
 
 
-	/**==== OTHER UTILITY ====**/
+	/**=====::LANGUAGE UTILITY::=====**/
 
-	// set language
+	#GET & SET LANGUAGE
 	public static function lang($lang=''){
 		if(!empty($lang)){$o = $lang;}
 		elseif(!empty($_GET['lang'])){$o = $_GET['lang'];}
 		elseif(!empty($_POST['oLang'])){$o = $_POST['oLang'];}
-		elseif(!empty($_SESSION['oLang'])){$o = $_SESSION['oLang'];}
+		elseif(!empty($_SESSION['oLANG'])){$o = $_SESSION['oLANG'];}
 		else {$o = 'en';}
 
-		if(empty($_SESSION['oLang'])){$_SESSION['oLang'] = $o;}
-		elseif($_SESSION['oLang'] != $o){$_SESSION['oLang'] = $o;}
+		if(empty($_SESSION['oLANG'])){$_SESSION['oLANG'] = $o;}
+		elseif($_SESSION['oLANG'] != $o){$_SESSION['oLANG'] = $o;}
 		return strtolower($o);
 	}
+
+
+
+
+
+
+
+
 
 
 	/**=====::JSON UTILITY::=====**/
