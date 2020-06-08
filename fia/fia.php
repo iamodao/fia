@@ -613,7 +613,7 @@ class fia {
 
 
 	#LOAD ~ load a file | use view path by default
-	public static function oload($i='oGET', $path='oVIEW'){
+	public static function load($i='oGET', $path='oVIEW'){
 		$o = self::oprepare($i, $path);
 		if(file_exists($o)){require $o; return;}
 		oExit('path', $path.' unavailable', $o);
@@ -621,22 +621,22 @@ class fia {
 
 
 	#VIEW ~ return or load
-	public static function oview($i='oGET', $v='oLOAD'){
-		if($v == 'oLOAD'){return self::oload($i, 'oVIEW');}
+	public static function view($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::load($i, 'oVIEW');}
 		else {return self::oprepare($i, 'oVIEW');}
 	}
 
 
 	#THEME ~ return or load
-	public static function otheme($i='oGET', $v='oLOAD'){
-		if($v == 'oLOAD'){return self::oload($i, 'oTHEME');}
+	public static function theme($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::load($i, 'oTHEME');}
 		else {return self::oprepare($i, 'oTHEME');}
 	}
 
 
 	#BIT ~ return or load
-	public static function obit($i='oGET', $v='oLOAD'){
-		if($v == 'oLOAD'){return self::oload($i, 'oBIT');}
+	public static function bit($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::load($i, 'oBIT');}
 		else {return self::oprepare($i, 'oBIT');}
 	}
 
