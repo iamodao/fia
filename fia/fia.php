@@ -606,6 +606,7 @@ class fia {
 			elseif($path == 'oBIT'){$o = self::$path['layout'].'bit'.DS.$route;}
 			elseif($path == 'oTHEME'){$o = self::$path['layout'].'skin'.DS.$route;}
 			elseif($path == 'oVIEW'){$o = self::$path['layout'].'view'.DS.$route;}
+			elseif($path == 'oCODE'){$o = self::$path['module'].'code'.DS.$route;}
 
 			if(!empty($o)){return $o.'.php';}
 		}
@@ -638,6 +639,12 @@ class fia {
 	public static function bit($i='oGET', $v='oLOAD'){
 		if($v == 'oLOAD'){return self::load($i, 'oBIT');}
 		else {return self::prepare($i, 'oBIT');}
+	}
+
+	#CODE ~ return or load
+	public static function code($i='oGET', $v='oLOAD'){
+		if($v == 'oLOAD'){return self::load($i, 'oCODE');}
+		else {return self::prepare($i, 'oCODE');}
 	}
 
 
