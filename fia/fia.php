@@ -487,7 +487,7 @@ class fia {
 
 
 	#GET & PREPARE ROUTE ~ from URI or input
-	public static function oroute($type='oAPP', $i='oGET'){
+	public static function route($type='oAPP', $i='oGET'){
 		if($i == 'oGET'){
 			if($type == 'oAPI'){
 				if(isset($_GET['oapi'])){$v = $_GET['oapi'];}
@@ -508,7 +508,7 @@ class fia {
 
 
 	#ROUTER ~ handles primary controller
-	public static function orouter($i='oAUTO'){
+	public static function router($i='oAUTO'){
 
 		#If redirect is detected from URI
 		if(!empty($_GET['oredirect'])){
@@ -535,9 +535,9 @@ class fia {
 
 
 			#APP ~ when api call on URI doesn't exists
-			elseif(!self::oroute('oAPI')){
+			elseif(!self::route('oAPI')){
 				$o['oRouter'] = 'oAPP';
-				$o['oRoute'] = self::oroute('oAPP');
+				$o['oRoute'] = self::route('oAPP');
 				$o['oFile'] = self::$path['module'].'app'.DS.$o['oRoute'].'.php';
 				if(!file_exists($o['oFile'])){
 					$o['oFile'] = self::$path['module'].'app.php';
@@ -557,7 +557,7 @@ class fia {
 			#API ~ when api call exists on URI
 			else {
 				$o['oRouter'] = 'oAPI';
-				$o['oRoute'] = self::oroute('oAPI');
+				$o['oRoute'] = self::route('oAPI');
 				$o['oFile'] = self::$path['module'].'api'.DS.$o['oRoute'].'.php';
 				if(!file_exists($o['oFile'])){
 					$o['oFile'] = self::$path['module'].'api.php';
@@ -595,8 +595,8 @@ class fia {
 	/**==== lOADER UTILITY ====**/
 
 	#PREPARE ~ get and return a file based on path (use view as default path)
-	public static function oprepare($i='oGET', $path='oVIEW'){
-		$v = self::orouter('oGET');
+	public static function prepare($i='oGET', $path='oVIEW'){
+		$v = self::router('oGET');
 		if(isset($v['oRouter'])){
 			$router = $v['oRouter'];
 			if($i !== 'oGET'){$route = $i;} else {$route = $v['oRoute'];}
@@ -614,7 +614,7 @@ class fia {
 
 	#LOAD ~ load a file | use view path by default
 	public static function load($i='oGET', $path='oVIEW'){
-		$o = self::oprepare($i, $path);
+		$o = self::prepare($i, $path);
 		if(file_exists($o)){require $o; return;}
 		oExit('path', $path.' unavailable', $o);
 	}
@@ -623,21 +623,21 @@ class fia {
 	#VIEW ~ return or load
 	public static function view($i='oGET', $v='oLOAD'){
 		if($v == 'oLOAD'){return self::load($i, 'oVIEW');}
-		else {return self::oprepare($i, 'oVIEW');}
+		else {return self::prepare($i, 'oVIEW');}
 	}
 
 
 	#THEME ~ return or load
 	public static function theme($i='oGET', $v='oLOAD'){
 		if($v == 'oLOAD'){return self::load($i, 'oTHEME');}
-		else {return self::oprepare($i, 'oTHEME');}
+		else {return self::prepare($i, 'oTHEME');}
 	}
 
 
 	#BIT ~ return or load
 	public static function bit($i='oGET', $v='oLOAD'){
 		if($v == 'oLOAD'){return self::load($i, 'oBIT');}
-		else {return self::oprepare($i, 'oBIT');}
+		else {return self::prepare($i, 'oBIT');}
 	}
 
 
