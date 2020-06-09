@@ -218,9 +218,9 @@ class fia {
 	/**==== ROUTING UTILITY ====**/
 
 	#CLEAN ROUTE VALUE
-	public static function cleanRoute($i){
+	public static function routeClean($i){
 		$o = strtolower($i);
-		$o = self::cleanInput($o);
+		$o = self::inputClean($o);
 		return trim($o);
 	}
 
@@ -240,7 +240,7 @@ class fia {
 		elseif(!empty($i)){$v = $i;}
 
 		if(!empty($v)){
-			return self::cleanRoute($v);
+			return self::routeClean($v);
 		}
 		return false;
 	}
@@ -251,7 +251,7 @@ class fia {
 
 		#If redirect is detected from URI
 		if(!empty($_GET['oredirect'])){
-			$goto = self::cleanRoute($_GET['oredirect']);
+			$goto = self::routeClean($_GET['oredirect']);
 			self::exitTo($goto);
 		}
 
@@ -1164,7 +1164,7 @@ class fia {
 				}
 			}
 			else {
-				$o = inputClean($v);
+				$o = self::inputClean($v);
 			}
 		}
 
@@ -1189,7 +1189,7 @@ class fia {
 	/**=====::INPUT UTILITY::=====**/
 
 	#CLEAN INPUT ~ returns clean string/array
-	public static function cleanInput($input){
+	public static function inputClean($input){
 		#strip out JS, HTML, CSS & multi-line comments
 		$search = array(
 			'@<script[^>]*?>.*?</script>@si',
@@ -1201,16 +1201,17 @@ class fia {
 			$o = '';
 			$o = preg_replace($search, '', $input);
 			$o = strip_tags($o);
+			$o = trim($o);
 		}
 		else {
 			$o = array();
 			foreach ($input as $key => $value){
 				$clean = preg_replace($search, '', $value);
 				$clean = strip_tags($clean);
-				$o[$key] = $clean;
+				$o[$key] = trim($clean);
 			}
 		}
-		return trim($o);
+		return $o;
 	}
 
 
