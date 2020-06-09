@@ -1211,9 +1211,13 @@ class fia {
   			if(is_array($input)){
   				$o = '<span>';
   				foreach ($input as $key => $value){
-  					$o .= '<strong>'.$key.':</strong> ';
-  					if(is_object($value)){$o .= 'isObject {<em>'.self::dump($value, 'oNEAT', 'oDEFAULT').'</em>}<br>';}
-  					elseif(is_array($value)){$o .= 'isArray <br><span style="display:inline-block; padding:5px 10px 0; margin-top: 5px; border-left:1px dotted gold; border-top:1px dotted gold;">'.self::dump($value, 'oNEAT', 'oDEFAULT').'</span><br>';}
+  					$o .= '<strong style="color:brown;">'.$key.':</strong> ';
+  					if(is_object($value)){
+  						$o .= '<em style="color:gold;">is object</em> <br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px;">'.self::dump($value, 'oPRE', 'oDEFAULT').'</span><br>';
+  					}
+  					elseif(is_array($value)){
+  						$o .= '<em style="color:gold;">is array</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oNEAT', 'oDEFAULT').'</span><br>';
+  					}
   					else {$o .= $value.'<br>';}
   				}
   				$o .= '</span>';
