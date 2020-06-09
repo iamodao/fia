@@ -207,55 +207,6 @@ class fia {
 
 
 
-	/**==== INPUT UTILITY ====**/
-
-	#CLEAN INPUT ~ returns clean string/array
-	public static function cleanInput($input){
-		#strip out JS, HTML, CSS & multi-line comments
-		$search = array(
-			'@<script[^>]*?>.*?</script>@si',
-			'@<[\/\!]*?[^<>]*?>@si',
-			'@<style[^>]*?>.*?</style>@siU',
-			'@<![\s\S]*?--[ \t\n\r]*>@'
-		);
-		if(!is_array($input)){
-			$o = '';
-			$o = preg_replace($search, '', $input);
-			$o = strip_tags($o);
-		}
-		else {
-			$o = array();
-			foreach ($input as $key => $value){
-				$clean = preg_replace($search, '', $value);
-				$clean = strip_tags($clean);
-				$o[$key] = $clean;
-			}
-		}
-		return trim($o);
-	}
-
-
-
-
-
-
-
-
-
-
-	/**=====::FORM UTILITY::=====**/
-
-	#REMOVE BUTTONS FROM FORM DATA (submit, update, delete, save)
-	public static function removeBTN($o){
-		$btns = array('submit', 'update', 'delete', 'save');
-		foreach ($btns as $btn){
-		#Unset button from data (example submitBTN)
-			if(isset($o[$btn.'BTN'])){
-				unset($o[$btn.'BTN']);
-			}
-		}
-		return $o;
-	}
 
 
 
@@ -714,37 +665,7 @@ class fia {
 
 
 
-	/**=====::DATA UTILITY::=====**/
 
-	#CAPTURE DATA (POST/GET/REQUEST/SESSION/any), FILTER RELEVANT INFO AND RETURN CLEANED
-	public static function dataCapture($i='oPOST', $filter=''){
-		if(!empty($i)){
-			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
-			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
-			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
-			elseif($i == 'oSESSION' && !empty($_SESSION)){$v = $_SESSION;}
-			else {$v = $i;}
-
-			if(!empty($filter) && is_array($filter) && is_array($v)){
-				$o = array();
-				foreach ($filter as $index){
-					if(!empty($v[$index])){$o[$index] = self::cleanInput($v[$index]);}
-					elseif(isset($v[$index])){$o[$index] = '';}
-				}
-			}
-			else {
-				$o = cleanInput($v);
-			}
-		}
-
-		if(!empty($o)){
-			#Remove main uri [oapi & olink] for array if it exists
-			if(isset($o['oapi'])){unset($o['oapi']);}
-			if(isset($o['olink'])){unset($o['olink']);}
-			return $o;
-		}
-		return false;
-	}
 
 
 
@@ -973,7 +894,7 @@ class fia {
 
 
 
-	//=====::BEGIN SESSION UTILITY::=====//
+	//=====::SESSION UTILITY::=====//
 
 	#RETURN SESSION VALUE - $_SESSION['value']
 	public static function session($i='', $v='', $id=''){
@@ -1213,6 +1134,106 @@ class fia {
 	#REDIRECT & EXIT
 	public static function exitTo($url){
 		return self::redirect($url, 0, 'oYEAH');
+	}
+
+
+
+
+
+
+
+
+
+
+	/**=====::DATA UTILITY::=====**/
+
+	#CAPTURE DATA (POST/GET/REQUEST/SESSION/any), FILTER RELEVANT INFO AND RETURN CLEANED
+	public static function dataCapture($i='oPOST', $filter=''){
+		if(!empty($i)){
+			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
+			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
+			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
+			elseif($i == 'oSESSION' && !empty($_SESSION)){$v = $_SESSION;}
+			else {$v = $i;}
+
+			if(!empty($filter) && is_array($filter) && is_array($v)){
+				$o = array();
+				foreach ($filter as $index){
+					if(!empty($v[$index])){$o[$index] = self::inputClean($v[$index]);}
+					elseif(isset($v[$index])){$o[$index] = '';}
+				}
+			}
+			else {
+				$o = inputClean($v);
+			}
+		}
+
+		if(!empty($o)){
+			#Remove main uri [oapi & olink] for array if it exists
+			if(isset($o['oapi'])){unset($o['oapi']);}
+			if(isset($o['olink'])){unset($o['olink']);}
+			return $o;
+		}
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+	/**=====::INPUT UTILITY::=====**/
+
+	#CLEAN INPUT ~ returns clean string/array
+	public static function cleanInput($input){
+		#strip out JS, HTML, CSS & multi-line comments
+		$search = array(
+			'@<script[^>]*?>.*?</script>@si',
+			'@<[\/\!]*?[^<>]*?>@si',
+			'@<style[^>]*?>.*?</style>@siU',
+			'@<![\s\S]*?--[ \t\n\r]*>@'
+		);
+		if(!is_array($input)){
+			$o = '';
+			$o = preg_replace($search, '', $input);
+			$o = strip_tags($o);
+		}
+		else {
+			$o = array();
+			foreach ($input as $key => $value){
+				$clean = preg_replace($search, '', $value);
+				$clean = strip_tags($clean);
+				$o[$key] = $clean;
+			}
+		}
+		return trim($o);
+	}
+
+
+
+
+
+
+
+
+
+
+	/**=====::FORM UTILITY::=====**/
+
+	#REMOVE BUTTONS FROM FORM DATA (submit, update, delete, save)
+	public static function removeBTN($o){
+		$btns = array('submit', 'update', 'delete', 'save');
+		foreach ($btns as $btn){
+		#Unset button from data (example submitBTN)
+			if(isset($o[$btn.'BTN'])){
+				unset($o[$btn.'BTN']);
+			}
+		}
+		return $o;
 	}
 
 
