@@ -1154,17 +1154,26 @@ class fia {
 			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
 			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
 			elseif($i == 'oSESSION' && !empty($_SESSION)){$v = $_SESSION;}
-			else {$v = $i;}
+			elseif(!empty($i)){$v = $i;}
 
-			if(!empty($filter) && is_array($filter) && is_array($v)){
-				$o = array();
-				foreach ($filter as $index){
-					if(!empty($v[$index])){$o[$index] = self::inputClean($v[$index]);}
-					elseif(isset($v[$index])){$o[$index] = '';}
+			if(!empty($filter) && !empty($v)){
+				if(is_array($filter) && is_array($v)){
+					$o = array();
+					foreach ($filter as $index){
+						if(!empty($v[$index])){$o[$index] = self::inputClean($v[$index]);}
+						elseif(isset($v[$index])){$o[$index] = '';}
+					}
 				}
-			}
-			else {
-				$o = self::inputClean($v);
+				elseif(!is_array($filter) && is_array($v)){
+					if(!empty($v[$filter])){$o[$filter] = self::inputClean($v[$filter]);}
+					elseif(isset($v[$filter])){$o[$filter] = '';}
+				}
+				elseif(is_array($filter) && !is_array($v) && in_array($v, $filter)){
+					$o = self::inputClean($v);
+				}
+				elseif(!is_array($filter) && !is_array($v) && ($v == $filter)){
+					$o = self::inputClean($v);
+				}
 			}
 		}
 
@@ -1173,6 +1182,28 @@ class fia {
 			if(isset($o['oapi'])){unset($o['oapi']);}
 			if(isset($o['olink'])){unset($o['olink']);}
 			return $o;
+		}
+		return false;
+	}
+
+
+
+	#READ RECORD FROM DATA ARRAY - and return value
+	public static function dataRecord($data, $record){
+		if(!empty($data) && is_array($data) && !empty($record)){
+			if(!is_array($record) && !empty($data[$record])){
+				return $data[$record];
+			}
+			elseif(!is_array($record) && isset($data[$record])){
+				return '';
+			}
+			elseif(is_array($record)){
+				foreach ($record as $index){
+					if(!empty($data[$index])){$o[$index] = $data[$index];}
+					else {$o[$index] = '';}
+				}
+				return $o;
+			}
 		}
 		return false;
 	}
@@ -1385,7 +1416,7 @@ class fia {
   		if($v == 'oECHO'){echo $o; return;}
   		return $o;
   	}
-  	return;
+  	return self::dump(array('BOOLEAN' => "FALSE"));
   }
 
 }
