@@ -196,39 +196,7 @@ class fia {
 
 
 
-	/**=====::REDIRECT UTILITY::=====**/
 
-	#URL REDIRECT ~ using meta
-	public static function redirectMeta($url, $delay=0, $exit='oNOPE'){
-		$o = '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
-		if($exit == 'oYEAH'){exit($o);}
-		else {return $o;}
-	}
-
-
-	#URL REDIRECT
-	public static function redirect($url, $delay=0, $exit='oNOPE'){
-		if($url == 'index'){$url = self::$url;}
-		#TODO ~ check if url has http so as not to include base URL
-		else {
-			$url = self::$url.DS.$url;
-		}
-
-		if(!headers_sent($filename, $linenum)){
-			if(!empty($delay)){header('Refresh:'.$delay.';url='.$url);}
-			else {header('Location: '.$url);}
-			if($exit != 'oNOPE'){exit();}
-		}
-		else {
-			#Use meta redirect (Headers already sent in $filename on line $linenum)
-			return self::redirectMeta($url, $delay, $exit);
-		}
-	}
-
-	#REDIRECT & EXIT
-	public static function exitTo($url){
-		return self::redirect($url, 0, 'oYEAH');
-	}
 
 
 
@@ -1201,6 +1169,51 @@ class fia {
 		}
 	}
 
+
+
+
+
+
+
+
+
+
+	/**=====::REDIRECT UTILITY::=====**/
+
+	#URL REDIRECT ~ using meta
+	public static function redirectMeta($url, $delay=0, $exit='oNOPE'){
+		$o = '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
+		if($exit == 'oYEAH'){exit($o);}
+		else {return $o;}
+	}
+
+
+
+	#URL REDIRECT
+	public static function redirect($url, $delay=0, $exit='oNOPE'){
+		if($url == 'index'){$url = self::$url;}
+		#TODO ~ check if url has http so as not to include base URL
+		else {
+			$url = self::$url.PS.$url;
+		}
+
+		if(!headers_sent($filename, $linenum)){
+			if(!empty($delay)){header('Refresh:'.$delay.';url='.$url);}
+			else {header('Location: '.$url);}
+			if($exit != 'oNOPE'){exit();}
+		}
+		else {
+			#Use meta redirect (Headers already sent in $filename on line $linenum)
+			return self::redirectMeta($url, $delay, $exit);
+		}
+	}
+
+
+
+	#REDIRECT & EXIT
+	public static function exitTo($url){
+		return self::redirect($url, 0, 'oYEAH');
+	}
 
 
 
