@@ -18,8 +18,8 @@ $o_config['oPROJECT'] = array(
 	'domain' => '',
 	'email' => 'hello', #[email@address.com | email]
 	'phone' => '+234 (0) 809-123-7654',
-	'version' => 'eVOLVE',
 	'routing' => 'oAUTO',
+	'version' => 'eVOLVE',
 );
 
 
