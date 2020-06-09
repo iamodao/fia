@@ -1163,7 +1163,7 @@ class fia {
 	#JSON ERROR INTERPRETER
 	public static function jsonError($e, $i=''){
 		$o['JSON_INPUT'] = $i; $o['JSON_ERROR'] = $e;
-		if($e == 4){$o['JSON_ERROR_MSG'] = 'Syntax error';}
+		if($e == 4){$o['JSON_ERROR_MSG'] = 'Syntax Error';}
 		elseif($e == 5){$o['JSON_ERROR_MSG'] = 'Malformed UTF-8 characters, possibly incorrectly encoded';}
 		if(!empty($o)){return $o;}
 	}
@@ -1193,12 +1193,40 @@ class fia {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//=====::MISCELLANEOUS UTILITY::=====//
+
+
 	#STATIC COUNTER
 	public static function counter($i=''){
 		static $counter = 0; #on first run
 		if(!empty($i)){$counter = $counter + $i;}
     return $counter++; #returns counter + 1
   }
+
 
 
 	#PRINT REPORT ~ especially nice for debugging
@@ -1232,5 +1260,6 @@ class fia {
   	}
   	return;
   }
+
 }
 ?>
