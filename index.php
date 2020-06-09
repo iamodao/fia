@@ -15,7 +15,7 @@ $o_init['DIR_FIA'] = $o_init['DIR_ROOT'].DS.'fia';
 $o_init['DIR_SOURCE'] = $o_init['DIR_ROOT'].DS.'source';
 
 
-#EXIT & ERROR REPORTER
+#EXIT - with error message
 function oExit($obj, $msg, $extra=''){
 	$o = strtoupper($obj).'::';
 	if(!empty($msg)){$o .=' <strong>'.ucwords($msg).'</strong>';}
@@ -24,21 +24,18 @@ function oExit($obj, $msg, $extra=''){
 }
 
 
-
-
-
-#INITIALATION FILE
-$init_file = $o_init['DIR_FIA'].DS.'init.php';
-if(!file_exists($init_file)){oExit('init', 'missing file', $init_file);}
-require $init_file;
+#INIT FILE
+$o_initFile = $o_init['DIR_FIA'].DS.'init.php';
+if(!file_exists($o_initFile)){oExit('init', 'missing file', $o_initFile);}
+require $o_initFile;
 
 
 #SANDBOX FILE - for development, demo & testing
-$sandbox_file = '_ignore/dev5/index.php';
-if(file_exists($sandbox_file)){require $sandbox_file;}
+$o_sanbox = '_ignore/dev5/index.php';
+if(file_exists($o_sanbox)){require $o_sanbox; unset($o_sanbox);}
 
 
-#ROUTER CALL
+#CALLING ROUTER
 if(isset($fia) && class_exists('fia') && method_exists('fia', 'router')){
 	$fia->router('oDEFAULT');
 }
