@@ -795,23 +795,7 @@ class fia {
 
 
 
-	/**=====::LANGUAGE UTILITY::=====**/
 
-	#GET & SET LANGUAGE
-	public static function lang($lang=''){
-		if(!empty($lang)){$o = $lang;}
-		elseif(!empty($_GET['lang'])){$o = $_GET['lang'];}
-		elseif(!empty($_POST['oLang'])){$o = $_POST['oLang'];}
-		elseif(!empty($_SESSION['oLANG'])){$o = $_SESSION['oLANG'];}
-		else {$o = 'en';}
-
-		if(empty($_SESSION['oLANG'])){
-			self::sessionStart();
-			$_SESSION['oLANG'] = $o;
-		}
-		elseif($_SESSION['oLANG'] != $o){$_SESSION['oLANG'] = $o;}
-		return strtolower($o);
-	}
 
 
 
@@ -1315,6 +1299,24 @@ class fia {
   		if(!empty($o) && $i != 'ASSET'){return $o.PS;}
   		else {return $o;}
   	}
+  }
+
+
+
+	#GET & SET LANGUAGE
+  public static function lang($lang=''){
+  	if(!empty($lang)){$o = $lang;}
+  	elseif(!empty($_GET['lang'])){$o = $_GET['lang'];}
+  	elseif(!empty($_POST['oLang'])){$o = $_POST['oLang'];}
+  	elseif(!empty($_SESSION['oLANG'])){$o = $_SESSION['oLANG'];}
+  	else {$o = 'en';}
+
+  	if(empty($_SESSION['oLANG'])){
+  		self::sessionStart();
+  		$_SESSION['oLANG'] = $o;
+  	}
+  	elseif($_SESSION['oLANG'] != $o){$_SESSION['oLANG'] = $o;}
+  	return strtolower($o);
   }
 
 
