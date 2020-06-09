@@ -41,39 +41,7 @@ class fia {
 
 
 
-	#SET PATH TO DIRECTORIES
-	private static function path($o=''){
-		if(array_key_exists('DIR_ROOT', $o) && !empty($o['DIR_ROOT'])){
-			self::$path['root'] = $o['DIR_ROOT'].DS;
-			unset($o['DIR_ROOT']);
-		}
-		if(array_key_exists('DIR_FIA', $o) && !empty($o['DIR_FIA'])){
-			self::$path['fia'] = $o['DIR_FIA'].DS;
-			unset($o['DIR_FIA']);
-		}
-		if(array_key_exists('DIR_SOURCE', $o) && !empty($o['DIR_SOURCE'])){
-			self::$path['source'] = $o['DIR_SOURCE'].DS;
-			unset($o['DIR_SOURCE']);
-		}
-		if(!empty($o['path'])){
-			$path = $o['path'];
-			if(!empty($path['module'])){
-				self::$path['module'] = $path['module'].DS;
-				unset($path['module']);
-			}
-			if(!empty($path['layout'])){
-				self::$path['layout'] = $path['layout'].DS;
-				unset($path['layout']);
-			}
-			if(!empty($path['drive'])){
-				self::$path['drive'] = $path['drive'].DS;
-				unset($path['drive']);
-			}
-			$o['path'] = $path;
-			if(empty($o['path'])){unset($o['path']);  }
-		}
-		return $o;
-	}
+
 
 
 	#GET PATH
@@ -867,35 +835,7 @@ class fia {
 
 
 
-	/**=====::JSON UTILITY::=====**/
 
-
-	#JSON ERROR INTERPRETER
-	public static function jsonError($e, $i=''){
-		$o['JSON_INPUT'] = $i; $o['JSON_ERROR'] = $e;
-		if($e == 4){$o['JSON_ERROR_MSG'] = 'Syntax Error';}
-		elseif($e == 5){$o['JSON_ERROR_MSG'] = 'Malformed UTF-8 characters, possibly incorrectly encoded';}
-		if(!empty($o)){return $o;}
-	}
-
-
-
-	#PERFORM JSON OPERATIONS (encode, decode & print)
-	public static function json($input, $i='oENCODE'){
-		if(!empty($input)){
-			if($i == 'oENCODE'){$o = json_encode($input);}
-			elseif($i == 'oDECODE'){$o = json_decode($input);}
-			$e = json_last_error();
-			if(!empty($e)){return self::jsonError($e, $input);}
-			elseif($i == 'oENCODE' || $i == 'oDECODE'){return $o;}
-			elseif($i == 'oPRINT'){
-				header('Content-Type: application/json');
-				echo json_encode($input, JSON_PRETTY_PRINT);
-				exit;
-			}
-		}
-		return;
-	}
 
 
 
@@ -986,7 +926,6 @@ class fia {
 				unset($o['machine']);
 			}
 
-
 			#set timezone
 			if(array_key_exists('timezone', $o)){
 				$timezone = self::timezone($o['timezone']);
@@ -1020,9 +959,14 @@ class fia {
 			$project = $o['oPROJECT'];
 			if(!isset($project['url'])){self::url('oSET');}
 			if(!isset($project['domain'])){self::domain('oSET');}
+			if(!isset($project['email'])){self::email('oSET');}
 
 			foreach ($project as $key => $value){
 				if(property_exists(__CLASS__, $key) && !empty($value)){
+					#fix email without @
+					if($key == 'email' && self::stringIn($value, '@') === false){
+						$value = $value.'@'.self::$domain;
+					}
 					self::${$key} = $value;
 					unset($project[$key]);
 				}
@@ -1034,12 +978,54 @@ class fia {
 					self::domain('oSET');
 					unset($project['domain']);
 				}
+				elseif($key == 'email' && empty($value)){
+					self::email('oSET');
+					unset($project['email']);
+				}
 			}
 			unset($o['oPROJECT']);
 			if(!empty($project)){$o['oPROJECT'] = $project;}
 		}
 		return $o;
 	}
+
+
+
+	#SET PATH TO DIRECTORIES
+	private static function path($o=''){
+		if(array_key_exists('DIR_ROOT', $o) && !empty($o['DIR_ROOT'])){
+			self::$path['root'] = $o['DIR_ROOT'].DS;
+			unset($o['DIR_ROOT']);
+		}
+		if(array_key_exists('DIR_FIA', $o) && !empty($o['DIR_FIA'])){
+			self::$path['fia'] = $o['DIR_FIA'].DS;
+			unset($o['DIR_FIA']);
+		}
+		if(array_key_exists('DIR_SOURCE', $o) && !empty($o['DIR_SOURCE'])){
+			self::$path['source'] = $o['DIR_SOURCE'].DS;
+			unset($o['DIR_SOURCE']);
+		}
+		if(!empty($o['path'])){
+			$path = $o['path'];
+			if(!empty($path['module'])){
+				self::$path['module'] = $path['module'].DS;
+				unset($path['module']);
+			}
+			if(!empty($path['layout'])){
+				self::$path['layout'] = $path['layout'].DS;
+				unset($path['layout']);
+			}
+			if(!empty($path['drive'])){
+				self::$path['drive'] = $path['drive'].DS;
+				unset($path['drive']);
+			}
+			$o['path'] = $path;
+			if(empty($o['path'])){unset($o['path']);}
+		}
+		return $o;
+	}
+
+
 
 
 
@@ -1274,7 +1260,6 @@ class fia {
 
 
 
-
 	#RETURN SERVER-BASE INFORMATION (for example server URL)
   public static function base($i='oDOMAIN'){
   	if($i == 'oDIR'){$o = $_SERVER['DOCUMENT_ROOT'];}
@@ -1283,6 +1268,7 @@ class fia {
   	if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
   	if(!empty($o)){return strtolower($o);}
   }
+
 
 
 	#SET/GET BASE DOMAIN & ASSIGN TO PROPERTY
@@ -1306,6 +1292,19 @@ class fia {
   	elseif($i == 'oGET'){
   		if(!empty(self::$url)){return self::$url;}
   		return self::base('oSERVER');
+  	}
+  }
+
+
+
+  #SET/GET PRIMATY EMAIL & ASSIGN TO PROPERTY
+  public static function email($i='oGET'){
+  	if($i == 'oSET'){
+  		self::$email = 'admin@'.self::base('oDOMAIN');
+  	}
+  	elseif($i == 'oGET'){
+  		if(!empty(self::$email)){return self::$email;}
+  		return 'admin@'.self::base('oDOMAIN');
   	}
   }
 
