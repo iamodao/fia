@@ -593,14 +593,7 @@ class fia {
 		}
 	}
 
-	#RETURN SERVER-BASE INFORMATION (for example server URL)
-	public static function base($i='oDOMAIN'){
-		if($i == 'oDIR'){$o = $_SERVER['DOCUMENT_ROOT'];}
-		if($i == 'oHOST'){$o = $_SERVER['HTTP_HOST'];}
-		if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
-		if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
-		if(!empty($o)){return strtolower($o);}
-	}
+
 
 
 
@@ -1025,18 +1018,21 @@ class fia {
 	private static function project($o){
 		if(isset($o['oPROJECT']) && !empty($o['oPROJECT']) && is_array($o['oPROJECT'])){
 			$project = $o['oPROJECT'];
+			if(!isset($project['url'])){self::url('oSET');}
+			if(!isset($project['domain'])){self::domain('oSET');}
+
 			foreach ($project as $key => $value){
 				if(property_exists(__CLASS__, $key) && !empty($value)){
 					self::${$key} = $value;
 					unset($project[$key]);
 				}
-				elseif($key == 'domain' && empty($value)){
-					self::domain();
-					unset($project['domain']);
-				}
 				elseif($key == 'url' && empty($value)){
-					self::url();
+					self::url('oSET');
 					unset($project['url']);
+				}
+				elseif($key == 'domain' && empty($value)){
+					self::domain('oSET');
+					unset($project['domain']);
 				}
 			}
 			unset($o['oPROJECT']);
@@ -1278,17 +1274,25 @@ class fia {
 
 
 
+
+	#RETURN SERVER-BASE INFORMATION (for example server URL)
+  public static function base($i='oDOMAIN'){
+  	if($i == 'oDIR'){$o = $_SERVER['DOCUMENT_ROOT'];}
+  	if($i == 'oHOST'){$o = $_SERVER['HTTP_HOST'];}
+  	if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
+  	if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
+  	if(!empty($o)){return strtolower($o);}
+  }
+
+
 	#SET/GET BASE DOMAIN & ASSIGN TO PROPERTY
   public static function domain($i='oGET'){
-  	$o = self::base('oDOMAIN');
-  	if($i == 'oGET'){
-  		if(isset(self::$domain)){
-  			return self::$doman;
-  		}
-  		return $o;
+  	if($i == 'oSET'){
+  		self::$domain = self::base('oDOMAIN');
   	}
-  	elseif($i == 'oSET'){
-  		$o = self::$domain;
+  	elseif($i == 'oGET'){
+  		if(!empty(self::$domain)){return self::$doman;}
+  		return self::base('oDOMAIN');
   	}
   }
 
@@ -1296,6 +1300,13 @@ class fia {
 
 	#SET/GET BASE URL & ASSIGN TO PROPERTY
   public static function url($i='oGET'){
+  	if($i == 'oSET'){
+  		self::$url = self::base('oSERVER');
+  	}
+  	elseif($i == 'oGET'){
+  		if(!empty(self::$url)){return self::$url;}
+  		return self::base('oSERVER');
+  	}
   }
 
 
