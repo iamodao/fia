@@ -44,20 +44,7 @@ class fia {
 
 
 
-	#GET PATH
-	public static function pathTo($i='', $prefix=''){
-		if(isset(self::$path[$i])){return self::$path[$i];}
-		else {
-			#TODO ~ improve path to method
-			$o = 'asset'.PS;
-			if($i == 'JS'){$o .= 'js';}
-			elseif($i == 'CSS'){$o .= 'css';}
-			elseif($i == 'IMG'){$o .= 'image';}
-			elseif($i == 'MEDIA'){$o .= 'media';}
-			if(!empty($o) && $i != 'ASSET'){return $o.PS;}
-			else {return $o;}
-		}
-	}
+
 
 
 
@@ -1263,8 +1250,11 @@ class fia {
 	#RETURN SERVER-BASE INFORMATION (for example server URL)
   public static function base($i='oDOMAIN'){
   	if($i == 'oDIR'){$o = $_SERVER['DOCUMENT_ROOT'];}
-  	if($i == 'oHOST'){$o = $_SERVER['HTTP_HOST'];}
-  	if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
+  	if($i == 'oHOST' || $i == 'oSERVER'){
+  		if($i == 'oHOST'){$o = $_SERVER['HTTP_HOST'];}
+  		if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
+  		if(!empty(self::session('oSSL'))){$o = 'https://'.$o;} else {$o = 'http://'.$o;}
+  	}
   	if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
   	if(!empty($o)){return strtolower($o);}
   }
@@ -1305,6 +1295,25 @@ class fia {
   	elseif($i == 'oGET'){
   		if(!empty(self::$email)){return self::$email;}
   		return 'admin@'.self::base('oDOMAIN');
+  	}
+  }
+
+
+
+	#RETURN PATHS
+  public static function pathTo($i='', $prefix='oURL'){
+  	if(isset(self::$path[$i])){return self::$path[$i];}
+  	else {
+			#TODO ~ improve path to method
+  		$o = '';
+  		if($prefix == 'oURL'){$o .= self::$url;}
+  		$o .= PS.'asset'.PS;
+  		if($i == 'JS'){$o .= 'js';}
+  		elseif($i == 'CSS'){$o .= 'css';}
+  		elseif($i == 'IMG'){$o .= 'image';}
+  		elseif($i == 'MEDIA'){$o .= 'media';}
+  		if(!empty($o) && $i != 'ASSET'){return $o.PS;}
+  		else {return $o;}
   	}
   }
 
