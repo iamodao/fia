@@ -1193,9 +1193,40 @@ class fia {
 
 
 
+	#STATIC COUNTER
+	public static function counter($i=''){
+		static $counter = 0; #on first run
+		if(!empty($i)){$counter = $counter + $i;}
+    return $counter++; #returns counter + 1
+  }
 
 
+	#PRINT REPORT ~ especially nice for debugging
+  public static function dump($input, $i='oNEAT', $v='oECHO'){
+  	if(!empty($input)){
+  		if($i == 'oPRE'){$o = '<pre><tt>'.var_export($input, true).'</tt></pre>';}
+  		elseif($i == 'oDUMP'){return var_dump($o);}
+  		elseif($i == 'oPRINT'){return print_r($o);}
+  		elseif($i == 'oNEAT'){
+  			if(is_array($input)){
+  				$o = '<span>';
+  				foreach ($input as $key => $value){
+  					$o .= '<strong>'.$key.':</strong> ';
+  					if(is_object($value)){$o .= 'isObject {<em>'.self::dump($value, 'oNEAT', 'oDEFAULT').'</em>}<br>';}
+  					elseif(is_array($value)){$o .= 'isArray <br><span style="display:inline-block; padding:5px 10px 0; margin-top: 5px; border-left:1px dotted gold; border-top:1px dotted gold;">'.self::dump($value, 'oNEAT', 'oDEFAULT').'</span><br>';}
+  					else {$o .= $value.'<br>';}
+  				}
+  				$o .= '</span>';
+  			}
+  			else {
+  				$o = $input;
+  			}
+  		}
 
-
+  		if($v == 'oECHO'){echo $o; return;}
+  		return $o;
+  	}
+  	return;
+  }
 }
 ?>
