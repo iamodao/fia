@@ -24,32 +24,7 @@ function oExit($obj, $msg, $extra=''){
 }
 
 
-#PRINT REPORT
-function oDUMP($input, $i='oNEAT', $v='oECHO'){
-	if(!empty($input)){
-		if($i == 'oPRE'){$o = '<pre><tt>'.var_export($input, true).'</tt></pre>';}
-		elseif($i == 'oDUMP'){return var_dump($o);}
-		elseif($i == 'oPRINT'){return print_r($o);}
-		elseif($i == 'oNEAT'){
-			if(is_array($input)){
-				$o = '<p>';
-				foreach ($input as $key => $value){
-					$o .= '<strong>'.$key.':</strong> ';
-					if(is_object($value)){$o .= 'isObject {<em>'.oDUMP($value, 'oPRE', 'oDEFAULT').'</em>}<br>';}
-					elseif(is_array($value)){$o .= 'isArray {<em>'.oDUMP($value, 'oPRE', 'oDEFAULT').'</em>}<br>';}
-					else {$o .= $value.'<br>';}
-				}
-				$o .= '</p>';
-			}
-			else {
-				$o = $input;
-			}
-		}
 
-		if($v == 'oECHO'){echo $o; return;}
-		return $o;
-	}
-}
 
 
 #INITIALATION FILE
@@ -64,7 +39,7 @@ if(file_exists($sandbox_file)){require $sandbox_file;}
 
 
 #ROUTER CALL
-if(isset($fia) && class_exists('fia') && method_exists('fia', 'orouter')){
-	$fia->orouter('oDEFAULT');
+if(isset($fia) && class_exists('fia') && method_exists('fia', 'router')){
+	$fia->router('oDEFAULT');
 }
 ?>
