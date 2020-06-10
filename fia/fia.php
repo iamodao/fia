@@ -28,193 +28,6 @@ class fia {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**=====::DATABASE UTILITY::=====**/
-
-	#CREATE DATABASE CONNECTION AND SET DATABASE OBJECT PROPERTY
-	protected static function database($o, $driver='oPDO'){
-		if(!empty($o) && is_array($o)){
-
-			#Using PDO driver
-			if($driver == 'oPDO'){
-				try {$pdo = new PDO('mysql:dbname='.$o['name'].';host='.$o['host'], $o['user'], $o['password']);}
-				catch (PDOException $e){oExit('database', 'connection error', $e->getMessage());}
-				self::$dbo = $pdo;
-			}
-		}
-	}
-
-
-	#RETURN DATABASE OBJECT
-	public static function dbo(){
-		if(!empty(self::$dbo)){return self::$dbo;}
-		return false;
-	}
-
-
-
-
-
-
-
-
-
-
-
-	/**=====::SQL UTILITY::=====**/
-
-	#RETURN ERROR RESPONSE FROM [QUERY STATEMENT OR LAST DATABASE OPERATION]
-	public static function stmtF9($sql, $obj='', $i=2){
-		$o['oSQL'] = $sql;
-		#TODO ~ clean up error reporting
-
-		#NOTE ~ we use DBO by default for object (thus returning error from last database operation)
-		if(empty($obj) || $obj === false){$obj = self::$dbo;}
-		$e = $obj->errorInfo();
-		if(!empty($e)){
-			if($i == 'oALL'){$o['oERROR'] = $e;}
-			elseif(is_numeric($i) && $i <3){$o['oERROR'] = $e[$i];}
-		}
-
-		if(empty($o['oERROR'])){$o['oERROR']= 'UNKNOWN';}
-		return $o;
-	}
-
-
-	#RESOLVE QUERY STATEMENT AND RETURN RESPONSE
-	public static function stmt($sql, $stmt){
-		if($stmt === false){
-			return self::stmtF9($sql, $stmt);
-		}
-		else {
-			$o['oSQL'] = $sql;
-			$o['oSUCCESS'] = 'oYEAH';
-			if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
-			else {
-				#TODO ~ a better check for query type
-				$is_select = stripos($o['oSQL'], 'select');
-				if($is_select !== false){
-					$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
-					else {
-						$o['oCOUNT'] = count($fetch);
-						if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
-						elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
-						elseif($o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
-					}
-				}
-				else {
-					$o['oCOUNT'] = $stmt->rowCount();
-				}
-			}
-		}
-		return $o;
-	}
-
-
-	#EXECUTES SQL QUERY & RETURNS RESPONSE
-	public static function execSQL($sql){
-		$selectInSQL = stripos($sql, 'select');
-		if($selectInSQL !== false){
-			exit('ERROR::Unacceptable <em>(Don\'t call <strong>execSQL()</strong> on SELECT statement</em>)');
-		}
-		$dbo = self::$dbo;
-		$stmt = $dbo->exec($sql);
-		return self::stmt($sql, $stmt);
-	}
-	/**NOTE:
-	 * Don't run SELECT statements on exec
-	 * Don't pass user's input directly via SQL into exec
-	 * It returns FALSE on failure, and ZERO(0) on success (when no rows affected), or the NUMBER of rows affected
-	*/
-
-
-	#RESET PRIMARY KEY
-	public static function resetSQL($table, $column){
-		$sql = "SET @NewID = 0; ";
-		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
-		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
-		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
-		return self::execSQL($sql);
-	}
-
-
-	#RUN SQL QUERY - NOTE ~ don't use with user INPUT, best for single case with result
-	public static function querySQL($sql){
-		$dbo = self::$dbo;
-		$stmt = $dbo->query($sql);
-		return self::stmt($sql, $stmt);
-	}
-
-
-	#RUN SQL USING PREPARED STATEMENT
-	public static function runSQL($sql, $i=''){
-		$dbo = self::$dbo;
-		$stmt = $dbo->prepare($sql);
-		if(empty(($i))){$exec = $stmt->execute();} elseif(is_array($i)){$exec = $stmt->execute($i);}
-		if($exec === false){
-			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
-		}
-		return self::stmt($sql, $stmt);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**==== ROUTING UTILITY ====**/
 
 	#CLEAN ROUTE VALUE
@@ -1190,19 +1003,25 @@ class fia {
 
 	#READ RECORD FROM DATA ARRAY - and return value
 	public static function dataRecord($data, $record){
-		if(!empty($data) && is_array($data) && !empty($record)){
-			if(!is_array($record) && !empty($data[$record])){
-				return $data[$record];
+		if(!empty($data) && !empty($record)){
+			if($data == 'oGET' || $data == 'oPOST' || $data == 'oREQUEST'  || $data == 'oSESSION'){
+				$data = self::dataCapture($data, $record);
+				return self::dataRecord($data, $record);
 			}
-			elseif(!is_array($record) && isset($data[$record])){
-				return '';
-			}
-			elseif(is_array($record)){
-				foreach ($record as $index){
-					if(!empty($data[$index])){$o[$index] = $data[$index];}
-					else {$o[$index] = '';}
+			elseif(is_array($data)){
+				if(!is_array($record) && !empty($data[$record])){
+					return $data[$record];
 				}
-				return $o;
+				elseif(!is_array($record) && isset($data[$record])){
+					return '';
+				}
+				elseif(is_array($record)){
+					foreach ($record as $index){
+						if(!empty($data[$index])){$o[$index] = $data[$index];}
+						else {$o[$index] = '';}
+					}
+					return $o;
+				}
 			}
 		}
 		return false;
@@ -1418,6 +1237,149 @@ class fia {
   	}
   	return self::dump(array('BOOLEAN' => "FALSE"));
   }
+
+
+
+
+
+
+
+
+
+
+	//=====::DATABASE UTILITY::=====//
+
+	#CREATE DATABASE CONNECTION AND SET DATABASE OBJECT PROPERTY
+  protected static function database($o, $driver='oPDO'){
+  	if(!empty($o) && is_array($o)){
+
+			#Using PDO driver
+  		if($driver == 'oPDO'){
+  			try {$pdo = new PDO('mysql:dbname='.$o['name'].';host='.$o['host'], $o['user'], $o['password']);}
+  			catch (PDOException $e){oExit('database', 'connection error', $e->getMessage());}
+  			self::$dbo = $pdo;
+  		}
+  	}
+  }
+
+
+
+	#RETURN DATABASE OBJECT
+  public static function dbo(){
+  	if(!empty(self::$dbo)){return self::$dbo;}
+  	return false;
+  }
+
+
+
+
+
+
+
+
+
+
+	//=====::SQL UTILITY::=====//
+
+	#RETURN ERROR RESPONSE FROM [QUERY STATEMENT OR LAST DATABASE OPERATION]
+  public static function stmtF9($sql, $obj='', $i=2){
+  	$o['oSQL'] = $sql;
+		#TODO ~ clean up error reporting
+
+		#NOTE ~ we use DBO by default for object (thus returning error from last database operation)
+  	if(empty($obj) || $obj === false){$obj = self::$dbo;}
+  	$e = $obj->errorInfo();
+  	if(!empty($e)){
+  		if($i == 'oALL'){$o['oERROR'] = $e;}
+  		elseif(is_numeric($i) && $i <3){$o['oERROR'] = $e[$i];}
+  	}
+
+  	if(empty($o['oERROR'])){$o['oERROR']= 'UNKNOWN';}
+  	return $o;
+  }
+
+
+
+	#RESOLVE QUERY STATEMENT AND RETURN RESPONSE
+  public static function stmt($sql, $stmt){
+  	if($stmt === false){
+  		return self::stmtF9($sql, $stmt);
+  	}
+  	else {
+  		$o['oSQL'] = $sql;
+  		$o['oSUCCESS'] = 'oYEAH';
+  		if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
+  		else {
+				#TODO ~ a better check for query type
+  			$is_select = stripos($o['oSQL'], 'select');
+  			if($is_select !== false){
+  				$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  				if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
+  				else {
+  					$o['oCOUNT'] = count($fetch);
+  					if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
+  					elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
+  					elseif($o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
+  				}
+  			}
+  			else {
+  				$o['oCOUNT'] = $stmt->rowCount();
+  			}
+  		}
+  	}
+  	return $o;
+  }
+
+
+
+	#EXECUTES SQL QUERY & RETURNS RESPONSE
+  public static function execSQL($sql){
+  	$selectInSQL = stripos($sql, 'select');
+  	if($selectInSQL !== false){
+  		exit('ERROR::Unacceptable <em>(Don\'t call <strong>execSQL()</strong> on SELECT statement</em>)');
+  	}
+  	$dbo = self::$dbo;
+  	$stmt = $dbo->exec($sql);
+  	return self::stmt($sql, $stmt);
+  }
+	/**NOTE:
+	 * Don't run SELECT statements on exec
+	 * Don't pass user's input directly via SQL into exec
+	 * It returns FALSE on failure, and ZERO(0) on success (when no rows affected), or the NUMBER of rows affected
+	*/
+
+
+
+	#RESET PRIMARY KEY
+	public static function resetSQL($table, $column){
+		$sql = "SET @NewID = 0; ";
+		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
+		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
+		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
+		return self::execSQL($sql);
+	}
+
+
+
+	#RUN SQL QUERY - NOTE ~ don't use with user INPUT, best for single case with result
+	public static function querySQL($sql){
+		$dbo = self::$dbo;
+		$stmt = $dbo->query($sql);
+		return self::stmt($sql, $stmt);
+	}
+
+
+
+	#RUN SQL USING PREPARED STATEMENT
+	public static function runSQL($sql, $i=''){
+		$dbo = self::$dbo;
+		$stmt = $dbo->prepare($sql);
+		if(empty(($i))){$exec = $stmt->execute();} elseif(is_array($i)){$exec = $stmt->execute($i);}
+		if($exec === false){
+			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
+		}
+		return self::stmt($sql, $stmt);
+	}
 
 }
 ?>
