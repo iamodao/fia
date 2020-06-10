@@ -1217,20 +1217,18 @@ class fia {
   public static function dump($input, $i='oNEAT', $v='oECHO'){
   	if(!empty($input)){
   		if($i == 'oPRE'){$o = '<pre><tt>'.var_export($input, true).'</tt></pre>';}
-  		elseif($i == 'oDUMP'){return var_dump($o);}
-  		elseif($i == 'oPRINT'){return print_r($o);}
+  		elseif($i == 'oDUMP'){return var_dump($input);}
+  		elseif($i == 'oPRINT'){return print_r($input);}
   		elseif($i == 'oNEAT'){
   			if(is_array($input)){
   				$o = '<span>';
   				foreach ($input as $key => $value){
   					$o .= '<strong style="color:brown;">'.$key.':</strong> ';
-  					if(is_object($value)){
-  						$o .= '<em style="color:gold;">is object</em> <br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px;">'.self::dump($value, 'oPRE', 'oDEFAULT').'</span><br>';
+  					if(is_array($value) || is_object($value)){
+  						$o .= '<em style="color:gold;">is array</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oPRE', 'oDEFAULT').'</span>';
   					}
-  					elseif(is_array($value)){
-  						$o .= '<em style="color:gold;">is array</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oNEAT', 'oDEFAULT').'</span><br>';
-  					}
-  					else {$o .= '<span style="font-size:0.942em; color: #454545; font-family:sans-serif; line-height:1.4;">'.$value.'<br>';}
+  					else {$o .= '<span style="font-size:0.942em; color: #454545; font-family:sans-serif; line-height:1.4;">'.$value;}
+  					$o .= '<br>';
   				}
   				$o .= '</span>';
   			}
