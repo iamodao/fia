@@ -1371,7 +1371,7 @@ class fia {
 
 
 	#RUN SQL USING PREPARED STATEMENT
-	public static function runSQL($sql, $i=''){
+	public static function runSQL($sql, $i='', $return='oDEFAULT'){
 		$dbo = self::$dbo;
 		$stmt = $dbo->prepare($sql);
 		if(empty(($i))){
@@ -1383,21 +1383,35 @@ class fia {
 		if($exec === false){
 			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
 		}
-		return self::stmt($sql, $stmt);
+		$result = self::stmt($sql, $stmt);
+		if($return == 'oDEFAULT'){return $result;}
+		elseif($return == 'oRECORD' && isset($result['oRECORD'])){return $result['oRECORD'];}
+		return false;
 	}
 
 
 
 	#SQL BINDER on array
-	public static function arrayBind($data){
+	public static function arrayBind($data, $symbol=':'){
 		if(is_array($data)){
 			$o = array();
 			foreach ($data as $key => $value){
-				$in = ':'.$key;
+				$in = $symbol.$key;
 				$o[$in] = $value;
 			}
 			return $o;
 		}
+	}
+
+
+
+	#SQL CHECK FOR RESULT
+	public static function isRecordSQL($result='', $check=''){
+		if($result != false && $result != 'NO_RECORD'){
+			if(empty($check)){return true;}
+			elseif(!empty($check) && is_array($result) && isset($result[$check])){return true;}
+		}
+		return false;
 	}
 
 }
