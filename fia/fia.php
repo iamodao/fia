@@ -1230,7 +1230,7 @@ class fia {
   					elseif(is_array($value)){
   						$o .= '<em style="color:gold;">is array</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oNEAT', 'oDEFAULT').'</span><br>';
   					}
-  					else {$o .= $value.'<br>';}
+  					else {$o .= '<span style="font-size:0.942em; color: #454545; font-family:sans-serif; line-height:1.4;">'.$value.'<br>';}
   				}
   				$o .= '</span>';
   			}
