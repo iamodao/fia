@@ -1374,7 +1374,12 @@ class fia {
 	public static function runSQL($sql, $i=''){
 		$dbo = self::$dbo;
 		$stmt = $dbo->prepare($sql);
-		if(empty(($i))){$exec = $stmt->execute();} elseif(is_array($i)){$exec = $stmt->execute($i);}
+		if(empty(($i))){
+			$exec = $stmt->execute();
+		}
+		elseif(is_array($i)){
+			$exec = $stmt->execute($i);
+		}
 		if($exec === false){
 			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
 		}
