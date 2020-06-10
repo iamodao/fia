@@ -1381,5 +1381,19 @@ class fia {
 		return self::stmt($sql, $stmt);
 	}
 
+
+
+	#SQL BINDER on array
+	public static function arrayBind($data){
+		if(is_array($data)){
+			$o = array();
+			foreach ($data as $key => $value){
+				$in = ':'.$key;
+				$o[$in] = $value;
+			}
+			return $o;
+		}
+	}
+
 }
 ?>
