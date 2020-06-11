@@ -30,6 +30,13 @@ if(!file_exists($o_initFile)){oExit('init', 'missing file', $o_initFile);}
 require $o_initFile;
 
 
+#SET INITIAL SESSION ID ~ for reuse when unique session is created within the program
+if(!isset($SESSION_INIT_ID)){$SESSION_INIT_ID = session_id();}
+defined('SESSION_INIT_ID') ? null : define('SESSION_INIT_ID', $SESSION_INIT_ID);
+$fia->sessionStart($SESSION_INIT_ID);
+
+
+
 #SANDBOX FILE - for development, demo & testing
 $o_sanbox = '_ignore/dev5/index.php';
 if(file_exists($o_sanbox)){require $o_sanbox; unset($o_sanbox);}
@@ -39,4 +46,8 @@ if(file_exists($o_sanbox)){require $o_sanbox; unset($o_sanbox);}
 if(isset($fia) && class_exists('fia') && method_exists('fia', 'router')){
 	$fia->router('oDEFAULT');
 }
+
+
+#RESET SESSION ID TO INITIAL
+$fia->sessionStart($SESSION_INIT_ID);
 ?>
