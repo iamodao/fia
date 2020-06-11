@@ -836,7 +836,8 @@ class fia {
 	public static function sessionStop($id='oGET'){
 		if($id == 'oGET'){$id = self::sessionID('oGET');}
 		self::sessionStart($id);
-		session_destroy();
+		self::sessionTerminate();
+		// self::sessionStart($id);
 	}
 
 
