@@ -1225,10 +1225,12 @@ class fia {
   				foreach ($input as $key => $value){
   					$o .= '<strong style="color:brown;">'.$key.':</strong> ';
   					if(is_array($value) || is_object($value)){
-  						$o .= '<em style="color:gold;">is array</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oPRE', 'oDEFAULT').'</span>';
+  						if(is_array($value)){$label = 'array';}
+  						elseif(is_object($value)){$label = 'object';}
+  						$o .= '<em style="color:gold;">is_'.$label.'</em><br><span style="display:inline-block; padding:8px; margin: 4px auto 6px 8px; border:1px dotted gold; border-radius:3px; background: rgba(255,255,255, 0.2);">'.self::dump($value, 'oPRE', 'oDEFAULT').'</span>';
   					}
   					else {$o .= '<span style="font-size:0.942em; color: #454545; font-family:sans-serif; line-height:1.4;">'.$value;}
-  					$o .= '<br>';
+  					$o .= '</span><br>';
   				}
   				$o .= '</span>';
   			}
