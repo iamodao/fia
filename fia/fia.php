@@ -809,7 +809,7 @@ class fia {
 
 
 
-	#DESTROY SESSION - (destroys all data witihin current session)
+	#DESTROY SESSION - (destroys all data within current session)
 	public static function sessionDestroy(){
 		if(isset($_SESSION['session_status'])){
 			unset($_SESSION['session_status']);
