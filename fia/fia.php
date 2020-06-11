@@ -30,6 +30,16 @@ class fia {
 
 	/**==== ROUTING UTILITY ====**/
 
+	#CHECK IF ACTIVE ROUTE SHOULD BE EXEMPTED ~ returns true of false
+	public static function routeExempt($exemption, $route=''){
+		if(empty($route) || $route == 'oACTIVE'){$route = self::route();}
+		if(!is_array($exemption) && $route == $exemption){return true;}
+		elseif(is_array($exemption) && in_array($route, $exemption)){return true;}
+		return false;
+	}
+
+
+
 	#CLEAN ROUTE VALUE
 	public static function routeClean($i){
 		$o = strtolower($i);
