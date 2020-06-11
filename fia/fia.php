@@ -1240,9 +1240,13 @@ class fia {
   			}
   		}
 
-  		if($v == 'oECHO'){echo $o; return;}
-  		return $o;
+  		if($v == 'oECHO'){
+  			if($o === true){return self::dump(array('BOOLEAN' => "TRUE"));}
+  			echo $o; return;
+  		}
+  		else {return $o;}
   	}
+
   	return self::dump(array('BOOLEAN' => "FALSE"));
   }
 
