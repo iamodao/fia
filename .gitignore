@@ -4,3 +4,8 @@ _ignore/www/
 
 # Ignore File
 _ignore/dev5/index.php
+
+#Optional
+source/asset/
+source/drive/
+source/layout/
