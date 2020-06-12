@@ -458,13 +458,14 @@ class fia {
 	}
 
 
+
 	// retain form input
 	public static function retainInput($i='', $method='oPOST'){
 		$o = '';
 		if(!empty($i)){
-			if($method == 'oGET'){if(isset($_GET[$i])){$o = $_GET[$i];}}
-			if($method == 'oPOST'){if(isset($_POST[$i])){$o = $_POST[$i];}}
-			if($method == 'oREQUEST'){if(isset($_REQUEST[$i])){$o = $_REQUEST[$i];}}
+			if($method == 'oGET' && !empty($_GET[$i])){$o = $_GET[$i];}
+			if($method == 'oPOST' && !empty($_POST[$i])){$o = $_POST[$i];}
+			if($method == 'oREQUEST' && !empty($_REQUEST[$i])){$o = $_REQUEST[$i];}
 		}
 		return $o;
 	}
@@ -1114,6 +1115,22 @@ class fia {
 		}
 		return $o;
 	}
+
+
+
+	public static function formData($i='oPOST', $name=''){
+		if($i == 'oPOST' && !empty($_POST)){
+			self::session('oFORM_POST_DATA', $_POST);
+		}
+	}
+
+	public static function retainFormPost($i='', $form=''){
+		if(!empty(self::session('oFORM_POST_DATA'))){
+			$data = self::session('oFORM_POST_DATA');
+			if(isset($data[$i])){return $data[$i];}
+		}
+	}
+
 
 
 
