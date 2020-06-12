@@ -48,6 +48,16 @@ class fia {
 	}
 
 
+	#RETURN ACTION URI FROM ROUTE
+	public static function routeAction($i='oGET'){
+		if($i == 'oGET'){
+			if(!empty($_GET['action'])){$o = $_GET['action'];}
+			else {$o = 'default';}
+			return strtolower($o);
+		}
+	}
+
+
 	#GET & PREPARE ROUTE ~ from URI or input
 	public static function route($type='oAPP', $i='oGET'){
 		if($i == 'oGET'){
