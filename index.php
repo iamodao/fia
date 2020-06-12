@@ -49,5 +49,5 @@ if(isset($fia) && class_exists('fia') && method_exists('fia', 'router')){
 
 
 #RESET SESSION ID TO INITIAL
-$fia->sessionStart($SESSION_INIT_ID);
+// $fia->sessionStart($SESSION_INIT_ID);
 ?>
