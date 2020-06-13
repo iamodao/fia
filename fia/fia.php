@@ -118,7 +118,8 @@ class fia {
 					#For when $i is set to auto & app.php is used as default app controller file
 					elseif($i == 'oAUTO'){
 						require $o['oFile'];
-						if(!class_exists('oAPP') || !method_exists('oAPP', $o['oRoute'])){oExit('app', '['.$o['oRoute'].'] controller required', $o['oFile']);}
+						$routename = self::stringTo($o['oRoute'], 'oMETHOD');
+						if(!class_exists('oAPP') || !method_exists('oAPP', $routename)){oExit('app', '['.$o['oRoute'].'] controller required', $o['oFile']);}
 					}
 				}
 
@@ -296,9 +297,26 @@ class fia {
 					$o = self::stringSwap($o, 'www.', '', 'oFIRST');
 				}
 			}
-
-			return $o;
 		}
+
+		#Returns page title from string
+		if($to == 'oTITLE'){
+			$o = self::stringSwap($o, '-', ' ');
+			$o = self::stringSwap($o, '_', ' ');
+			$o = ucwords($o);
+		}
+
+
+		#Returns method-clean name from string
+		if($to == 'oMETHOD'){
+			$o = self::stringSwap($o, '-', ' ');
+			$o = self::stringSwap($o, '_', ' ');
+			$o = ucwords($o);
+			$o = lcfirst($o);
+			$o = self::spaceTo($o, '');
+		}
+
+		return $o;
 	}
 
 
