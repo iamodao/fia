@@ -4,11 +4,11 @@ class oAPP {
 	var $method;
 
 	public function __construct(){
-		$method = fia::route();
+		$method = fia::stringTo(fia::route(), 'oMETHOD');
 		if(!empty($method) && method_exists(__CLASS__, $method)){
 			$this->method = $method;
 			fia::sessionStart();
-			$noauthroute = array('login', 'logout', 'index');
+			$noauthroute = array('login', 'logout', 'index', 'password-reset');
 			$exemptroute = fia::routeExempt($noauthroute);
 			if(!$exemptroute){
 				$this->Auth_IsLoggedIn();
@@ -18,15 +18,20 @@ class oAPP {
 		}
 	}
 
+
 	public function demo(){}
+
+
 	public function index(){
 		self::Auth_IsLoggedIn('login');
 		fia::exitTo('dashboard', 'oRELATIVE');
 	}
 
+
 	public function logout(){
 		$this->Auth_Logout();
 	}
+
 
 	public function login(){
 		if(fia::routeAction() == 'process'){
@@ -49,8 +54,31 @@ class oAPP {
 		fia::sessionUnset('is_logged_in');
 	}
 
+	public function passwordReset(){fia::theme('auth');}
 
-	public function dashboard(){}
+
+	public function dashboard(){fia::theme('main');}
+
+
+	public function booking(){fia::theme('main');}
+
+	public function roomReservation(){fia::theme('main');}
+
+	public function loungeReservation(){fia::theme('main');}
+
+	public function cleaningReservation(){fia::theme('main');}
+
+	public function salonReservation(){fia::theme('main');}
+	public function rooms(){fia::theme('main');}
+	public function suites(){fia::theme('main');}
+	public function newEmployee(){fia::theme('main');}
+	public function employees(){fia::theme('main');}
+	public function updateProfile(){fia::theme('main');}
+	public function changePassword(){fia::theme('main');}
+	public function manual(){fia::theme('main');}
+
+
+
 
 
 

@@ -8,5 +8,7 @@ class bookingApp {
 		elseif($action == 'login-failed') {$msg = '<p class="mdc-typography mdc-theme--secondary">Sorry, your authentication failed!</p>';}
 		if(!empty($msg)){return $msg;}
 	}
+
+	static function PasswordResetMessage(){}
 }
 ?>
