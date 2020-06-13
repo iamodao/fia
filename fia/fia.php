@@ -51,11 +51,12 @@ class fia {
 	#RETURN ACTION URI FROM ROUTE
 	public static function routeAction($i='oGET'){
 		if($i == 'oGET'){
-			if(!empty($_GET['action'])){$o = $_GET['action'];}
+			if(!empty($_GET['oact'])){$o = $_GET['oact'];}
 			else {$o = 'default';}
 			return strtolower($o);
 		}
 	}
+
 
 
 	#GET & PREPARE ROUTE ~ from URI or input
@@ -775,12 +776,15 @@ class fia {
 	public static function sessionStart($id=''){
 		if(empty($id) || $id == 'oGET'){
 			if(headers_sent() === false && !isset($_SESSION)){
-				return session_start();
+				session_start();
+				if(empty($_SESSION['INIT_SESSION_ID'])){$_SESSION['INIT_SESSION_ID'] = session_id();}
+				return;
 			}
 		}
 		else {
 			self::sessionID($id);
-			return session_start();
+			session_start();
+			return;
 		}
 	}
 
@@ -807,12 +811,13 @@ class fia {
 	#DELETE SESSION - (unset session or a session's variable)
 	public static function sessionUnset($var=''){
 		if(!empty($_SESSION)){
-			if(isset($_SESSION[$var])){
+			if(!empty($var) && !empty(self::session($var))){
 				unset($_SESSION[$var]);
 				return true;
 			}
-			else {
-				return session_unset();
+			elseif(empty($var)){
+				session_unset();
+				return true;
 			}
 		}
 		return false;
