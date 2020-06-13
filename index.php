@@ -46,8 +46,4 @@ if(file_exists($o_sanbox)){require $o_sanbox; unset($o_sanbox);}
 if(isset($fia) && class_exists('fia') && method_exists('fia', 'router')){
 	$fia->router('oDEFAULT');
 }
-
-
-#RESET SESSION ID TO INITIAL
-// $fia->sessionStart($SESSION_INIT_ID);
 ?>
