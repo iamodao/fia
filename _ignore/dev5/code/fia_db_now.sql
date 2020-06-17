@@ -17,63 +17,42 @@ DROP DATABASE IF EXISTS `fia_db`;
 CREATE DATABASE IF NOT EXISTS `fia_db` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `fia_db`;
 
--- Dumping structure for table fia_db.firm
-DROP TABLE IF EXISTS `firm`;
-CREATE TABLE IF NOT EXISTS `firm` (
+-- Dumping structure for table fia_db.booking
+DROP TABLE IF EXISTS `booking`;
+CREATE TABLE IF NOT EXISTS `booking` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `buid` varchar(50) DEFAULT NULL,
-  `name` text,
-  `email` text,
-  `phone` text,
-  `address` text,
-  `addresso` text,
-  `webmail` text,
-  `timezone` varchar(50) DEFAULT 'Europe/London',
+  `bind` char(50) DEFAULT NULL,
+  `author` char(50) DEFAULT NULL,
+  `status` char(20) DEFAULT 'pending',
+  `entry` timestamp NULL DEFAULT NULL,
+  `summary` varchar(200) DEFAULT NULL,
+  `type` varchar(100) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `phone` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `amount` bigint(20) DEFAULT '0',
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `buid` (`buid`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+  UNIQUE KEY `bind` (`bind`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table fia_db.firm: 31 rows
-/*!40000 ALTER TABLE `firm` DISABLE KEYS */;
-REPLACE INTO `firm` (`id`, `buid`, `name`, `email`, `phone`, `address`, `addresso`, `webmail`, `timezone`) VALUES
-	(1, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(2, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(3, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(4, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(5, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(6, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(7, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(8, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(9, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(10, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(11, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(12, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(13, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(14, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(15, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(16, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(17, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(18, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(19, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(20, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(21, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(22, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(23, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(24, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(25, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(26, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(27, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(28, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(29, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(30, NULL, 'Samsung Limited', 'info@samsungc.co', NULL, NULL, NULL, NULL, 'Europe/London'),
-	(31, NULL, 'Jerry Gyang', NULL, NULL, NULL, NULL, NULL, 'Europe/London');
-/*!40000 ALTER TABLE `firm` ENABLE KEYS */;
+-- Dumping data for table fia_db.booking: ~2 rows (approximately)
+/*!40000 ALTER TABLE `booking` DISABLE KEYS */;
+REPLACE INTO `booking` (`id`, `bind`, `author`, `status`, `entry`, `summary`, `type`, `name`, `phone`, `email`, `amount`, `date`, `time`) VALUES
+	(1, '45553', '0909799', 'pending', NULL, 'Teni Omoni', 'SALON', 'Teni Omoni', '08037788621', NULL, 0, '2020-06-15', '09:15:21'),
+	(2, '79231', '0909799', 'pending', '2020-06-15 04:11:57', 'Richard Quest schedules a spa session for June 15th, 2020 at 10AM', 'SALON', 'Richard Quest', NULL, 'richard@quest.co.uk', 0, '2020-06-15', '10:13:40'),
+	(3, '32455', '0909799', 'pending', '2020-06-17 11:49:53', 'Kelly Rowland', 'ROOM', 'Kelly Rowland', '09037788621', 'kelly@rowland.com', 0, '2020-06-17', '11:49:51');
+/*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 -- Dumping structure for table fia_db.user
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bind` char(50) DEFAULT NULL,
+  `author` char(50) DEFAULT NULL,
+  `status` char(50) DEFAULT NULL,
+  `entry` timestamp NULL DEFAULT NULL,
   `username` char(50) DEFAULT NULL,
   `password` char(50) DEFAULT NULL,
   `type` char(50) DEFAULT NULL,
@@ -83,9 +62,26 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- Dumping data for table fia_db.user: ~0 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-REPLACE INTO `user` (`id`, `bind`, `username`, `password`, `type`) VALUES
-	(1, '0909799', 'odao', 'oneguy', 'admin');
+REPLACE INTO `user` (`id`, `bind`, `author`, `status`, `entry`, `username`, `password`, `type`) VALUES
+	(1, '0909799', NULL, NULL, NULL, 'odao', 'oneguy', 'admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+
+-- Dumping structure for table fia_db._table
+DROP TABLE IF EXISTS `_table`;
+CREATE TABLE IF NOT EXISTS `_table` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bind` char(50) DEFAULT NULL,
+  `author` char(50) DEFAULT NULL,
+  `status` char(20) DEFAULT NULL,
+  `entry` timestamp NULL DEFAULT NULL,
+  `Column 5` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `bind` (`bind`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+-- Dumping data for table fia_db._table: ~0 rows (approximately)
+/*!40000 ALTER TABLE `_table` DISABLE KEYS */;
+/*!40000 ALTER TABLE `_table` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

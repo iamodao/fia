@@ -62,7 +62,11 @@ class oAPP {
 
 	public function booking(){fia::theme('main');}
 
-	public function roomReservation(){fia::theme('main');}
+	public function roomReservation(){
+		$fil['type'] = 'SALON';
+		$rr = bookingApp::Reservations();
+		fia::theme('main');
+	}
 
 	public function loungeReservation(){fia::theme('main');}
 

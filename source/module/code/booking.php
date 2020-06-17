@@ -10,5 +10,24 @@ class bookingApp {
 	}
 
 	static function PasswordResetMessage(){}
+
+	static function Reservations($filter=''){ # $filter['type'] = 'room'
+	$query = "SELECT * FROM `booking` WHERE `status` != 'done'";
+	if(!empty($filter)){
+		if(!is_array($filter)){
+			$column = '';
+			$query .= " AND `type` = '".$filter."'";
+		}
+		// when filter is array
+		else {
+			$column = fia::arrayBind($filter);
+			foreach ($filter as $key => $value){
+				$query .= " AND `".$key."` = :".$key;
+			}
+		}
+		$result = fia::runSQL($query, $column, 'oRECORD');
+		return $result;
+	}
+}
 }
 ?>

@@ -17,3 +17,7 @@ echo $css;
 <link rel="stylesheet" href="/asset/css/demo/style.css">
 <link rel="shortcut icon" href="/asset/images/favicon.png">
 <link rel="stylesheet" href="/asset/odao.css">
+
+
+<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" type="text/css" rel="stylesheet" media="all">
+
