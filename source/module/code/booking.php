@@ -11,23 +11,46 @@ class bookingApp {
 
 	static function PasswordResetMessage(){}
 
-	static function Reservations($filter=''){ # $filter['type'] = 'room'
-	$query = "SELECT * FROM `booking` WHERE `status` != 'done'";
-	if(!empty($filter)){
-		if(!is_array($filter)){
-			$column = '';
-			$query .= " AND `type` = '".$filter."'";
-		}
-		// when filter is array
-		else {
-			$column = fia::arrayBind($filter);
-			foreach ($filter as $key => $value){
-				$query .= " AND `".$key."` = :".$key;
+	static function Reservations($filter=''){
+		$query = "SELECT * FROM `booking` WHERE `status` != 'done'";
+		$column = '';
+		if(!empty($filter)){
+			if(!is_array($filter)){
+				$query .= " AND `type` = '".$filter."'";
+			}
+			// when filter is array
+			else {
+				$column = fia::arrayBind($filter);
+				foreach ($filter as $key => $value){
+					$query .= " AND `".$key."` = :".$key;
+				}
 			}
 		}
+		$query .= " ORDER BY `id` DESC";
 		$result = fia::runSQL($query, $column, 'oRECORD');
 		return $result;
 	}
-}
+
+
+
+	static function Employees($filter=''){
+		$query = "SELECT * FROM `user` WHERE `status` = 'active'";
+		$column = '';
+		if(!empty($filter)){
+			if(!is_array($filter)){
+				$query .= " AND `type` = '".$filter."'";
+			}
+			// when filter is array
+			else {
+				$column = fia::arrayBind($filter);
+				foreach ($filter as $key => $value){
+					$query .= " AND `".$key."` = :".$key;
+				}
+			}
+		}
+		$query .= " ORDER BY `name` ASC";
+		$result = fia::runSQL($query, $column, 'oRECORD');
+		return $result;
+	}
 }
 ?>

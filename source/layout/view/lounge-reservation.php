@@ -1,5 +1,5 @@
 <?php
-$filter['type'] = 'ROOM';
+$filter['type'] = 'LOUNGE';
 $record = bookingApp::Reservations($filter);
 ?>
 <table id="dataTable" class="display" style="width:100%">

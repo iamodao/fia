@@ -20,6 +20,6 @@ echo $js;
 
 <script>
 	$(document).ready(function() {
-		$('#example').DataTable();
+		$('#dataTable').DataTable();
 	} );
 </script>

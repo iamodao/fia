@@ -230,6 +230,16 @@ class fia {
 	}
 
 
+
+	#ARRAY
+	public static function isArrayMulti($i){
+		foreach ($i as $v) {
+			if (is_array($v)) return true;
+		}
+		return false;
+	}
+
+
 	#RETURNS BOOLEAN ~ check for needle in string
 	public static function stringIn($string, $needle){
 		if(strpos($string, $needle) !== false){return true;}
@@ -1177,7 +1187,7 @@ class fia {
 
 	#STATIC COUNTER
 	public static function counter($i=''){
-		static $counter = 0; #on first run
+		static $counter = 1; #on first run
 		if(!empty($i)){$counter = $counter + $i;}
     return $counter++; #returns counter + 1
   }
