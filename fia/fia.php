@@ -327,6 +327,12 @@ class fia {
 		return false;
 	}
 
+	public static function stringMatch($string='', $comparison='', $rule='oDEFAULT'){
+		if($rule == 'oABSOLUTE' && $string === $comparison){return true;}
+		elseif($rule != 'oABSOLUTE' && $string == $comparison){return true;}
+		return false;
+	}
+
 	public static function stringTo($o, $to){
 		#Returns domain from URL
 		if($to == 'oDOMAIN'){
@@ -1505,12 +1511,17 @@ class fia {
 			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
 		}
 		$result = self::stmt($sql, $stmt);
-		if($return == 'oDEFAULT'){return $result;}
-		elseif($return == 'oRECORD'){
-			if(isset($result['oRECORD'])){return $result['oRECORD'];}
-			return true;
-		}
-		return false;
+		if($return == 'oBOOLEAN' && isset($result['oSUCCESS'])){return true;}
+		elseif($return == 'oCOUNT' && isset($result['oCOUNT'])){return $result['oCOUNT'];}
+		elseif($return == 'oRECORD' && isset($result['oRECORD'])){return $result['oRECORD'];}
+		else {return $result;}
+	}
+
+
+	public static function isCountSQL($query, $column, $count=''){
+		$o = fia::runSQL($query, $column, 'oCOUNT');
+		if($o != $count){return false;}
+		return true;
 	}
 
 
