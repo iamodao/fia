@@ -76,8 +76,21 @@ class oAPP {
 	public function newEmployee(){fia::theme('main');}
 	public function employees(){fia::theme('main');}
 	public function updateProfile(){fia::theme('main');}
-	public function changePassword(){fia::theme('main');}
+	public function changePassword(){
+		fia::theme('main');
+	}
 	public function manual(){fia::theme('main');}
+
+
+	public function settings(){
+		$load_auth_code = fia::ocode('auth');
+		if($load_auth_code){
+
+		}
+		fia::dump($load_auth_code);
+
+	}
+
 
 
 
@@ -151,6 +164,16 @@ class oAPP {
 			if(!empty($redirect)){fia::exitTo($redirect, 'oRELATIVE');}
 			else {fia::exitTo('login', 'oRELATIVE');}
 		}
+	}
+
+	private function Auth_ChangePassword($input){
+		$field = array('password', 'newpassword', 'repassword', 'bind');
+		$record = fia::dataRecord($input, $field);
+		if($record !== false){
+			$query = "SELECT `password` FROM `user` WHERE `bind` = :bind LIMIT 1";
+		}
+
+
 	}
 
 
