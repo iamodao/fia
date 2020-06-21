@@ -1506,7 +1506,10 @@ class fia {
 		}
 		$result = self::stmt($sql, $stmt);
 		if($return == 'oDEFAULT'){return $result;}
-		elseif($return == 'oRECORD' && isset($result['oRECORD'])){return $result['oRECORD'];}
+		elseif($return == 'oRECORD'){
+			if(isset($result['oRECORD'])){return $result['oRECORD'];}
+			return true;
+		}
 		return false;
 	}
 
