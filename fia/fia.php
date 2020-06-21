@@ -187,6 +187,45 @@ class fia {
 	}
 
 
+
+	public static function ofile($o = '', $option='oLOAD', $type=''){
+		if(!empty($o)){
+			if($type == 'oCODE'){$o = self::$path['module'].'code'.DS.$o;}
+			$o = strtolower($o);
+			$file = $o.'.html';
+			if(!file_exists($file)){$file = $o.'.inc';}
+			if(!file_exists($file)){$file = $o.'.php';}
+
+			if($option == 'oLOAD'){
+				if(!file_exists($file)){
+					oExit($type, 'file unavailable', $file);
+				}
+				require $file;
+				return true;
+			}
+			elseif($option == 'oRETURN'){
+				return $file;
+			}
+		}
+		return false;
+	}
+
+
+	public static function ocode($i='oGET', $option='oLOAD'){
+		if(!empty($i)){
+			if($i !== 'oGET'){$o = $i;}
+			else {
+				$v = self::router('oGET');
+				if(isset($v['oRoute'])){$o = $v['oRoute'];}
+			}
+			return self::ofile($o, $option, 'oCODE');
+		}
+	}
+
+
+
+
+
 	#LOAD ~ load a file | use view path by default
 	public static function load($i='oGET', $path='oVIEW'){
 		$o = self::prepare($i, $path);
