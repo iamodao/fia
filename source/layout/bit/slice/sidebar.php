@@ -19,8 +19,10 @@
 				fia::bit('nav'.DS.'reservation');
 				fia::bit('nav'.DS.'hotel');
 				fia::bit('nav'.DS.'employee');
-				fia::bit('nav'.DS.'settings');
 				?>
+				<div class="mdc-list-item mdc-drawer-item">
+					<a class="mdc-drawer-link" href="/settings"> <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">settings</i> Settings</a>
+				</div>
 				<div class="mdc-list-item mdc-drawer-item">
 					<a class="mdc-drawer-link" href="/logout"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">input</i> Logout </a>
 				</div>
