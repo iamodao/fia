@@ -19,7 +19,16 @@ $o_init['DIR_SOURCE'] = $o_init['DIR_ROOT'].DS.'source';
 function oExit($obj, $msg, $extra=''){
 	$o = strtoupper($obj).'::';
 	if(!empty($msg)){$o .=' <strong>'.ucwords($msg).'</strong>';}
-	if(!empty($extra)){$o .= ' (<small><em>'.$extra.'</em></small>)';}
+	if(!empty($extra)){
+		if(is_string($extra)){$o .= ' (<small><em>'.$extra.'</em></small>)';}
+		else {
+			$rez['OBJECT'] = $obj;
+			$rez['MESSAGE'] = $msg;
+			$rez['EXTRA'] = $extra;
+			fia::dump($rez);
+			exit;
+		}
+	}
 	exit($o);
 }
 
