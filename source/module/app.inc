@@ -11,7 +11,8 @@ class oAPP {
 			fia::ocode('auth');
 			Auth::isLoggedIn();
 		}
-		return $this->$controller();
+		$method = $this->controller;
+		$this->$method();
 	}
 
 
@@ -23,6 +24,12 @@ class oAPP {
 
 
 	protected function index(){}
+
+	protected function login(){
+		fia::otheme('auth');
+		fia::sessionUnset('active_user_bind');
+		fia::sessionUnset('is_logged_in');
+	}
 
 
 }
