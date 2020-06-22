@@ -83,12 +83,38 @@ class oAPP {
 
 
 	public function settings(){
-		$load_auth_code = fia::ocode('auth');
-		if($load_auth_code){
+		// $load_auth_code = fia::ocode('auth');
+		// if($load_auth_code){
+		// 	$input['bind'] = fia::session('active_user_bind');
+		// 	$input['password'] = 'MyOwnGuy';
 
-		}
-		fia::dump($load_auth_code);
+		// 	if(fia::stringMatch($input) === false){fia::exitTo('settingzs?oact=password-nomatch', 'oRELATIVE');}
+		// 	elseif(Auth::passwordCheck($input) === false){fia::exitTo('settings?oact=password-invalid', 'oRELATIVE');}
+		// 	elseif(Auth::passwordUpdate($input) === false){fia::exitTo('settings?oact=password-update-failed', 'oRELATIVE');}
+		// 	else {
+		// 		echo 'Password updated';
+		// 	}
+		// }
+		// // fia::dump($xn);
 
+		// fia::code('user');
+
+		// $input['bind'] = mt_rand();
+		// $input['username'] = 'room';
+		// $input['password'] = 'RoomGuy';
+		// $input['name'] = 'Room Guy';
+		// $input['phone'] = '09097996078';
+		// $input['email'] = 'room@guy.com';
+		// $input['type'] = 'STAFF';
+		// $input['office'] = 'ROOM';
+		// $input['status'] = 'active';
+		// $sand = User::create($input);
+
+		// $input['bind'] = '946937716';
+		// $sand = User::read($input, 'ol');
+
+		// fia::dump($sand);
+		fia::theme('main');
 	}
 
 

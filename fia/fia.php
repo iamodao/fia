@@ -211,7 +211,8 @@ class fia {
 	}
 
 
-	public static function ocode($i='oGET', $option='oLOAD'){
+	#CODE ~ return or load
+	public static function code($i='oGET', $option='oLOAD'){
 		if(!empty($i)){
 			if($i !== 'oGET'){$o = $i;}
 			else {
@@ -254,11 +255,6 @@ class fia {
 		else {return self::prepare($i, 'oBIT');}
 	}
 
-	#CODE ~ return or load
-	public static function code($i='oGET', $v='oLOAD'){
-		if($v == 'oLOAD'){return self::load($i, 'oCODE');}
-		else {return self::prepare($i, 'oCODE');}
-	}
 
 
 
@@ -1483,7 +1479,7 @@ class fia {
 		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
 		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
 		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
-		return self::execSQL($sql);
+		return self::runSQL($sql);
 	}
 
 
