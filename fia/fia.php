@@ -94,6 +94,7 @@ class fia {
 
 			#Prepare value for $i when it is set to default or empty
 			if($i == 'oDEFAULT' || empty($i)){
+
 				if(!empty(self::$routing)){$i = self::$routing;}
 				else {$i = 'oAUTO';}
 			}
@@ -177,6 +178,7 @@ class fia {
 		if(!empty($o)){
 			if($type == 'oCODE'){$o = self::$path['module'].'code'.DS.$o;}
 			if($type == 'oSITE'){$o = self::$path['module'].$o;}
+			if($type == 'oAPP'){$o = self::$path['module'].'app'.DS.$o;}
 			if($type == 'oAPI'){$o = self::$path['module'].'api'.DS.$o;}
 			$o = strtolower($o);
 			$file = $o.'.html';
