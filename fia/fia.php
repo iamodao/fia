@@ -101,9 +101,7 @@ class fia {
 
 			#SITE
 			if($i == 'oSITE'){
-				$o['oFile'] = self::$path['module'].'site.php';
-				if(!file_exists($o['oFile'])){oExit('site','missing controller file',$o['oFile']);}
-				require $o['oFile'];
+				return self::osite();
 			}
 
 
@@ -130,21 +128,22 @@ class fia {
 
 			#API ~ when api call exists on URI
 			else {
-				$o['oRouter'] = 'oAPI';
-				$o['oRoute'] = self::route('oAPI');
-				$o['oFile'] = self::$path['module'].'api'.DS.$o['oRoute'].'.php';
-				if(!file_exists($o['oFile'])){
-					$o['oFile'] = self::$path['module'].'api.php';
-					if(!file_exists($o['oFile'])){oExit('api','missing controller file', $o['oFile']);}
-					#For when $i is set to auto & api.php is used as default api controller file
-					elseif($i == 'oAUTO'){
-						require $o['oFile'];
-						if(!class_exists('oAPI') || !method_exists('oAPI', $o['oRoute'])){oExit('api', '['.$o['oRoute'].'] controller required', $o['oFile']);}
-					}
-				}
+				// $o['oRouter'] = 'oAPI';
+				// $o['oRoute'] = self::route('oAPI');
+				// $o['oFile'] = self::$path['module'].'api'.DS.$o['oRoute'].'.php';
+				// if(!file_exists($o['oFile'])){
+				// 	$o['oFile'] = self::$path['module'].'api.php';
+				// 	if(!file_exists($o['oFile'])){oExit('api','missing controller file', $o['oFile']);}
+				// 	#For when $i is set to auto & api.php is used as default api controller file
+				// 	elseif($i == 'oAUTO'){
+				// 		require $o['oFile'];
+				// 		if(!class_exists('oAPI') || !method_exists('oAPI', $o['oRoute'])){oExit('api', '['.$o['oRoute'].'] controller required', $o['oFile']);}
+				// 	}
+				// }
 
-				#For when $i is set to get ~ returns $i value;
-				if($i == 'oGET' && !empty($o)){return $o;}
+				// #For when $i is set to get ~ returns $i value;
+				// if($i == 'oGET' && !empty($o)){return $o;}
+				return self::oapi($i);
 			}
 		}
 		else {oExit('FIA', 'path undefined', 'module path not set as property of fia class');}
@@ -191,6 +190,8 @@ class fia {
 	public static function ofile($o = '', $option='oLOAD', $type=''){
 		if(!empty($o)){
 			if($type == 'oCODE'){$o = self::$path['module'].'code'.DS.$o;}
+			if($type == 'oSITE'){$o = self::$path['module'].$o;}
+			if($type == 'oAPI'){$o = self::$path['module'].'api'.DS.$o;}
 			$o = strtolower($o);
 			$file = $o.'.html';
 			if(!file_exists($file)){$file = $o.'.inc';}
@@ -211,8 +212,14 @@ class fia {
 	}
 
 
+
+
+
+
+
+
 	#CODE ~ return or load
-	public static function code($i='oGET', $option='oLOAD'){
+	public static function ocode($i='oGET', $option='oLOAD'){
 		if(!empty($i)){
 			if($i !== 'oGET'){$o = $i;}
 			else {
@@ -222,6 +229,37 @@ class fia {
 			return self::ofile($o, $option, 'oCODE');
 		}
 	}
+
+
+
+
+	#SITE ~ Load default site controller
+	public static function osite($input='', $option='oLOAD'){
+		if(empty($input)){$input = 'site';}
+		return self::ofile($input, $option, 'oSITE');
+	}
+
+	public static function oapi($i='oAUTO', $option='oLOAD'){
+		$o['oRouter'] = 'oAPI';
+		$o['oRoute'] = self::route('oAPI');
+		$o['oFile'] = self::ofile($o['oRoute'], 'oRETURN', 'oAPI');
+		if(!file_exists($o['oFile'])){
+			$file = self::$path['module'].'api';
+			$o['oFile'] = self::ofile($file, 'oRETURN', 'oDEFAULT');
+		}
+
+		if($option == 'oLOAD'){
+			if(!file_exists($o['oFile'])){
+				oExit('oapi', 'controller file unavailable', $o['oFile']);
+			}
+			require $o['oFile'];
+			return true;
+		}
+		elseif($option == 'oRETURN'){
+			return $o;
+		}
+	}
+
 
 
 
