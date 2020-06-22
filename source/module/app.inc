@@ -6,9 +6,10 @@ class oAPP {
 	public function __construct(){
 		$this->set_controller();
 		fia::sessionStart();
-		$no_auth_routes = array('login', 'logout', 'lost-password');
+		fia::ocode('auth');
+		fia::ocode('message');
+		$no_auth_routes = array('login', 'logout', 'lost-password', 'index');
 		if(!fia::routeExempt($no_auth_routes)){
-			fia::ocode('auth');
 			Auth::isLoggedIn();
 		}
 		$method = $this->controller;
@@ -23,9 +24,35 @@ class oAPP {
 	}
 
 
-	protected function index(){}
+	protected function logout(){
+		Auth::logout();
+	}
+
+
+
+	protected function index(){
+		Auth::isLoggedIn('login');
+		fia::exitTo('dashboard', 'oRELATIVE');
+	}
+
+
 
 	protected function login(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'login');
+				if(!Auth::login()){
+					fia::exitTo('login?oact=login-failed', 'oRELATIVE');
+				}
+				else {
+					fia::sessionUnset('oFORM_POST_DATA');
+					fia::exitTo('dashboard', 'oRELATIVE');
+				}
+			}
+			else {
+				fia::exitTo('login', 'oRELATIVE');
+			}
+		}
 		fia::otheme('auth');
 		fia::sessionUnset('active_user_bind');
 		fia::sessionUnset('is_logged_in');

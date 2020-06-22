@@ -22,38 +22,6 @@ class oAPP {
 	public function demo(){}
 
 
-	public function index(){
-		self::Auth_IsLoggedIn('login');
-		fia::exitTo('dashboard', 'oRELATIVE');
-	}
-
-
-	public function logout(){
-		$this->Auth_Logout();
-	}
-
-
-	public function login(){
-		if(fia::routeAction() == 'process'){
-			if(!empty($_POST)){
-				fia::formData('oPOST', 'login');
-				if(!self::Auth_Login()){
-					fia::exitTo('login?oact=login-failed', 'oRELATIVE');
-				}
-				else {
-					fia::sessionUnset('oFORM_POST_DATA');
-					fia::exitTo('dashboard', 'oRELATIVE');
-				}
-			}
-			else {
-				fia::exitTo('login', 'oRELATIVE');
-			}
-		}
-		fia::theme('auth');
-		fia::sessionUnset('active_user_bind');
-		fia::sessionUnset('is_logged_in');
-	}
-
 	public function passwordReset(){fia::theme('auth');}
 
 
@@ -130,33 +98,9 @@ class oAPP {
 
 
 
-	private function Auth_Login(){
-		$field = array('userid', 'password');
-		$record = fia::dataRecord('oPOST', $field);
-		$column = fia::arrayBind($record);
-		if($record !== false){
-			$query = "SELECT `bind` FROM `user` WHERE `username` = :userid AND `password` = :password LIMIT 1";
-			$result = fia::runSQL($query, $column, 'oRECORD');
-			if(fia::isRecordSQL($result, 'bind')){
-				fia::session('active_user_bind', $result['bind']);
-				fia::session('is_logged_in', 'yez');
-				return true;
-			}
-		}
-		else {
-			fia::sessionUnset('active_user_bind');
-			fia::sessionUnset('is_logged_in');
-		}
-		return false;
-	}
 
-	private function Auth_Logout(){
-		fia::sessionUnset('oFORM_POST_DATA');
-		fia::sessionUnset('active_user_bind');
-		fia::sessionUnset('is_logged_in');
-		fia::sessionFresh();
-		fia::exitTo('login?oact=logged-out', 'oRELATIVE');
-	}
+
+
 
 
 	private function Auth_User(){

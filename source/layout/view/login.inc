@@ -7,7 +7,7 @@
 					<div class="mdc-layout-grid">
 						<div class="mdc-layout-grid__inner">
 							<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
-								<?php echo bookingApp::LoginMessage();?>
+								<?php echo Message::login();?>
 							</div>
 							<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
 								<div class="mdc-text-field w-100">
