@@ -43,7 +43,7 @@
 							</div>
 						</li>-->
 
-						<?php fia::bit('nav'.DS.'menu');?>
+						<?php fia::obit('nav'.DS.'menu');?>
 
 					</ul>
 				</div>
