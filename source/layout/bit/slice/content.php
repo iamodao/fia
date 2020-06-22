@@ -1,7 +1,9 @@
 
 <main class="content-wrapper">
 
-	<?php #fia::dump(fia::route());?>
-	<?php fia::view();?>
+	<?php
+	fia::dump(fia::route());
+	#fia::oview();
+	?>
 
 </main>
