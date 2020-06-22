@@ -29,12 +29,10 @@ class oAPP {
 	}
 
 
-
 	protected function index(){
 		Auth::isLoggedIn('login');
 		fia::exitTo('dashboard', 'oRELATIVE');
 	}
-
 
 
 	protected function login(){
@@ -56,6 +54,10 @@ class oAPP {
 		fia::otheme('auth');
 		fia::sessionUnset('active_user_bind');
 		fia::sessionUnset('is_logged_in');
+	}
+
+	protected function dashboard(){
+		
 	}
 
 
