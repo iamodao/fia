@@ -56,9 +56,8 @@ class oAPP {
 		fia::sessionUnset('is_logged_in');
 	}
 
-	protected function dashboard(){
-		
-	}
+	protected function dashboard(){fia::otheme('main');}
+	protected function booking(){fia::otheme('main');}
 
 
 }
