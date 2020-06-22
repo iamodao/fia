@@ -127,16 +127,7 @@ class oAPP {
 
 
 
-	private function Auth_IsLoggedIn($link=''){
-		if(fia::session('is_logged_in') !== 'yez'){
-			if(empty($link)){
-				fia::exitTo('login?oact=not-logged-in', 'oRELATIVE');
-			}
-			else {
-				fia::exitTo($link, 'oRELATIVE');
-			}
-		}
-	}
+
 
 
 	private function Auth_Login(){
