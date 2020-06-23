@@ -1,6 +1,5 @@
 <?php
 class Auth {
-
 	public static function isLoggedIn($link=''){
 		if(fia::session('is_logged_in') !== 'yez'){
 			if(empty($link)){
@@ -18,7 +17,7 @@ class Auth {
 		$record = fia::dataRecord('oPOST', $field);
 		$column = fia::arrayBind($record);
 		if($record !== false){
-			$query = "SELECT `bind` FROM `user` WHERE `username` = :userid AND `password` = :password LIMIT 1";
+			$query = "SELECT * FROM `user` WHERE `username` = :userid AND `password` = :password LIMIT 1";
 			$result = fia::runSQL($query, $column, 'oRECORD');
 			if(fia::isRecordSQL($result, 'bind')){
 				fia::session('active_user_bind', $result['bind']);
@@ -41,6 +40,9 @@ class Auth {
 		fia::sessionFresh();
 		fia::exitTo('login?oact=logged-out', 'oRELATIVE');
 	}
+
+
+
 
 
 

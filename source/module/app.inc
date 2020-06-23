@@ -12,6 +12,7 @@ class oAPP {
 		if(!fia::routeExempt($no_auth_routes)){
 			Auth::isLoggedIn();
 		}
+		fia::ocode('user');
 		$method = $this->controller;
 		$this->$method();
 	}
@@ -57,7 +58,23 @@ class oAPP {
 	}
 
 	protected function dashboard(){fia::otheme('main');}
-	protected function booking(){fia::otheme('main');}
+	protected function booking(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'booking');
+				fia::ocode('booking');
+				if(Booking::create() == true){fia::exitTo('booking?oact=success', 'oRELATIVE');}
+				fia::exitTo('booking?oact=error', 'oRELATIVE');
+			}
+		}
+		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
+	}
+
+	protected function reservations(){
+		fia::ocode('booking');
+		fia::otheme('main');
+	}
 
 
 }

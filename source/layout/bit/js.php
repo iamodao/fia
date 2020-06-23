@@ -15,13 +15,15 @@ echo $js;
 
 
 
-<script src="//code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+<!-- <script src="//code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script> -->
 <?php if(fia::route() != 'login'){?>
-	<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" type="text/javascript"></script>
 
 	<script>
 		$(document).ready(function() {
-			$('#dataTable').DataTable();
+			$('#dataTable').DataTable( {
+				"order": [[ 3, "desc" ]]
+			} );
 		} );
 	</script>
+	<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" type="text/javascript"></script>
 	<?php } ?>

@@ -17,8 +17,11 @@
 				</div>
 				<?php
 				fia::obit('nav'.DS.'reservation');
-				fia::obit('nav'.DS.'hotel');
-				fia::obit('nav'.DS.'employee');
+				$activeUser = new ActiveUser;
+				if(strtolower($activeUser->type) == 'admin'){
+					fia::obit('nav'.DS.'hotel');
+					fia::obit('nav'.DS.'employee');
+				}
 				?>
 				<div class="mdc-list-item mdc-drawer-item">
 					<a class="mdc-drawer-link" href="/settings"> <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">settings</i> Settings</a>

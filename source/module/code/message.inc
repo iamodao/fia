@@ -9,6 +9,16 @@ class Message {
 		if(!empty($msg)){return $msg;}
 	}
 
+
+	public static function booking(){
+		$action = fia::routeAction();
+		if($action == 'default'){$msg = '<p class=" mdc-theme--info">Please complete the form below with valid information</p>';}
+		elseif($action == 'success'){$msg = '<p class=" mdc-theme--success">You have successfully completed a booking</p>';}
+		elseif($action == 'warning'){$msg = '<p class=" mdc-theme--warning">Please correct the following errors</p>';}
+		elseif($action == 'error') {$msg = '<p class="mdc-typography mdc-theme--secondary">Sorry, your action failed!</p>';}
+		if(!empty($msg)){return $msg;}
+	}
+
 	public static function passwordReset(){}
 
 

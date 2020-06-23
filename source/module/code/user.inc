@@ -60,4 +60,46 @@ class User {
 		return fia::runSQL($query, $column, 'oRECORD');
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ActiveUser {
+	public $data;
+
+	public function __construct(){
+		$input['bind'] = fia::session('active_user_bind');
+		$column = fia::arrayBind($input);
+		$query = "SELECT * FROM `user` WHERE `bind` = :bind LIMIT 1";
+		$result = fia::runSQL($query, $column, 'oRECORD');
+		if(fia::isRecordSQL($result, 'bind')){
+			if(isset($result['password'])){unset($result['password']);}
+			$this->data = $result;
+			foreach ($result as $key => $value){$this->$key = $value;}
+			return true;
+		}
+		return false;
+	}
+
+	public function info($field=''){
+		if(!empty($field) && isset($this->$field)){return $this->$field;}
+		elseif($field == 'oDATA' && isset($this->data)){return $this->data;}
+		return false;
+	}
+}
 ?>
