@@ -4,7 +4,7 @@ class oAPP {
 	var $controller;
 
 	public function __construct(){
-		$this->set_controller();
+		$this->iscontroller();
 		fia::sessionStart();
 		fia::ocode('auth');
 		fia::ocode('message');
@@ -13,13 +13,12 @@ class oAPP {
 			Auth::isLoggedIn();
 		}
 		fia::ocode('user');
-		$method = $this->controller;
-		$this->$method();
+		$this->{$this->controller}();
 	}
 
 
-	private function set_controller(){
-		$method = fia::stringTo(fia::route('oAPP'), 'oMETHOD');
+	private function iscontroller(){
+		$method = oString::to(fia::route('oAPP'), 'oMETHOD');
 		if(empty($method) || !method_exists(__CLASS__, $method)){oExit('app', $method, 'controller required');}
 		$this->controller = $method;
 	}
