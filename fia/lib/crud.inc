@@ -16,9 +16,10 @@ class oCRUD {
 			$param = oData::param($filter, ':');
 			$query .= ' WHERE ';
 			foreach ($filter as $key => $value) {
-				$query .= '`'.$key.'` = :'.$key;
+				$query .= '`'.$key.'` = :'.$key.' AND';
 			}
 		}
+		$query = oString::swap($query, ' AND', '' , $occurence='oLAST');
 		if(!empty($limit)){$query .= ' LIMIT '.$limit;}
 		return oSQL::run($query, $param, 'oRECORD');
 	}
