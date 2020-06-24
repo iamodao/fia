@@ -94,7 +94,7 @@ class oSQL {
 
 
 	#RESET PRIMARY KEY
-	public static function reset($table, $column){
+	public static function reset($table, $column='id'){
 		// $sql = "SET @NewID = 0; ";
 		// $sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
 		// $sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
@@ -138,7 +138,7 @@ class oSQL {
 
 
 	public static function isCount($sql, $column, $count=''){
-		$o = fia::run($sql, $column, 'oCOUNT');
+		$o = self::run($sql, $column, 'oCOUNT');
 		if($o != $count){return false;}
 		return true;
 	}
