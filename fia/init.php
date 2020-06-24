@@ -37,6 +37,15 @@ $drive_path = $o_init['DIR_SOURCE'].DS.'drive';
 if(is_dir($drive_path)){$o_init['path']['drive'] = $drive_path;}
 
 
+#CORE LIBRARY
+$core_lib = $o_init['DIR_FIA'].DS.'lib'.DS;
+require($core_lib.'string.inc');
+require($core_lib.'json.inc');
+require($core_lib.'sql.inc');
+require($core_lib.'data.inc');
+require($core_lib.'crud.inc');
+
+
 #FIA CORE, INSTANTIATION & INITIALIZATION
 $core_file = $o_init['DIR_FIA'].DS.'fia.php';
 if(file_exists($core_file)){
