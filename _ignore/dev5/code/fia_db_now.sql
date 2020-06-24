@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
+-- Host:                         localhost
 -- Server version:               5.7.24 - MySQL Community Server (GPL)
 -- Server OS:                    Win64
 -- HeidiSQL Version:             11.0.0.6013
@@ -20,49 +20,37 @@ USE `fia_db`;
 -- Dumping structure for table fia_db.booking
 DROP TABLE IF EXISTS `booking`;
 CREATE TABLE IF NOT EXISTS `booking` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bind` char(50) DEFAULT NULL,
-  `author` char(50) DEFAULT 'oAPP',
-  `status` char(20) DEFAULT 'pending',
   `entry` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `refid` varchar(20) DEFAULT NULL,
-  `summary` varchar(200) DEFAULT NULL,
-  `type` varchar(100) DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `phone` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `suite` varchar(100) DEFAULT NULL,
+  `author` char(50) DEFAULT 'APP',
+  `status` char(50) DEFAULT 'PENDING',
+  `suite` char(100) DEFAULT NULL,
+  `refid` char(100) DEFAULT NULL,
+  `type` char(100) DEFAULT NULL,
+  `name` char(100) DEFAULT NULL,
+  `email` char(100) DEFAULT NULL,
+  `phone` char(100) DEFAULT NULL,
+  `address` char(100) DEFAULT NULL,
+  `sex` char(100) DEFAULT NULL,
+  `summary` char(200) DEFAULT NULL,
   `amount` bigint(20) DEFAULT '0',
-  `schedule_date` date DEFAULT NULL,
-  `schedule_time` time DEFAULT NULL,
+  `birth` date DEFAULT NULL,
+  `schedule` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `bind` (`bind`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+  UNIQUE KEY `bind` (`bind`) USING BTREE,
+  KEY `status` (`status`) USING BTREE,
+  KEY `author` (`author`) USING BTREE,
+  KEY `entry` (`entry`) USING BTREE,
+  KEY `title` (`refid`) USING BTREE,
+  KEY `type` (`type`),
+  KEY `suite` (`suite`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table fia_db.booking: ~21 rows (approximately)
+-- Dumping data for table fia_db.booking: ~0 rows (approximately)
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-REPLACE INTO `booking` (`id`, `bind`, `author`, `status`, `entry`, `refid`, `summary`, `type`, `name`, `phone`, `email`, `suite`, `amount`, `schedule_date`, `schedule_time`) VALUES
-	(1, '159286806196009', '1809771323', 'pending', '2020-06-23 00:21:01', '3430', 'Let\'s clean my home', 'CLEANING', 'Jirk Falon', '0908877627', 'jirk@falon.com', NULL, 0, '2020-06-25', '11:13:00'),
-	(2, '159287270379790', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(3, '159294783141834', '1457580891', 'pending', '2020-06-23 22:30:31', '7417', 'I will like to get my nails done', 'SALON', 'Jeka Nada', '07038899761', 'jeka@nada.com', NULL, 0, '2020-06-26', '11:44:00'),
-	(4, '159295100376703', '246368795', 'pending', '2020-06-23 23:23:23', '9641', '', 'LOUNGE', 'Nicole Sanders', '08090786531', 'nicole@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(5, '159295100376795', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(6, '159295100376792', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(7, '159294783141835', '1457580891', 'pending', '2020-06-23 22:30:31', '7417', 'I will like to get my nails done', 'SALON', 'Jeka Nada', '07038899761', 'jeka@nada.com', NULL, 0, '2020-06-26', '11:44:00'),
-	(8, '159287270379791', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(9, '159295100376762', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(10, '159287270379745', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(11, '159286806196049', '1809771323', 'pending', '2020-06-23 00:21:01', '3430', 'Let\'s clean my home', 'CLEANING', 'Jirk Falon', '0908877627', 'jirk@falon.com', NULL, 0, '2020-06-25', '11:13:00'),
-	(12, '159287270379712', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(13, '159287270379711', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(14, '159287270379111', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(15, '159287270334311', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(16, '159287270379311', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(17, '009295100376794', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(18, '159295100376794', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(19, '159295100376721', '246368795', 'pending', '2020-06-23 23:23:23', '9642', '', 'LOUNGE', 'Zina Sanders', '08090786532', 'zina@gmail.com', NULL, 0, '2020-06-28', '12:15:00'),
-	(20, '159287270311755', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00'),
-	(21, '159287270311711', '246368795', 'pending', '2020-06-23 01:38:23', '5200', '', 'LOUNGE', 'Simion Kesta', '08077663813', '', NULL, 0, '2020-06-24', '10:35:00');
+REPLACE INTO `booking` (`id`, `bind`, `entry`, `author`, `status`, `suite`, `refid`, `type`, `name`, `email`, `phone`, `address`, `sex`, `summary`, `amount`, `birth`, `schedule`) VALUES
+	(1, '476159302832742', '2020-06-24 20:52:07', 'APP', 'PENDING', NULL, '2151', 'SALON', 'Jerry Markus', '', '', '', '', 'Hair Cut', 0, NULL, '2020-06-26 09:45:00');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 -- Dumping structure for table fia_db.room
