@@ -309,11 +309,7 @@ class fia {
 
 
 
-	#SUBSTITUTE SPACE WITH CHARACTER|STRING AND VICE-VERSA
-	public static function spaceTo($string, $value, $inv='oNOPE'){
-		if($inv == 'oYEAH'){return str_replace($value, ' ', $string);}
-		return preg_replace('/\s+/', $value, $string);
-	}
+
 
 
 
@@ -326,100 +322,7 @@ class fia {
 	}
 
 
-	#RETURNS BOOLEAN ~ check for needle in string
-	public static function stringIn($string, $needle){
-		if(strpos($string, $needle) !== false){return true;}
-		return false;
-	}
 
-	//-------------- Substitute a character|string in a string and vice-versa ---------------
-	public static function stringSwap($string, $search, $substitute , $occurence='oALL'){
-		#check if $search is found and return result, else return full string
-		$found = self::stringIn($string, $search);
-		if(!$found){return $string;}
-		else {
-			if($occurence == 'oALL'){return str_replace($search, $substitute, $string);}
-			else {
-				if($occurence == 'oFIRST'){$pos = strpos($string, $search);}
-				if($occurence == 'oLAST'){$pos = strrpos($string, $search);}
-
-				if($pos !== false){
-					return substr_replace($string, $substitute, $pos, strlen($search));
-				}
-				else {return $string;}
-			}
-		}
-	}
-
-	//-------------- Return false OR value before first occurrence character|string if found ---------------
-	public static function stringBefore($string, $search, $strip='oYEAH'){
-		$pos = strpos($string, $search);
-		if($pos && $pos != 0){$result = substr($string, 0, $pos);}
-		if($strip != 'oYEAH'){$result = $result.$search;}
-		if(isset($result)){return $result;}
-		return false;
-	}
-
-
-	//-------------- Return false OR value after first character|string if found ---------------
-	public static function stringAfter($string, $search, $strip='oYEAH'){
-		$found = strstr($string, $search);
-		if($found){
-			$result = $found;
-			if($strip == 'oYEAH'){
-				$result = self::stringSwap($result, $search, '', 'oFIRST');
-			}
-		}
-		if(!empty($result)){return $result;}
-		return false;
-	}
-
-	public static function stringMatch($string='', $comparison='', $rule='oDEFAULT'){
-		if($rule == 'oABSOLUTE' && $string === $comparison){return true;}
-		elseif($rule != 'oABSOLUTE' && $string == $comparison){return true;}
-		return false;
-	}
-
-	public static function stringTo($o, $to){
-		#Returns domain from URL
-		if($to == 'oDOMAIN'){
-			$o = self::stringSwap($o, 'https://', '', 'oFIRST');
-			$o = self::stringSwap($o, 'http://', '', 'oFIRST');
-
-			#Remove sub-directory if found
-			if(self::stringIn($o, '/')){
-				$o = self::stringBefore($o, '/', 'oYEAH');
-			}
-
-			#Remove [known] sub-domain  TODO  ~ use library
-			$subs = array('www','en', 'ng');
-			$o_stripped = '';
-			foreach ($subs as $sub){
-				if(self::stringIn($o, $sub)){
-					$o = self::stringSwap($o, 'www.', '', 'oFIRST');
-				}
-			}
-		}
-
-		#Returns page title from string
-		if($to == 'oTITLE'){
-			$o = self::stringSwap($o, '-', ' ');
-			$o = self::stringSwap($o, '_', ' ');
-			$o = ucwords($o);
-		}
-
-
-		#Returns method-clean name from string
-		if($to == 'oMETHOD'){
-			$o = self::stringSwap($o, '-', ' ');
-			$o = self::stringSwap($o, '_', ' ');
-			$o = ucwords($o);
-			$o = lcfirst($o);
-			$o = self::spaceTo($o, '');
-		}
-
-		return $o;
-	}
 
 
 
@@ -779,7 +682,7 @@ class fia {
 			foreach ($project as $key => $value){
 				if(property_exists(__CLASS__, $key) && !empty($value)){
 					#fix email without @
-					if($key == 'email' && self::stringIn($value, '@') === false){
+					if($key == 'email' && oString::in($value, '@') === false){
 						$value = $value.'@'.self::$domain;
 					}
 					self::${$key} = $value;
@@ -1112,82 +1015,7 @@ class fia {
 
 
 
-	/**=====::DATA UTILITY::=====**/
 
-	#CAPTURE DATA (POST/GET/REQUEST/SESSION/any), FILTER RELEVANT INFO AND RETURN CLEANED
-	public static function dataCapture($i='oPOST', $filter=''){
-		if(!empty($i)){
-			if($i == 'oGET' && !empty($_GET)){$v = $_GET;}
-			elseif($i == 'oPOST' && !empty($_POST)){$v = $_POST;}
-			elseif($i == 'oREQUEST' && !empty($_REQUEST)){$v = $_REQUEST;}
-			elseif($i == 'oSESSION' && !empty($_SESSION)){$v = $_SESSION;}
-			elseif(!empty($i)){$v = $i;}
-
-			if(!empty($filter) && !empty($v)){
-				if(is_array($filter) && is_array($v)){
-					$o = array();
-					foreach ($filter as $index){
-						if(!empty($v[$index])){$o[$index] = self::inputClean($v[$index]);}
-						elseif(isset($v[$index])){$o[$index] = '';}
-					}
-				}
-				elseif(!is_array($filter) && is_array($v)){
-					if(!empty($v[$filter])){$o[$filter] = self::inputClean($v[$filter]);}
-					elseif(isset($v[$filter])){$o[$filter] = '';}
-				}
-				elseif(is_array($filter) && !is_array($v) && in_array($v, $filter)){
-					$o = self::inputClean($v);
-				}
-				elseif(!is_array($filter) && !is_array($v) && ($v == $filter)){
-					$o = self::inputClean($v);
-				}
-			}
-		}
-
-		if(!empty($o)){
-			#Remove main uri [oapi & olink] for array if it exists
-			if(isset($o['oapi'])){unset($o['oapi']);}
-			if(isset($o['olink'])){unset($o['olink']);}
-			return $o;
-		}
-		return false;
-	}
-
-
-
-	#READ RECORD FROM DATA ARRAY - and return value
-	public static function dataRecord($data, $record){
-		if(!empty($data) && !empty($record)){
-			if($data == 'oGET' || $data == 'oPOST' || $data == 'oREQUEST'  || $data == 'oSESSION'){
-				$data = self::dataCapture($data, $record);
-				return self::dataRecord($data, $record);
-			}
-			elseif(is_array($data)){
-				if(!is_array($record) && !empty($data[$record])){
-					return $data[$record];
-				}
-				elseif(!is_array($record) && isset($data[$record])){
-					return '';
-				}
-				elseif(is_array($record)){
-					foreach ($record as $index){
-						if(!empty($data[$index])){$o[$index] = $data[$index];}
-						else {$o[$index] = '';}
-					}
-					return $o;
-				}
-			}
-		}
-		return false;
-	}
-
-
-	public static function dataBind($field, $dataset ='oPOST'){
-		$o['oFIELD'] = $field;
-		$o['oRECORD'] = fia::dataRecord($dataset, $o['oFIELD']);
-		$o['oCOLUMN'] = fia::arrayBind($o['oRECORD']);
-		return $o;
-	}
 
 
 
@@ -1300,7 +1128,7 @@ class fia {
   		if($i == 'oSERVER'){$o = $_SERVER['SERVER_NAME'];}
   		if(!empty(self::session('oSSL'))){$o = 'https://'.$o;} else {$o = 'http://'.$o;}
   	}
-  	if($i == 'oDOMAIN'){$o = self::stringTo(self::base('oHOST'), 'oDOMAIN');}
+  	if($i == 'oDOMAIN'){$o = oString::to(self::base('oHOST'), 'oDOMAIN');}
   	if(!empty($o)){return strtolower($o);}
   }
 
@@ -1459,148 +1287,7 @@ class fia {
 
 
 
-	//=====::SQL UTILITY::=====//
 
-	#RETURN ERROR RESPONSE FROM [QUERY STATEMENT OR LAST DATABASE OPERATION]
-  public static function stmtF9($sql, $obj='', $i=2){
-  	$o['oSQL'] = $sql;
-		#TODO ~ clean up error reporting
-
-		#NOTE ~ we use DBO by default for object (thus returning error from last database operation)
-  	if(empty($obj) || $obj === false){$obj = self::$dbo;}
-  	$e = $obj->errorInfo();
-  	if(!empty($e)){
-  		if($i == 'oALL'){$o['oERROR'] = $e;}
-  		elseif(is_numeric($i) && $i <3){$o['oERROR'] = $e[$i];}
-  	}
-
-  	if(empty($o['oERROR'])){$o['oERROR']= 'UNKNOWN';}
-  	return $o;
-  }
-
-
-
-	#RESOLVE QUERY STATEMENT AND RETURN RESPONSE
-  public static function stmt($sql, $stmt){
-  	if($stmt === false){
-  		return self::stmtF9($sql, $stmt);
-  	}
-  	else {
-  		$o['oSQL'] = $sql;
-  		$o['oSUCCESS'] = 'oYEAH';
-  		if(is_int($stmt)){$o['oCOUNT'] = $stmt;}
-  		else {
-				#TODO ~ a better check for query type
-  			$is_select = stripos($o['oSQL'], 'select');
-  			if($is_select !== false){
-  				$fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  				if($fetch === false){$o['oRECORD'] = 'NO_FETCH';}
-  				else {
-  					$o['oCOUNT'] = count($fetch);
-  					if($o['oCOUNT'] > 1){$o['oRECORD'] = $fetch;}
-  					elseif($o['oCOUNT'] === 1){$o['oRECORD'] = $fetch[0];}
-  					elseif($o['oCOUNT'] === 0){$o['oRECORD'] = 'NO_RECORD';}
-  				}
-  			}
-  			else {
-  				$o['oCOUNT'] = $stmt->rowCount();
-  			}
-  		}
-  	}
-  	return $o;
-  }
-
-
-
-	#EXECUTES SQL QUERY & RETURNS RESPONSE
-  public static function execSQL($sql){
-  	$selectInSQL = stripos($sql, 'select');
-  	if($selectInSQL !== false){
-  		exit('ERROR::Unacceptable <em>(Don\'t call <strong>execSQL()</strong> on SELECT statement</em>)');
-  	}
-  	$dbo = self::$dbo;
-  	$stmt = $dbo->exec($sql);
-  	return self::stmt($sql, $stmt);
-  }
-	/**NOTE:
-	 * Don't run SELECT statements on exec
-	 * Don't pass user's input directly via SQL into exec
-	 * It returns FALSE on failure, and ZERO(0) on success (when no rows affected), or the NUMBER of rows affected
-	*/
-
-
-
-	#RESET PRIMARY KEY
-	public static function resetSQL($table, $column){
-		$sql = "SET @NewID = 0; ";
-		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
-		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
-		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
-		return self::runSQL($sql);
-	}
-
-
-
-	#RUN SQL QUERY - NOTE ~ don't use with user INPUT, best for single case with result
-	public static function querySQL($sql){
-		$dbo = self::$dbo;
-		$stmt = $dbo->query($sql);
-		return self::stmt($sql, $stmt);
-	}
-
-
-
-	#RUN SQL USING PREPARED STATEMENT
-	public static function runSQL($sql, $i='', $return='oDEFAULT'){
-		$dbo = self::$dbo;
-		$stmt = $dbo->prepare($sql);
-		if(empty(($i))){
-			$exec = $stmt->execute();
-		}
-		elseif(is_array($i)){
-			$exec = $stmt->execute($i);
-		}
-		if($exec === false){
-			return self::stmtF9($sql, $stmt);	#returns error as PDO [$dbo->errorInfo()]
-		}
-		$result = self::stmt($sql, $stmt);
-		if($return == 'oBOOLEAN' && isset($result['oSUCCESS'])){return true;}
-		elseif($return == 'oCOUNT' && isset($result['oCOUNT'])){return $result['oCOUNT'];}
-		elseif($return == 'oRECORD' && isset($result['oRECORD'])){return $result['oRECORD'];}
-		else {return $result;}
-	}
-
-
-	public static function isCountSQL($query, $column, $count=''){
-		$o = fia::runSQL($query, $column, 'oCOUNT');
-		if($o != $count){return false;}
-		return true;
-	}
-
-
-
-	#SQL BINDER on array
-	public static function arrayBind($data, $symbol=':'){
-		if(is_array($data)){
-			$o = array();
-			foreach ($data as $key => $value){
-				$in = $symbol.$key;
-				$o[$in] = $value;
-			}
-			return $o;
-		}
-	}
-
-
-
-	#SQL CHECK FOR RESULT
-	public static function isRecordSQL($result='', $check=''){
-		if($result != false && $result != 'NO_RECORD'){
-			if(empty($check)){return true;}
-			elseif(!empty($check) && is_array($result) && isset($result[$check])){return true;}
-		}
-		return false;
-	}
 
 }
 ?>
