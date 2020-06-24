@@ -42,23 +42,23 @@ class oData {
 
 
 
-	#READ RECORD FROM DATA ARRAY - and return value
-	public static function record($data, $record){
-		if(!empty($data) && !empty($record)){
-			if($data == 'oGET' || $data == 'oPOST' || $data == 'oREQUEST'  || $data == 'oSESSION'){
-				$data = self::capture($data, $record);
-				return self::record($data, $record);
+	#FILTER RECORD FROM DATA ARRAY - and return value
+	public static function filter($field, $dataset){
+		if(!empty($dataset) && !empty($field)){
+			if($dataset == 'oGET' || $dataset == 'oPOST' || $dataset == 'oREQUEST'  || $dataset == 'oSESSION'){
+				$dataset = self::capture($dataset, $field);
+				return self::filter($dataset, $field);
 			}
-			elseif(is_array($data)){
-				if(!is_array($record) && !empty($data[$record])){
-					return $data[$record];
+			elseif(is_array($dataset)){
+				if(!is_array($field) && !empty($dataset[$field])){
+					return $dataset[$field];
 				}
-				elseif(!is_array($record) && isset($data[$record])){
+				elseif(!is_array($field) && isset($dataset[$field])){
 					return '';
 				}
-				elseif(is_array($record)){
-					foreach ($record as $index){
-						if(!empty($data[$index])){$o[$index] = $data[$index];}
+				elseif(is_array($field)){
+					foreach ($field as $index){
+						if(!empty($dataset[$index])){$o[$index] = $dataset[$index];}
 						else {$o[$index] = '';}
 					}
 					return $o;
@@ -69,9 +69,21 @@ class oData {
 	}
 
 
-	public static function bindSQL($field, $dataset ='oPOST', $symbol=':'){
-		$data = self::record($dataset, $field);
-		return oSQL::bindparam($data, $symbol);
+	#BIND on array ~ great for SQL bind parameters
+	public static function param($data, $symbol=':'){
+		if(is_array($data)){
+			$o = array();
+			foreach ($data as $key => $value){
+				$o[$symbol.$key] = $value;
+			}
+			return $o;
+		}
+	}
+
+
+	public static function filter_param($field, $dataset ='oPOST', $symbol=':'){
+		$data = self::filter($field, $dataset);
+		return self::param($data, $symbol);
 	}
 }
 ?>
