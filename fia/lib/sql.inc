@@ -1,29 +1,22 @@
 <?php
 class oSQL {
-
-
-
-
-	public static function statement($type, $table, $dataset, $option='oPREPARED'){
+	public static function insert($table, $dataset, $option='oPREPARED'){
 		$query = '';
-		if($type == 'oINSERT'){
-			$query .= 'INSERT INTO `'.$table.'` (';
-			$field = '';
-			foreach ($dataset as $key => $value){
-				$field .='`'.$key.'`, ';
-			}
-			$field = oString::swap($field, ',', '' , $occurence='oLAST');
-			$query .= trim($field).') VALUES (';
-			$param = '';
-			if($option == 'oPREPARED'){
-				foreach ($dataset as $key => $value){
-					$param .=':'.$key.', ';
-				}
-				$param = oString::swap($param, ',', '' , $occurence='oLAST');
-			}
-			$query .= trim($param).');';
+		$query .= 'INSERT INTO `'.$table.'` (';
+		$field = '';
+		foreach ($dataset as $key => $value){
+			$field .='`'.$key.'`, ';
 		}
-
+		$field = oString::swap($field, ',', '' , $occurence='oLAST');
+		$query .= trim($field).') VALUES (';
+		$param = '';
+		if($option == 'oPREPARED'){
+			foreach ($dataset as $key => $value){
+				$param .=':'.$key.', ';
+			}
+			$param = oString::swap($param, ',', '' , $occurence='oLAST');
+		}
+		$query .= trim($param).');';
 		return $query;
 	}
 
@@ -102,10 +95,13 @@ class oSQL {
 
 	#RESET PRIMARY KEY
 	public static function reset($table, $column){
-		$sql = "SET @NewID = 0; ";
-		$sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
-		$sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
-		$sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
+		// $sql = "SET @NewID = 0; ";
+		// $sql .= "UPDATE `{$table}` SET `{$column}`=(@NewID := @NewID +1) ORDER BY `{$column}`; ";
+		// $sql .= "SELECT MAX(`{$column}`) AS `IDMax` FROM `{$table}`; ";
+		// $sql .= "ALTER TABLE `{$table}` AUTO_INCREMENT = [IDMax + 1]; ";
+		$sql = 'ALTER TABLE `'.$table.'` DROP '.$column.';';
+		$sql .= 'ALTER TABLE `'.$table.'` AUTO_INCREMENT = 1;';
+		$sql .= 'ALTER TABLE `'.$table.'` ADD '.$column.' int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;';
 		return self::run($sql);
 	}
 
