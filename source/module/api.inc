@@ -15,13 +15,18 @@ class oAPI {
 		$this->controller = $method;
 	}
 
-	private function bindID(){
-		return mt_rand(100,999).time().mt_rand(10,99);
-	}
+
 
 	public  function sandbox(){
-		$sb = oCRUD::exist('email', 'odao@vae24.ng', 'user');
-		fia::dump($sb);
+		// oSQL::reset('room', 'id');
+		// $input = array('title' => '207', 'suite' => '442159301116415');
+		// $input = array('title' => 'Execute', 'price' => 31500);
+		$input['bind'] = '521159302093145';
+		// $input['id'] = 1;
+		fia::ocode('suite');
+		// $sandbox = Room::create($input);
+		$sandbox = Room::delete($input);
+		fia::dump($sandbox);
 	}
 }
 
