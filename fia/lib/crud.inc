@@ -4,7 +4,7 @@ class oCRUD {
 		#TODO ~ clean these steps to prevent multiple array creation & multiple foreach calls
 		$input = oData::filter($field, $dataset);
 		$param = oData::param($input, ':');
-		$query = oSQL::insert('user', $input);
+		$query = oSQL::insert($table, $input);
 		return oSQL::run($query, $param, 'oBOOLEAN');
 	}
 
@@ -13,6 +13,10 @@ class oCRUD {
 		$param = oData::param($input, ':');
 		$query = 'SELECT `'.$column.'` FROM `'.$table."` WHERE `".$column."` = :".$column;
 		return oSQL::run($query, $param, 'oCOUNT');
+	}
+
+	public static function bindID(){
+		return mt_rand(100,999).time().mt_rand(10,99);
 	}
 
 }
