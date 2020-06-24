@@ -27,4 +27,8 @@ $email = 'wayne@johnson.co';
 $insV = array(':name' => 'Wayne Johnson', ':email' => $email, ':phone' => '0909766534');
 $q = "INSERT INTO `firm`(name, email, phone) VALUES (:name, :email, :phone)";
 $demo = $fia->runSQL($q, $insV);
+
+
+	// $time = strtotime("+2 days 9:45 AM");
+		// $input['schedule'] = date('Y-m-d H:i:s', $time);
 ?>
