@@ -174,6 +174,7 @@ class fia {
 			if($type == 'oTHEME'){$o = self::$path['layout'].'skin'.DS.$o;}
 			if($type == 'oBIT'){$o = self::$path['layout'].'bit'.DS.$o;}
 			if($type == 'oVIEW'){$o = self::$path['layout'].'view'.DS.$o;}
+			if($type == 'oLIB'){$o = self::$path['fia'].'lib'.DS.$o;}
 			$o = strtolower($o);
 			$file = $o.'.html';
 			if(!file_exists($file)){$file = $o.'.inc';}
@@ -286,6 +287,11 @@ class fia {
 		}
 	}
 
+	#LIBRARY ~ return or load
+	public static function olib($i='', $option='oLOAD'){
+		if(empty($i)){oExit('library', 'name required', 'missing argument');}
+		return self::oprepare($i, $option, 'oLIB');
+	}
 
 
 
@@ -1176,6 +1182,12 @@ class fia {
 	}
 
 
+	public static function dataBind($field, $dataset ='oPOST'){
+		$o['oFIELD'] = $field;
+		$o['oRECORD'] = fia::dataRecord($dataset, $o['oFIELD']);
+		$o['oCOLUMN'] = fia::arrayBind($o['oRECORD']);
+		return $o;
+	}
 
 
 
