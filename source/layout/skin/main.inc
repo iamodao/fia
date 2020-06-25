@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 	<?php fia::obit('head');?>
+
 </head>
-<body>
-	<script src="/asset/js/preloader.js"></script>
-	<div class="body-wrapper">
+<body class="sb-nav-fixed">
 
-		<?php fia::obit('slice'.DS.'sidebar');?>
+	<?php fia::oslice('header');?>
 
-		<div class="main-wrapper mdc-drawer-app-content">
+	<div id="layoutSidenav">
 
-			<?php fia::obit('slice'.DS.'navbar');?>
+		<?php fia::oslice('sidebar');?>
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container-fluid">
 
-			<div class="page-wrapper mdc-toolbar-fixed-adjust">
+					<?php fia::oview();?>
 
-				<?php fia::obit('slice'.DS.'content');?>
+				</div>
+			</main>
 
-				<?php fia::obit('slice'.DS.'footer');?>
+			<?php fia::oslice('footer');?>
 
-			</div>
 		</div>
 	</div>
 

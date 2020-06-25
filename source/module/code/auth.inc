@@ -13,17 +13,13 @@ class Auth {
 
 
 	public static function Login(){
-		$field = array('userid', 'password');
-		$record = fia::dataRecord('oPOST', $field);
-		$column = fia::arrayBind($record);
-		if($record !== false){
-			$query = "SELECT * FROM `user` WHERE `username` = :userid AND `password` = :password LIMIT 1";
-			$result = fia::runSQL($query, $column, 'oRECORD');
-			if(fia::isRecordSQL($result, 'bind')){
-				fia::session('active_user_bind', $result['bind']);
-				fia::session('is_logged_in', 'yeah');
-				return true;
-			}
+		$field = array('username', 'password');
+		$capture = oData::capture('oPOST', $field);
+		$result = User::read($capture, 'bind', 1);
+		if(oSQL::isRecord($result, 'bind')){
+			fia::session('active_user_bind', $result['bind']);
+			fia::session('is_logged_in', 'yeah');
+			return true;
 		}
 		else {
 			fia::sessionUnset('active_user_bind');

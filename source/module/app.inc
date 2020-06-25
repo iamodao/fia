@@ -4,8 +4,15 @@ class oAPP {
 	var $controller;
 
 	public function __construct(){
-		$this->iscontroller();
+		#fia::sessionStart();
 		fia::ocode('auth');
+		fia::ocode('notify');
+		$no_auth_routes = array('login', 'logout', 'password-reset', 'index');
+		if(!fia::routeExempt($no_auth_routes)){
+			Auth::isLoggedIn();
+		}
+		fia::ocode('user');
+		$this->iscontroller();
 		$this->{$this->controller}();
 	}
 
@@ -15,11 +22,15 @@ class oAPP {
 		$this->controller = $method;
 	}
 
+	protected function logout(){
+		Auth::logout();
+	}
 
 	protected function index(){
 		Auth::isLoggedIn('login');
 		fia::exitTo('dashboard', 'oRELATIVE');
 	}
+
 
 	protected function login(){
 		if(fia::routeAction() == 'process'){
@@ -41,6 +52,18 @@ class oAPP {
 		fia::sessionUnset('active_user_bind');
 		fia::sessionUnset('is_logged_in');
 	}
+
+
+	protected function passwordReset(){
+		fia::otheme('auth');
+	}
+
+
+	protected function dashboard(){
+		fia::otheme('main');
+	}
+
+
 }
 $runAPP = new oAPP;
 ?>
