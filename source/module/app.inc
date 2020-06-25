@@ -51,6 +51,7 @@ class oAPP {
 		fia::otheme('auth');
 		fia::sessionUnset('active_user_bind');
 		fia::sessionUnset('is_logged_in');
+		fia::sessionUnset('oFORM_POST_DATA');
 	}
 
 
