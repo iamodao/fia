@@ -241,6 +241,11 @@ class fia {
 		return self::oprepare($i, $option, 'oBIT');
 	}
 
+	#SLICE ~ return or load
+	public static function oslice($i, $option='oLOAD'){
+		return self::oprepare('slice'.DS.$i, $option, 'oBIT');
+	}
+
 
 	#API ~ return or load
 	public static function oapi($i='oAUTO', $option='oLOAD'){

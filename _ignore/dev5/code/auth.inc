@@ -1,7 +1,7 @@
 <?php
 class Auth {
 	public static function isLoggedIn($link=''){
-		if(fia::session('is_logged_in') !== 'yeah'){
+		if(fia::session('is_logged_in') !== 'yez'){
 			if(empty($link)){
 				fia::exitTo('login?oact=not-logged-in', 'oRELATIVE');
 			}
@@ -21,7 +21,7 @@ class Auth {
 			$result = fia::runSQL($query, $column, 'oRECORD');
 			if(fia::isRecordSQL($result, 'bind')){
 				fia::session('active_user_bind', $result['bind']);
-				fia::session('is_logged_in', 'yeah');
+				fia::session('is_logged_in', 'yez');
 				return true;
 			}
 		}

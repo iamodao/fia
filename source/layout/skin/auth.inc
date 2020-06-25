@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 	<?php fia::obit('head');?>
+
 </head>
-<body>
-	<div class="body-wrapper">
-		<div class="main-wrapper">
-			<div class="page-wrapper full-page-wrapper d-flex align-items-center justify-content-center">
-				<main class="auth-page">
+<body class="bg-primary">
+	<div id="layoutAuthentication">
+		<div id="layoutAuthentication_content">
+			<main>
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-lg-5">
 
-					<?php fia::oview();?>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<div id="layoutAuthentication_footer">
 
-				</main>
-			</div>
+			<?php fia::oslice('footer');?>
+
 		</div>
 	</div>
 	<?php fia::obit('js');?>
+
 </body>
 </html>
