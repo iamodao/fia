@@ -14,19 +14,29 @@ class oData {
 				if(is_array($filter) && is_array($v)){
 					$o = array();
 					foreach ($filter as $index){
-						if(!empty($v[$index])){$o[$index] = self::inputClean($v[$index]);}
+						if(!empty($v[$index])){$o[$index] = oInput::clean($v[$index]);}
 						elseif(isset($v[$index])){$o[$index] = '';}
 					}
 				}
 				elseif(!is_array($filter) && is_array($v)){
-					if(!empty($v[$filter])){$o[$filter] = self::inputClean($v[$filter]);}
+					if(!empty($v[$filter])){$o[$filter] = oInput::clean($v[$filter]);}
 					elseif(isset($v[$filter])){$o[$filter] = '';}
 				}
 				elseif(is_array($filter) && !is_array($v) && in_array($v, $filter)){
-					$o = self::inputClean($v);
+					$o = oInput::clean($v);
 				}
 				elseif(!is_array($filter) && !is_array($v) && ($v == $filter)){
-					$o = self::inputClean($v);
+					$o = oInput::clean($v);
+				}
+			}
+			elseif(!empty($v)){
+				$o = $v;
+				if(is_array($o)){
+					$clean = array();
+					foreach ($o as $key => $value){
+						$clean[$key] = oInput::clean($value);
+					}
+					$o = $clean;
 				}
 			}
 		}
