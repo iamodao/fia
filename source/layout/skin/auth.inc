@@ -12,7 +12,11 @@
 				<div class="container">
 					<div class="row justify-content-center">
 						<div class="col-lg-5">
+							<div class="card shadow-lg border-0 rounded-lg mt-5">
 
+								<?php fia::oview();?>
+
+							</div>
 						</div>
 					</div>
 				</div>
@@ -24,6 +28,7 @@
 
 		</div>
 	</div>
+
 	<?php fia::obit('js');?>
 
 </body>
