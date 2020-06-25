@@ -44,6 +44,7 @@ require($core_lib.'json.inc');
 require($core_lib.'sql.inc');
 require($core_lib.'data.inc');
 require($core_lib.'crud.inc');
+require($core_lib.'input.inc');
 
 
 #FIA CORE, INSTANTIATION & INITIALIZATION
