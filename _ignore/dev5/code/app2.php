@@ -24,9 +24,7 @@ class oAPP {
 	}
 
 
-	protected function logout(){
-		Auth::logout();
-	}
+
 
 
 
