@@ -2,7 +2,7 @@
 class Suite {
 	public static function create($input){
 		$input['bind'] = oCRUD::bindID();
-		$field = array('bind', 'title', 'price');
+		$field = array('bind', 'title', 'price', 'stock');
 		return oCRUD::create($field, $input, 'suite');
 	}
 

@@ -1,12 +1,5 @@
 <?php
 class User {
-	public static function create($input){
-		$column = fia::arrayBind($input);
-		$query = "INSERT INTO `user` (`username`, `password`, `name`, `phone`, `email`, `type`, `office`, `status`, `bind`)
-		VALUES (:username, :password, :name, :phone, :email, :type, :office, :status, :bind)";
-		$result = fia::runSQL($query, $column, 'oBOOLEAN');
-		return $result;
-	}
 
 
 	public static function update($input, $object='profile'){

@@ -26,6 +26,10 @@ $record = Booking::read($filter);
 						<?php if(strtolower($activeUser) == 'admin'){?>
 							<th style="width:60px;">TYPE</th>
 						<?php } ?>
+						<?php if(strtolower($AU['office']) == 'room' || strtolower($activeUser) == 'admin'){?>
+							<th style="width:60px;">SUITE</th>
+						<?php } ?>
+
 						<th style="width:60px;">STATUS</th>
 						<th style="width:160px;">SCHEDULE</th>
 						<th style="width:120px;" colspan="3">MANAGE</th>
@@ -47,6 +51,10 @@ $record = Booking::read($filter);
 									<?php if(strtolower($activeUser) == 'admin'){?>
 										<td class="center"><?php echo $row['type'];?></td>
 									<?php } ?>
+									<?php if(strtolower($AU['office']) == 'room' || strtolower($activeUser) == 'admin'){?>
+										<td class="center"><?php echo $row['suite'];?></td>
+									<?php } ?>
+
 									<td class="center"><?php echo $row['status'];?></td>
 									<td class="center"><?php echo $row['schedule'];?></td>
 									<td style="width:40px;">Details</td>
@@ -60,6 +68,9 @@ $record = Booking::read($filter);
 									<td><?php echo $record['phone'];?></td>
 									<?php if(strtolower($activeUser) == 'admin'){?>
 										<td class="center"><?php echo $record['type'];?></td>
+									<?php } ?>
+									<?php if(strtolower($AU['office']) == 'room' || strtolower($activeUser) == 'admin'){?>
+										<td class="center"><?php echo $row['suite'];?></td>
 									<?php } ?>
 									<td class="center"><?php echo $record['status'];?></td>
 									<td class="center"><?php echo $record['schedule'];?></td>

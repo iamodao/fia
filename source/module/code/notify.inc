@@ -1,17 +1,5 @@
 <?php
 function Notify($method=''){
-	// public static function booking(){
-	// 	$action = fia::routeAction();
-	// 	if($action == 'default'){$msg = '<p class=" mdc-theme--info">Please complete the form below with valid information</p>';}
-	// 	elseif($action == 'success'){$msg = '<p class=" mdc-theme--success">You have successfully completed a booking</p>';}
-	// 	elseif($action == 'warning'){$msg = '<p class=" mdc-theme--warning">Please correct the following errors</p>';}
-	// 	elseif($action == 'error') {$msg = '<p class="mdc-typography mdc-theme--secondary">Sorry, your action failed!</p>';}
-	// 	if(!empty($msg)){return $msg;}
-	// }
-
-	// public static function passwordReset(){}
-
-
 	$action = fia::routeAction();
 	$notify = '<p class="small mb-3 ';
 
@@ -20,6 +8,27 @@ function Notify($method=''){
 		elseif($action == 'not-logged-in'){$notify .= 'text-warning">You are required to login';}
 		elseif($action == 'logged-out'){$notify .= 'text-success">Your account has been logged out';}
 		else {$notify .= 'text-info">Please enter your login information';}
+	}
+
+	if($method == 'booking'){
+		if($action == 'error'){$notify .= 'text-danger">Sorry, your action failed!';}
+		elseif($action == 'warning'){$notify .= 'text-warning">Please correct the following errors';}
+		elseif($action == 'success'){$notify .= 'text-success">You have successfully completed a booking';}
+		else {$notify .= 'text-info">Please complete the form below with valid information';}
+	}
+
+	if($method == 'suite'){
+		if($action == 'error'){$notify .= 'text-danger">Sorry, your action failed!';}
+		elseif($action == 'warning'){$notify .= 'text-warning">Please correct the following errors';}
+		elseif($action == 'success'){$notify .= 'text-success">You have successfully created a suite';}
+		else {$notify .= 'text-info">Please complete the form below with valid information';}
+	}
+
+	if($method == 'staff'){
+		if($action == 'error'){$notify .= 'text-danger">Sorry, your action failed!';}
+		elseif($action == 'warning'){$notify .= 'text-warning">Please correct the following errors';}
+		elseif($action == 'success'){$notify .= 'text-success">You have successfully created a staff';}
+		else {$notify .= 'text-info">Please complete the form below with valid information';}
 	}
 
 	$notify .= "</p>";

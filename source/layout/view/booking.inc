@@ -1,148 +1,95 @@
-<?php $AU = User::active();?>
-<div class="mdc-layout-grid">
-	<div class="mdc-layout-grid__inner">
-		<div class="mdc-layout-grid__cell--span-12">
-			<div class="mdc-card">
-				<h6 class="card-title"><?php echo $AU['office'];?> > Create Booking</h6>
-				<div class="template-demo">
-					<form action="?oact=process" method="POST" accept-charset="utf-8">
-
-						<div class="mdc-layout-grid__inner mdc-btn-down">
-							<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
-								<?php echo Message::booking();?>
-							</div>
-						</div>
-						<?php
-						if(fia::routeAction() != 'success'){?>
-
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-									<div class="mdc-text-field mdc-text-field--outlined">
-										<input class="mdc-text-field__input" id="name" name="name" value="<?php echo fia::retainFormPost('name');?>">
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="name" class="mdc-floating-label">Name</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-									<div class="mdc-text-field mdc-text-field--outlined">
-										<input class="mdc-text-field__input" id="phone" name="phone" value="<?php echo fia::retainFormPost('phone');?>">
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="phone" class="mdc-floating-label">Phone Number</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-									<div class="mdc-text-field mdc-text-field--outlined">
-										<input class="mdc-text-field__input" id="email" name="email" type="email" value="<?php echo fia::retainFormPost('email');?>">
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="email" class="mdc-floating-label">Email Address</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4-desktop">
-									<div class="mdc-text-field mdc-text-field--outlined datepicker-box-top">
-										<input class="mdc-text-field__input" id="date" name="schedule_date" type="date" value="<?php echo fia::retainFormPost('schedule_date');?>">
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="date" class="mdc-floating-label">Date</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-2-desktop">
-									<div class="mdc-text-field mdc-text-field--outlined datepicker-box-top">
-										<input class="mdc-text-field__input" id="time" name="schedule_time" type="time" value="<?php echo fia::retainFormPost('schedule_time');?>">
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="time" class="mdc-floating-label">Time</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-							<?php if(strtolower($AU['office']) != 'admin'){?>
-								<input type="hidden" name="type" value="<?php echo $AU->office;?>">
-							<?php } else {?>
-
-
-								<div class="mdc-select demo-width-class mdc-btn-down" data-mdc-auto-init="MDCSelect">
-									<input type="hidden" name="type">
-									<i class="mdc-select__dropdown-icon"></i>
-									<div class="mdc-select__selected-text"></div>
-									<div class="mdc-select__menu mdc-menu-surface demo-width-class">
-										<ul class="mdc-list">
-											<li class="mdc-list-item mdc-list-item--selected" data-value="" aria-selected="true"></li>
-											<li class="mdc-list-item" data-value="SALON">Salon</li>
-											<li class="mdc-list-item" data-value="LOUNGE">Lounge</li>
-											<li class="mdc-list-item" data-value="CLEANING">Cleaning</li>
-										</ul>
-									</div>
-									<span class="mdc-floating-label">Pick a Booking type</span>
-									<div class="mdc-line-ripple"></div>
-								</div>
-
-
-							<?php }?>
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-									<div class="mdc-text-field mdc-text-field--textarea">
-										<textarea class="mdc-text-field__input" rows="4" cols="40"  aria-label="label" id="summary" name="summary"><?php echo fia::retainFormPost('summary');?></textarea>
-										<div class="mdc-notched-outline mdc-notched-outline--upgraded">
-											<div class="mdc-notched-outline__leading"></div>
-											<div class="mdc-notched-outline__notch" style="">
-												<label for="summary" class="mdc-floating-label">Summary</label>
-											</div>
-											<div class="mdc-notched-outline__trailing"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="mdc-layout-grid__inner">
-								<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-									<input type="submit" class="mdc-button mdc-button--unelevated filled-button--dark mdc-btn-down"  value="Save">
-								</div>
-							</div>
-						<?php }?>
-
-					</form>
-
-
-
+<?php
+$AU = User::active();
+$BookingFor = '';
+$filter = array();
+$activeUser = strtolower($AU['type']);
+if($activeUser != 'admin'){
+	$BookingFor = 'for '.$AU['office'];
+}
+?>
+<h1 class="mt-4">Booking</h1>
+<div class="card mb-4">
+	<div class="card-body">
+		<form action="?oact=process" method="POST" accept-charset="utf-8">
+			<?php
+			Notify('booking');
+			if(fia::routeAction() != 'success'){?>
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label" for="inputName">Customer Name</label>
+					<div class="col-md-5">
+						<input class="form-control" id="inputName" type="text" placeholder="Full Name" name="name" value="<?php echo fia::retainFormPost('name');?>" required>
+					</div>
 				</div>
-			</div>
+				<div class="form-group row">
+					<label for="inputPhone" class="col-md-2 col-form-label">Phone Number</label>
+					<div class="col-md-5">
+						<input class="form-control" id="inputPhone" type="text" placeholder="Phone Number" name="phone" value="<?php echo fia::retainFormPost('phone');?>">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="inputEmail" class="col-md-2 col-form-label">Email Address</label>
+					<div class="col-md-5">
+						<input class="form-control" id="inputEmail" type="text" placeholder="Email Address" name="email" value="<?php echo fia::retainFormPost('email');?>">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="inputSchedule" class="col-md-2 col-form-label">Schedule Date</label>
+					<div class="col-md-3">
+						<input class="form-control" id="inputSchedule" type="date" placeholder="Schedule" name="schedule_date" value="<?php echo fia::retainFormPost('schedule_date');?>" required>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="inputScheduleTime" class="col-md-2 col-form-label">Schedule Time</label>
+					<div class="col-md-3">
+						<input class="form-control" id="inputScheduleTime" type="time" placeholder="Schedule" name="schedule_time" value="<?php echo fia::retainFormPost('schedule_time');?>">
+					</div>
+				</div>
+
+				<?php if(strtolower($AU['office']) != 'admin'){?>
+					<input type="hidden" name="type" value="<?php echo $AU['office'];?>">
+				<?php } else {?>
+					<div class="form-group row">
+						<label for="inputType" class="col-md-2 col-form-label">Type</label>
+						<div class="col-md-3">
+							<select class="custom-select mr-sm-2" id="inputType" name="type" required>
+								<option selected>Choose...</option>
+								<option value="ROOM">ROOM</option>
+								<option value="SALON">SALON</option>
+								<option value="LOUNGE">LOUNGE</option>
+								<option value="CLEANING">CLEANING</option>
+							</select>
+						</div>
+					</div>
+				<?php }?>
+				<?php if(strtolower($AU['office']) == 'room' || strtolower($AU['office']) == 'admin'){?>
+					<div class="form-group row">
+						<label for="inputSuite" class="col-md-2 col-form-label">Suite</label>
+						<div class="col-md-4">
+							<select class="custom-select mr-sm-2" id="Suite" name="suite" <?php if(strtolower($AU['office']) != 'admin'){echo 'required';}?>>
+								<option selected>Choose...</option>
+								<?php
+								$suite = Suite::read();
+								if($suites != 'NO_RECORD'){
+									if(fia::isArrayMulti($suite) === true){
+										foreach ($suite as $row){?>
+											<option value="<?php echo $row['title'];?>"><?php echo $row['title'].' - ₦'.format::number($row['price'], 0);?></option>
+										<?php } ?>
+									</select>
+								</div>
+							</div>
+						<?php }
+					}	}?>
+					<div class="form-group row">
+						<label for="inputSummary" class="col-md-2 col-form-label">Summary</label>
+						<div class="col-md-5">
+							<textarea class="form-control" id="inputSummary" type="time" placeholder="Enter Summary" name="summary"><?php echo fia::retainFormPost('summary');?></textarea>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inputSend" class="col-md-2 col-form-label"></label>
+						<div class="col-md-2"><input type="submit" class="form-control btn btn-primary" value="Save"></div>
+					</div>
+				<?php }?>
+			</form>
 		</div>
 	</div>
-</div>

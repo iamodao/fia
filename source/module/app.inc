@@ -66,9 +66,62 @@ class oAPP {
 	}
 
 	protected function booking(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'booking');
+				$_POST['schedule'] = '';
+				if(!empty($_POST['schedule_date'])){$_POST['schedule'] .= $_POST['schedule_date'];} else {
+					$date = strtotime('Tomorrow');
+					$_POST['schedule'] .= date("Y-m-d", $date);
+				}
+				if(!empty($_POST['schedule_time'])){$_POST['schedule'] .= ' '.$_POST['schedule_time'];} else {$_POST['schedule'] .= ' 09:45:30';}
+				$booking = Booking::create($_POST, strtolower($_POST['type']));
+				if($booking == true){fia::exitTo('booking?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('booking?oact=error', 'oRELATIVE');
+		}
 		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
 	}
 
+	protected function createSuite(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'suite');
+				$suite = Suite::create($_POST);
+				if($suite == true){fia::exitTo('create-suite?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('create-suite?oact=error', 'oRELATIVE');
+		}
+		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
+	}
+
+	protected function createStaff(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'staff');
+				$staff = User::create($_POST);
+				if($staff == true){fia::exitTo('create-staff?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('create-staff?oact=error', 'oRELATIVE');
+		}
+		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
+	}
+
+	protected function updateProfile(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'staff');
+				$staff = User::create($_POST);
+				if($staff == true){fia::exitTo('update-profile?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('update-profile?oact=error', 'oRELATIVE');
+		}
+		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
+	}
 
 	protected function reservations(){
 		fia::otheme('main');
