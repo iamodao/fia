@@ -4,7 +4,6 @@ class oAPP {
 	var $controller;
 
 	public function __construct(){
-		#fia::sessionStart();
 		fia::ocode('auth');
 		fia::ocode('notify');
 		$no_auth_routes = array('login', 'logout', 'password-reset', 'index');
@@ -12,6 +11,8 @@ class oAPP {
 			Auth::isLoggedIn();
 		}
 		fia::ocode('user');
+		fia::ocode('booking');
+		fia::ocode('suite');
 		$this->iscontroller();
 		$this->{$this->controller}();
 	}
@@ -64,7 +65,22 @@ class oAPP {
 		fia::otheme('main');
 	}
 
+	protected function booking(){
+		fia::otheme('main');
+	}
 
+
+	protected function reservations(){
+		fia::otheme('main');
+	}
+
+	protected function suites(){
+		fia::otheme('main');
+	}
+
+	protected function staffs(){
+		fia::otheme('main');
+	}
 }
 $runAPP = new oAPP;
 ?>

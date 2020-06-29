@@ -1,9 +1,9 @@
-<?php $activeUser = new ActiveUser;?>
+<?php $AU = User::active();?>
 <div class="mdc-layout-grid">
 	<div class="mdc-layout-grid__inner">
 		<div class="mdc-layout-grid__cell--span-12">
 			<div class="mdc-card">
-				<h6 class="card-title"><?php echo $activeUser->office;?> > Create Booking</h6>
+				<h6 class="card-title"><?php echo $AU['office'];?> > Create Booking</h6>
 				<div class="template-demo">
 					<form action="?oact=process" method="POST" accept-charset="utf-8">
 
@@ -90,8 +90,8 @@
 							</div>
 
 
-							<?php if(strtolower($activeUser->office) != 'admin'){?>
-								<input type="hidden" name="type" value="<?php echo $activeUser->office;?>">
+							<?php if(strtolower($AU['office']) != 'admin'){?>
+								<input type="hidden" name="type" value="<?php echo $AU->office;?>">
 							<?php } else {?>
 
 
