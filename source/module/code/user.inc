@@ -16,13 +16,10 @@ class User {
 		return oCRUD::read('user', $filter, $column, $limit);
 	}
 
-	// public static function create($input){
-	// 	$column = fia::arrayBind($input);
-	// 	$query = "INSERT INTO `user`
-	// 	VALUES (:username, :password, :name, :phone, :email, :type, :office, :bind)";
-	// 	$result = fia::runSQL($query, $column, 'oBOOLEAN');
-	// 	return $result;
-	// }
+	public static function update($input, $filter='oBIND'){
+		if($filter == 'oBIND'){return oCRUD::updateBIND($input, 'user');}
+	}
+
 
 	public static function create($input){
 		$input['bind'] = oCRUD::bindID();

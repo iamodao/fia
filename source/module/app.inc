@@ -113,11 +113,29 @@ class oAPP {
 	protected function updateProfile(){
 		if(fia::routeAction() == 'process'){
 			if(!empty($_POST)){
-				fia::formData('oPOST', 'staff');
-				$staff = User::create($_POST);
-				if($staff == true){fia::exitTo('update-profile?oact=success', 'oRELATIVE');}
+				fia::formData('oPOST', 'profile');
+				$_POST['bind'] = fia::session('active_user_bind');
+				$result = User::update($_POST);
+				if($result == true){fia::exitTo('update-profile?oact=success', 'oRELATIVE');}
 			}
 			fia::exitTo('update-profile?oact=error', 'oRELATIVE');
+		}
+		fia::otheme('main');
+		fia::sessionUnset('oFORM_POST_DATA');
+	}
+
+	protected function changePassword(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'password');
+				$_POST['bind'] = fia::session('active_user_bind');
+				$result = User::update($_POST);
+				if($result == true){fia::exitTo('change-password?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('change-password?oact=error', 'oRELATIVE');
+		}
+		elseif(fia::routeAction() == 'success'){
+			fia::redirect('login?oact=changed-password', 3, 'oRELATIVE', 'oNOPE');
 		}
 		fia::otheme('main');
 		fia::sessionUnset('oFORM_POST_DATA');
