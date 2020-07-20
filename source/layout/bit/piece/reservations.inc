@@ -32,7 +32,12 @@ $record = Booking::read($filter);
 
 						<th style="width:60px;">STATUS</th>
 						<th style="width:160px;">SCHEDULE</th>
-						<th style="width:120px;" colspan="3">MANAGE</th>
+						<?php if(strtolower($activeUser) == 'admin'){?>
+
+							<th style="width:120px;" colspan="3">MANAGE</th>
+						<?php } else {?>
+							<th style="width:120px;" colspan="2">MANAGE</th>
+						<?php } ?>
 					</tr>
 				</thead>
 
@@ -57,9 +62,11 @@ $record = Booking::read($filter);
 
 									<td class="center"><?php echo $row['status'];?></td>
 									<td class="center"><?php echo $row['schedule'];?></td>
-									<td style="width:40px;"><a href="./booking-details?id=<?php echo $row['bind'];?>" class="text-info">Details</a></td>
-									<td style="width:40px;"><a href="./update-booking?id=<?php echo $row['bind'];?>" class="text-warning">Edit</a></td>
-									<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $row['bind'];?>);">Trash</a></td>
+									<td style="width:40px;"><a href="./booking-details?id=<?php echo $row['bind'];?>" class="text-info">View</a></td>
+									<td style="width:40px;"><a href="./update-booking?id=<?php echo $row['bind'];?>" class="text-warning">Update</a></td>
+									<?php if(strtolower($activeUser) == 'admin'){?>
+										<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $row['bind'];?>);">Delete</a></td>
+									<?php }?>
 								</tr>
 							<?php } } else {$row = $record;?>
 								<tr>
@@ -74,9 +81,11 @@ $record = Booking::read($filter);
 									<?php } ?>
 									<td class="center"><?php echo $record['status'];?></td>
 									<td class="center"><?php echo $record['schedule'];?></td>
-									<td style="width:40px;"><a href="./booking-details?id=<?php echo $record['bind'];?>" class="text-info">Details</a></td>
-									<td style="width:40px;"><a href="./update-booking?id=<?php echo $record['bind'];?>" class="text-warning">Edit</a></td>
-									<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $record['bind'];?>);">Trash</a></td>
+									<td style="width:40px;"><a href="./booking-details?id=<?php echo $record['bind'];?>" class="text-info">View</a></td>
+									<td style="width:40px;"><a href="./update-booking?id=<?php echo $record['bind'];?>" class="text-warning">Update</a></td>
+									<?php if(strtolower($activeUser) == 'admin'){?>
+										<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $record['bind'];?>);">Delete</a></td>
+									<?php } ?>
 								</tr>
 							<?php }  }?>
 						</tbody>
