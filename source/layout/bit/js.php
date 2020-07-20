@@ -12,4 +12,13 @@
 	$(document).ready(function() {
 		$('#dataTable').DataTable();
 	});
+
+	function jsTrash(record, id){
+		var decision = confirm("Are you certain?");
+		if(decision === true){
+			var url = './delete?id='+id+'&oact='+record;
+			window.location.href = url;
+		}
+		return;
+	}
 </script>

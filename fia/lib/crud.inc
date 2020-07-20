@@ -40,7 +40,8 @@ class oCRUD {
 
 	public static function deleteBIND($input, $table){
 		$query = 'DELETE FROM `'.$table.'` WHERE `bind` = :bind LIMIT 1';
-		return oSQL::isCount($query, $input, 1);
+		return oSQL::run($query, $input, 'oBOOLEAN');
+		#return oSQL::isCount($query, $input, 1);
 	}
 
 

@@ -22,7 +22,7 @@ class oSQL {
 
 
 
-		//=====::SQL UTILITY::=====//
+	//=====::SQL UTILITY::=====//
 
 	#RETURN ERROR RESPONSE FROM [QUERY STATEMENT OR LAST DATABASE OPERATION]
 	public static function stmtF9($sql, $obj='', $i=2){

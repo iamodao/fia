@@ -152,6 +152,16 @@ class oAPP {
 	protected function staffs(){
 		fia::otheme('main');
 	}
+
+	protected function delete(){
+		$record = fia::routeAction();
+		$id = $_GET['id'];
+		if(!empty($id) && !empty($record)){
+			$input['bind'] = $id;
+			if($record == 'booking'){$result = Booking::delete($input);}
+			if($result == true){fia::exitTo('reservations?oact=deleted', 'oRELATIVE');}
+		}
+	}
 }
 $runAPP = new oAPP;
 ?>
