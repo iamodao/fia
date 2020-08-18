@@ -1,8 +1,13 @@
 <?php
 class oString {
-	#RETURNS BOOLEAN ~ check for needle in string
-	public static function in($string, $needle){
-		if(strpos($string, $needle) !== false){return true;}
+#RETURNS BOOLEAN ~ check for needle in string
+	public static function in($string, $needle, $case="oSENSITIVE"){
+		if($case == 'oSENSITIVE'){
+			if(strpos($string, $needle) !== false){return true;}
+		}
+		else {
+			if(stripos($string, $needle) !== false){return true;}
+		}
 		return false;
 	}
 
@@ -13,12 +18,19 @@ class oString {
 	}
 
 	//-------------- Substitute a character|string in a string and vice-versa ---------------
-	public static function swap($string, $search, $substitute , $occurence='oALL'){
+	public static function swap($string, $search, $substitute , $occurence='oALL', $case="oSENSITIVE"){
 		#check if $search is found and return result, else return full string
-		$found = self::in($string, $search);
+		$found = self::in($string, $search, $case);
 		if(!$found){return $string;}
 		else {
-			if($occurence == 'oALL'){return str_replace($search, $substitute, $string);}
+			if($occurence == 'oALL'){
+				if($case == 'oSENSITIVE'){
+					return str_replace($search, $substitute, $string);
+				}
+				else {
+					return str_ireplace($search, $substitute, $string);
+				}
+			}
 			else {
 				if($occurence == 'oFIRST'){$pos = strpos($string, $search);}
 				if($occurence == 'oLAST'){$pos = strrpos($string, $search);}
@@ -30,6 +42,24 @@ class oString {
 			}
 		}
 	}
+
+
+	//-------------- Substitute censored word from a string (using library as DB) ---------------
+	public static function censored($string, $library, $symbol = ', ', $case='oINSENSITIVE'){
+		$o = $string;
+		$words = explode(" ", $string);
+		if(!is_array($library)){
+			$library = explode($symbol, $library);
+		}
+
+		foreach ($words as $word){
+			if(in_array(strtolower($word), array_map('strtolower', $library))){
+				$o = self::swap($o, $word, '***' , 'oALL', $case);
+			}
+		}
+		return $o;
+	}
+
 
 	//-------------- Return false OR value before first occurrence character|string if found ---------------
 	public static function before($string, $search, $strip='oYEAH'){
