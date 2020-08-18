@@ -84,6 +84,7 @@ class oString {
 		return false;
 	}
 
+
 	public static function match($string='', $comparison='', $rule='oDEFAULT'){
 		if($rule == 'oABSOLUTE' && $string === $comparison){return true;}
 		elseif($rule != 'oABSOLUTE' && $string == $comparison){return true;}
