@@ -11,11 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
--- Dumping database structure for devdb
-CREATE DATABASE IF NOT EXISTS `devdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `devdb`;
-
 -- Dumping structure for table devdb.booking
 DROP TABLE IF EXISTS `booking`;
 CREATE TABLE IF NOT EXISTS `booking` (
@@ -43,15 +38,15 @@ CREATE TABLE IF NOT EXISTS `booking` (
   KEY `title` (`refid`) USING BTREE,
   KEY `type` (`type`),
   KEY `suite` (`suite`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table devdb.booking: ~4 rows (approximately)
+-- Dumping data for table devdb.booking: ~3 rows (approximately)
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
 REPLACE INTO `booking` (`id`, `bind`, `entry`, `author`, `status`, `suite`, `refid`, `type`, `name`, `email`, `phone`, `address`, `sex`, `summary`, `amount`, `schedule`) VALUES
-	(3, '301159345425314', '2020-06-29 19:10:53', 'APP', 'PENDING', NULL, '3586', 'CLEANING', 'Kingston Larel', '', '', '', '', '', 0, '2020-10-12 09:45:30'),
 	(4, '585159345462292', '2020-06-29 19:17:02', 'APP', 'PENDING', NULL, '5386', 'CLEANING', 'Derik Leventis', 'derik@leventis.co', '09077886251', '', '', 'Cleaning at my apartment', 0, '2020-06-19 09:48:00'),
-	(8, '859160669295237', '2020-11-30 00:35:52', 'APP', 'PENDING', 'Standard', '9149', 'ROOM', 'Cali', '', '0909', '', '', 'New', 0, '2020-12-01 11:34:00'),
-	(9, '346160669306556', '2020-11-30 00:37:45', 'APP', 'PENDING', NULL, '2705', 'SALON', 'Silas More', '', '090977463', '', '', 'Nothing more\r\n', 0, '2021-12-28 23:36:00');
+	(8, '859160669295237', '2020-11-30 00:35:52', 'APP', 'CONFIRMED', 'Standard', '9149', 'ROOM', 'Cali Moris', 'cali@gmail.com', '090978849093', '', '', 'Simple Room', 0, '2020-12-01 11:34:00'),
+	(9, '346160669306556', '2020-11-30 00:37:45', 'APP', 'PENDING', NULL, '2705', 'SALON', 'Silas More', '', '090977463', '', '', 'Nothing more\r\n', 0, '2021-12-28 23:36:00'),
+	(10, '407160676781819', '2020-11-30 21:23:38', 'APP', 'CONFIRMED', NULL, '4362', 'LOUNGE', 'Chris Morgani', 'chris@morgani.co', '+2341677339828', '', '', 'Lounge', 0, '2020-10-29 08:22:00');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 -- Dumping structure for table devdb.room
@@ -144,8 +139,8 @@ REPLACE INTO `user` (`id`, `bind`, `author`, `status`, `entry`, `session`, `emai
 	(1, '246368795', 'SELF', 'active', '2020-06-21 22:31:40', NULL, 'odao@vae.com', '09097996048', 'odao', 'oneguy', 'ODAO', 'ADMIN', 'ADMIN', NULL, NULL, NULL),
 	(2, '1457580891', 'oAPP', 'active', '2020-06-21 23:23:30', NULL, 'salon@guy.com', '09097996043', 'salon', 'salon', 'Salon Guy', 'STAFF', 'SALON', NULL, NULL, NULL),
 	(3, '1809771323', 'oAPP', 'active', '2020-06-21 23:26:24', NULL, 'clean@guy.com', '09097996045', 'clean', 'CleanGuy', 'Clean Guy', 'STAFF', 'CLEANING', NULL, NULL, NULL),
-	(4, '448264615', 'oAPP', 'active', '2020-06-21 23:27:40', NULL, 'lounge@guy.com', '09097996047', 'lounge', 'LoungeGuy', 'Lounge Guy', 'STAFF', 'LOUNGE', NULL, NULL, NULL),
-	(5, '946937716', 'oAPP', 'active', '2020-06-21 23:30:30', NULL, 'room@guy.com', '09097996078', 'room', 'RoomGuy', 'Room Guy', 'STAFF', 'ROOM', NULL, NULL, NULL),
+	(4, '448264615', 'oAPP', 'active', '2020-06-21 23:27:40', NULL, 'lounge@guy.com', '09097996047', 'lounge', 'lounge', 'Lounge Staff', 'STAFF', 'LOUNGE', NULL, NULL, NULL),
+	(5, '946937716', 'oAPP', 'active', '2020-06-21 23:30:30', NULL, 'room@guy.com', '09097996078', 'room', 'room', 'Room Guy', 'STAFF', 'ROOM', NULL, NULL, NULL),
 	(6, NULL, 'APP', 'ACTIVE', '2020-06-24 14:27:18', NULL, 'odao@vae24.com', '09097996061', NULL, NULL, 'ODAO VAE', NULL, NULL, NULL, 'male', NULL),
 	(7, NULL, 'APP', 'ACTIVE', '2020-06-24 14:28:13', NULL, 'odao@vae24.co', '09097996051', NULL, NULL, 'ODAO VAE', NULL, NULL, NULL, 'male', NULL),
 	(8, NULL, 'APP', 'ACTIVE', '2020-06-24 14:28:31', NULL, 'odao@vae24.org', '09057996051', NULL, NULL, 'ODAO VAE', NULL, NULL, NULL, 'male', NULL),

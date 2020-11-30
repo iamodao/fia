@@ -63,7 +63,7 @@ $record = Booking::read($filter);
 									<td class="center"><?php echo $row['status'];?></td>
 									<td class="center"><?php echo $row['schedule'];?></td>
 									<td style="width:40px;"><a href="./booking-details?id=<?php echo $row['bind'];?>" class="text-info">View</a></td>
-									<td style="width:40px;"><a href="./update-booking?id=<?php echo $row['bind'];?>" class="text-warning">Update</a></td>
+									<td style="width:40px;"><a href="./booking-update?id=<?php echo $row['bind'];?>" class="text-warning">Update</a></td>
 									<?php if(strtolower($activeUser) == 'admin'){?>
 										<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $row['bind'];?>);">Delete</a></td>
 									<?php }?>
@@ -82,7 +82,7 @@ $record = Booking::read($filter);
 									<td class="center"><?php echo $record['status'];?></td>
 									<td class="center"><?php echo $record['schedule'];?></td>
 									<td style="width:40px;"><a href="./booking-details?id=<?php echo $record['bind'];?>" class="text-info">View</a></td>
-									<td style="width:40px;"><a href="./update-booking?id=<?php echo $record['bind'];?>" class="text-warning">Update</a></td>
+									<td style="width:40px;"><a href="./booking-update?id=<?php echo $record['bind'];?>" class="text-warning">Update</a></td>
 									<?php if(strtolower($activeUser) == 'admin'){?>
 										<td style="width:40px;"><a href="#" class="text-danger" onclick="return jsTrash('booking', <?php echo $record['bind'];?>);">Delete</a></td>
 									<?php } ?>

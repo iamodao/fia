@@ -80,9 +80,31 @@ class oAPP {
 			}
 			fia::exitTo('booking?oact=error', 'oRELATIVE');
 		}
+
 		fia::otheme('main');
 		fia::sessionUnset('oFORM_POST_DATA');
 	}
+
+
+	protected function bookingDetails(){
+		fia::otheme('main');
+	}
+
+	protected function bookingUpdate(){
+		if(fia::routeAction() == 'process'){
+			if(!empty($_POST)){
+				fia::formData('oPOST', 'booking');
+				$data = $_POST;
+				$data['bind'] = $_GET['id'];
+
+				$booking = Booking::update($data);
+				if($booking == true){fia::exitTo('booking?oact=success', 'oRELATIVE');}
+			}
+			fia::exitTo('booking-update?oact=error', 'oRELATIVE');
+		}
+		fia::otheme('main');
+	}
+
 
 	protected function createSuite(){
 		if(fia::routeAction() == 'process'){
